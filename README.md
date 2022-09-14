@@ -38,3 +38,9 @@ node -v
 ```bash
 yarn install
 ```
+
+## Run
+
+```bash
+yarn tauri dev
+```
