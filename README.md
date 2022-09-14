@@ -44,3 +44,9 @@ yarn install
 ```bash
 yarn tauri dev
 ```
+
+## Run Unit Test
+
+```bash
+yarn test
+```
