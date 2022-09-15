@@ -9,35 +9,35 @@ const defaultState = {
   byArray: [],
 };
 
-const mockState = {
-  byId: {
-    s1: {
-      id: "s1",
-      name: "work",
-      type: "space",
-      createdAt: "1663151888",
-      updatedAt: "1663151888",
-      icon: "work.svg",
-      collections: ["c1", "c2"],
-    },
-    s2: {
-      id: "s2",
-      name: "home",
-      type: "space",
-      createdAt: "1663151889",
-      updatedAt: "1663151889",
-      icon: "home.svg",
-      collections: ["c3"],
-    },
-  },
-  byArray: ["s2", "s1"],
-};
+// const mockState = {
+//   byId: {
+//     s1: {
+//       id: "s1",
+//       name: "work",
+//       type: "space",
+//       createdAt: "1663151888",
+//       updatedAt: "1663151888",
+//       icon: "work.svg",
+//       collections: ["c1", "c2"],
+//     },
+//     s2: {
+//       id: "s2",
+//       name: "home",
+//       type: "space",
+//       createdAt: "1663151889",
+//       updatedAt: "1663151889",
+//       icon: "home.svg",
+//       collections: ["c3"],
+//     },
+//   },
+//   byArray: ["s2", "s1"],
+// };
 
 export default function spaceReducer(state = defaultState, action) {
   switch (action.type) {
     case CREATE_SPACE: {
-      const noId = !(action?.payload?.id?.length > 0);
-      const idExisted = !!state.byId[action?.payload?.id];
+      const noId = !(action.payload.id.length > 0);
+      const idExisted = !!state.byId[action.payload.id];
       if (noId || idExisted) return state;
       return {
         byId: {
@@ -48,7 +48,7 @@ export default function spaceReducer(state = defaultState, action) {
       };
     }
     case DELETE_SPACE: {
-      const noId = !(action?.id?.length > 0);
+      const noId = !(action.id.length > 0);
       if (noId) return state;
       delete state.byId[action.id];
       return {
@@ -59,8 +59,8 @@ export default function spaceReducer(state = defaultState, action) {
       };
     }
     case UPDATE_SPACE: {
-      const noId = !(action?.id?.length > 0);
-      const idExisted = !!state.byId[action?.id];
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
       if (noId || !idExisted) return state;
       removeUndefinedKeys(action.payload);
 
