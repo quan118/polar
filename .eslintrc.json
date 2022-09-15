@@ -11,6 +11,7 @@
       "version": "detect"
     }
   },
+  "ignorePatterns": ["/dist"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
