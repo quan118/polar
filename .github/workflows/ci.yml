@@ -43,7 +43,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-    - name: lint and build 
-      run: yarn && yarn lint && yarn tauri build
+    - name: yarn install
+      run: yarn install
+    - name: lint
+      run: yarn lint
+    - name: build
+      run: yarn tauri build
     - name: vitest
       run: yarn vitest run
