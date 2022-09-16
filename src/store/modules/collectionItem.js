@@ -45,31 +45,17 @@ const defaultState = {
 //       },
 //       auth: {
 //         type: "basic", // basic | bearer | apikey
-//         basic: [
-//           {
-//             key: "password",
-//             value: "abc123",
-//             type: "string",
-//           },
-//           {
-//             key: "username",
-//             value: "quan",
-//             type: "string",
-//           },
-//         ],
+//         basic: {
+//            username: 'quan',
+//            password: 'abc123'
+//         },
 //         /*
-//         bearer: [
-//           {
-//             key: 'token',
-//             value: 'abcdfef',
-//             type: 'string'
-//           }
-//         ],
-//         apikey: [{
-//           key: 'key',
+//         bearer: 'jsontoken',
+//         apikey: {
+//           in: 'query',
+//           key: 'api-key',
 //           value: 'abc123',
-//           type: 'string'
-//         }]
+//         }
 
 //         */
 //       },
