@@ -11,6 +11,11 @@
       "version": "detect"
     }
   },
+  "overrides": [
+    {
+      "files": ["*.jsx", "*.tsx"]
+    }
+  ],
   "ignorePatterns": ["/dist"],
   "parserOptions": {
     "ecmaFeatures": {
