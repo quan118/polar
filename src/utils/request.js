@@ -102,16 +102,17 @@ export const handleBody = (requestConfig, fetchConfig) => {
       break;
     }
     case "form-data": {
-      body = new FormData();
+      var formData = {};
       requestConfig?.body?.formdata?.forEach((item) => {
-        body.append(item.key, item.value);
+        formData[item.key] = item.value;
       });
+      body = new Body.form(formData);
       break;
     }
     case "urlencoded": {
       const params = {};
       requestConfig?.body?.urlencoded?.forEach((item) => {
-        params[item.key] = params[item.value];
+        params[item.key] = item.value;
       });
       body = new URLSearchParams(params);
       headers.push({
