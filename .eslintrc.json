@@ -16,7 +16,7 @@
       "files": ["*.jsx", "*.tsx"]
     }
   ],
-  "ignorePatterns": ["/dist"],
+  "ignorePatterns": ["/dist", "/src-tauri"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
