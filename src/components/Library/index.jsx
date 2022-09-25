@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 const Library = () => {
-  return <div className="flex bg-sky-500">Library TODO</div>;
+  return <div className="flex bg-white">Library TODO</div>;
 };
 
 export default memo(Library);
