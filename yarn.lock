@@ -267,11 +267,6 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@fontsource/inter@^4.5.12":
-  version "4.5.12"
-  resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-4.5.12.tgz#a6236379bf710658db048d7087ec588754962cb6"
-  integrity sha512-bGKk4/8tube/nCk8hav0ZDBVbzJzc7m0Vt4xF5p15IN4YImwGdtKG38Oq5bU8xHNS+VfvbFFCepgQNj7Pr/Lvg==
-
 "@headlessui/react@^1.7.2":
   version "1.7.2"
   resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.7.2.tgz"
@@ -500,11 +495,6 @@
   version "18.7.18"
   resolved "https://registry.npmjs.org/@types/node/-/node-18.7.18.tgz"
   integrity sha512-m+6nTEOadJZuTPkKR/SYK3A2d7FZrgElol9UP1Kae90VVU4a6mxnPuLiIW1m4Cq4gZ/nWb9GrdVXJCoCazDAbg==
-
-"@types/parse-unit@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/parse-unit/-/parse-unit-1.0.1.tgz#1c1ffda43d17accccad048012f9c1764b4042bba"
-  integrity sha512-p6QazF9lsJKxD+l/jcPQSGthgFbtKQuNSOH48zdPCnItg2qrvKGwaDd5KRmdsC/qmJ20zGafQ/VzNtIfi7AfiA==
 
 "@types/prop-types@*":
   version "15.7.5"
@@ -1901,11 +1891,6 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
-parse-unit@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/parse-unit/-/parse-unit-1.0.1.tgz#7e1bb6d5bef3874c28e392526a2541170291eecf"
-  integrity sha512-hrqldJHokR3Qj88EIlV/kAyAi/G5R2+R56TBANxNMy0uPlYcttx0jnMW6Yx5KsKPSbC3KddM/7qQm3+0wEXKxg==
-
 path-exists@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/path-exists/-/path-exists-4.0.0.tgz"
@@ -2057,11 +2042,6 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
-
-react-icons@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.npmjs.org/react-icons/-/react-icons-4.4.0.tgz"
-  integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -2335,14 +2315,6 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
-
-tailwindcss-font-inter@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/tailwindcss-font-inter/-/tailwindcss-font-inter-3.0.1.tgz#1a53688c42ff56eb2517fd11a9edb65fe71f0a89"
-  integrity sha512-wN0uIB+OzQk8ItqFoEl/eQM4H05AgNbqlI++IDb5B4Fqz8imee2dJAy85jyARwTUUouMwdwdBjx7yxXf22CyCg==
-  dependencies:
-    "@types/parse-unit" "^1.0.1"
-    parse-unit "^1.0.1"
 
 tailwindcss@^3.1.8:
   version "3.1.8"
