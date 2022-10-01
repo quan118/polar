@@ -26,7 +26,7 @@ jobs:
       with:
         toolchain: stable
         profile: minimal
-    - name: Set up cargo cache
+    - name: Caching cargo
       uses: actions/cache@v3
       continue-on-error: false
       with:
@@ -35,14 +35,14 @@ jobs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
-          src-tauri/target/            
+          src-tauri/target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - name: install dependencies (ubuntu only)
+    - uses: awalsh128/cache-apt-pkgs-action@latest
       if: matrix.platform == 'ubuntu-22.04'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+      with: 
+        packages: libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+        version: ${{ matrix.platform }}
     - name: yarn install
       run: yarn install
     - name: lint
