@@ -5,9 +5,9 @@ import "./App.css";
 import { Sidebar, Library, Editor } from "./components";
 function App() {
   return (
-    <div className="flex h-screen bg-[#FF0000]">
+    <div className="flex h-screen bg-gray-300">
       <Sidebar />
-      <Split class="flex flex-1" gutterSize={2} minSize={[200]}>
+      <Split className="flex flex-1" gutterSize={2} minSize={[200]}>
         <Library />
         <Editor />
       </Split>

@@ -4,3 +4,5 @@ export const removeUndefinedKeys = (obj) =>
       delete obj[key];
     }
   });
+
+export const classNames = (...classes) => classes.filter(Boolean).join(" ");

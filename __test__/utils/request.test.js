@@ -27,8 +27,10 @@ test("should handle basic auth successfully", () => {
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
-    query: [],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+    },
+    query: {},
   };
   const newFetchConfig = handleAuth(requestConfig, initialFetchConfig);
   expect(newFetchConfig).toEqual(expectedFetchConfig);
@@ -52,8 +54,8 @@ test("should handle bearer auth successfully", () => {
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Bearer jsontoken" }],
-    query: [],
+    headers: { Authorization: "Bearer jsontoken" },
+    query: {},
   };
   const newFetchConfig = handleAuth(requestConfig, initialFetchConfig);
   expect(newFetchConfig).toEqual(expectedFetchConfig);
@@ -86,8 +88,8 @@ test("should handle apikey auth successfully", () => {
   const expectedFetchConfig_in_header = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "X-API-Key", value: "abcd1234" }],
-    query: [],
+    headers: { "X-API-Key": "abcd1234" },
+    query: {},
   };
 
   const newFetchConfig_in_header = handleAuth(
@@ -113,8 +115,8 @@ test("should handle apikey auth successfully", () => {
   const expectedFetchConfig_in_query = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "api_key", value: "abcd1234" }],
-    query: [],
+    headers: { api_key: "abcd1234" },
+    query: {},
   };
   const newFetchConfig_in_query = handleAuth(
     requestConfig_in_query,
@@ -139,15 +141,16 @@ test("should handle raw body successfully", () => {
   const initialFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
+    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
   };
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "text/plain" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "text/plain",
+    },
+    body: Body.text("Hello Postpone"),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
   expect(newFetchConfig).toEqual(expectedFetchConfig);
@@ -170,10 +173,11 @@ test("should handle raw body successfully", () => {
   const expectedFetchConfig_json = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "application/json" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "application/json",
+    },
+    body: Body.json(),
   };
   const newFetchConfig_json = handleBody(
     requestConfig_json,
@@ -199,10 +203,11 @@ test("should handle raw body successfully", () => {
   const expectedFetchConfig_xml = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "application/xml" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "application/xml",
+    },
+    body: Body.text(),
   };
   const newFetchConfig_xml = handleBody(requestConfig_xml, initialFetchConfig);
   expect(newFetchConfig_xml).toEqual(expectedFetchConfig_xml);
@@ -225,10 +230,11 @@ test("should handle raw body successfully", () => {
   const expectedFetchConfig_yaml = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "text/yaml" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "text/yaml",
+    },
+    body: Body.text(),
   };
   const newFetchConfig_yaml = handleBody(
     requestConfig_yaml,
@@ -254,12 +260,12 @@ test("should handle form-data body successfully", () => {
   const initialFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
+    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
   };
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
+    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
     body: { type: "Form", payload: { abc: "123", abcd: "1234" } },
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
@@ -282,15 +288,15 @@ test("should handle urlencoded body successfully", () => {
   const initialFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
+    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
   };
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "application/x-www-form-urlencoded" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     body: new URLSearchParams({ aaa: "111" }),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
@@ -313,15 +319,15 @@ test("should handle file body successfully", () => {
   const initialFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [{ key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" }],
+    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
   };
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "multipart/form-data" },
-    ],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "multipart/form-data",
+    },
     body: Body.form({ fileData: { file: "https://xyz.jpg" } }),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
@@ -350,11 +356,12 @@ test("should handle a request with basic auth + raw body successfully", () => {
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: [
-      { key: "Authorization", value: "Basic cXVhbjphYmMxMjM=" },
-      { key: "Content-Type", value: "text/plain" },
-    ],
-    query: [],
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "text/plain",
+    },
+    query: {},
+    body: Body.text("Hello Postpone"),
   };
   const newFetchConfig = buildFetchConfig(requestConfig);
   expect(newFetchConfig).toEqual(expectedFetchConfig);

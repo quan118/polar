@@ -1,9 +1,28 @@
 export const CREATE_COLLECTION_ITEM = "CREATE_COLLECTION_ITEM";
 export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
 export const UPDATE_COLLECTION_ITEM = "UPDATE_COLLECTION_ITEM";
+export const UPDATE_COLLECTION_ITEM_QUERY = "UPDATE_COLLECTION_ITEM_QUERY";
+export const UPDATE_COLLECTION_ITEM_HEADER = "UPDATE_COLLECTION_ITEM_HEADER";
+export const UPDATE_COLLECTION_ITEM_AUTH_KEY =
+  "UPDATE_COLLECTION_ITEM_AUTH_KEY"; // update a key in auth object of a collection item
+export const UPDATE_COLLECTION_ITEM_BODY_KEY =
+  "UPDATE_COLLECTION_ITEM_BODY_KEY"; // update a key in body object of collection item
+export const UPDATE_COLLECTION_ITEM_URL_KEY = "UPDATE_COLLECTION_ITEM_URL_KEY";
 
 const defaultState = {
-  byId: {},
+  byId: {
+    drafts: {
+      id: "drafts",
+      type: "group",
+      name: "drafts",
+      items: ["draft0"],
+    },
+    draft0: {
+      id: "draft0",
+      type: "request",
+      method: "GET",
+    },
+  },
 };
 
 // const mockState = {
@@ -118,6 +137,93 @@ export default function collectionItemReducer(state = defaultState, action) {
         },
       };
     }
+    case UPDATE_COLLECTION_ITEM_QUERY: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            url: {
+              ...state.byId[action.id].url,
+              query: action.payload,
+            },
+          },
+        },
+      };
+    }
+    case UPDATE_COLLECTION_ITEM_HEADER: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            header: action.payload,
+          },
+        },
+      };
+    }
+    case UPDATE_COLLECTION_ITEM_AUTH_KEY: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            auth: {
+              ...state.byId[action.id].auth,
+              [action.key]: action.payload,
+            },
+          },
+        },
+      };
+    }
+    case UPDATE_COLLECTION_ITEM_BODY_KEY: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            body: {
+              ...state.byId[action.id].body,
+              [action.key]: action.payload,
+            },
+          },
+        },
+      };
+    }
+    case UPDATE_COLLECTION_ITEM_URL_KEY: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            url: {
+              ...state.byId[action.id].url,
+              [action.key]: action.payload,
+            },
+          },
+        },
+      };
+    }
     default:
       return state;
   }
@@ -136,5 +242,38 @@ export const deleteCollectionItemAction = ({ id }) => ({
 export const updateCollectionItemAction = (id, payload) => ({
   type: UPDATE_COLLECTION_ITEM,
   id,
+  payload,
+});
+
+export const updateCollectionItemQueryAction = (id, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_QUERY,
+  id,
+  payload,
+});
+
+export const updateCollectionItemHeaderAction = (id, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_HEADER,
+  id,
+  payload,
+});
+
+export const updateCollectionItemAuthKeyAction = (id, key, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_AUTH_KEY,
+  id,
+  key,
+  payload,
+});
+
+export const updateCollectionItemBodyKeyAction = (id, key, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_BODY_KEY,
+  id,
+  key,
+  payload,
+});
+
+export const updateCollectionItemUrlKeyAction = (id, key, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_URL_KEY,
+  id,
+  key,
   payload,
 });

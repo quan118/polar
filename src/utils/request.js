@@ -1,4 +1,5 @@
 import { Body } from "@tauri-apps/api/http";
+import { Buffer } from "buffer";
 
 export const pipe =
   (...fns) =>
@@ -19,19 +20,45 @@ fetchConfig
 */
 
 export const buildFetchConfig = (requestConfig) => {
-  let fetchConfig = {
+  let initialFetchConfig = {
     method: requestConfig?.method,
-    headers: [],
-    query: [],
+    headers: {},
+    query: {},
     url: requestConfig?.url?.raw,
   };
+  let finalFetchConfig = pipe(handleAuth, handleBody)(
+    requestConfig,
+    initialFetchConfig
+  );
 
-  return pipe(handleAuth, handleBody)(requestConfig, fetchConfig);
+  const requestHeaders = {};
+  requestConfig.header?.forEach((item) => {
+    if (!item.enabled) return;
+    requestHeaders[item.key] = item.value;
+  });
+
+  const requestQueries = {};
+  requestConfig.url?.query?.forEach((item) => {
+    if (!item.enabled) return;
+    requestQueries[item.key] = item.value;
+  });
+
+  return {
+    ...finalFetchConfig,
+    headers: {
+      ...finalFetchConfig.headers,
+      ...requestHeaders,
+    },
+    query: {
+      ...finalFetchConfig.query,
+      ...requestQueries,
+    },
+  };
 };
 
 export const handleAuth = (requestConfig, fetchConfig) => {
-  const headers = [];
-  const query = [];
+  const headers = {};
+  const query = {};
 
   switch (requestConfig?.auth?.type) {
     case "basic": {
@@ -40,26 +67,19 @@ export const handleAuth = (requestConfig, fetchConfig) => {
       const inBase64 = Buffer.from(`${username}:${password}`).toString(
         "base64"
       );
-      headers.push({ key: "Authorization", value: `Basic ${inBase64}` });
+      headers["Authorization"] = `Basic ${inBase64}`;
       break;
     }
     case "bearer":
-      headers.push({
-        key: "Authorization",
-        value: `Bearer ${requestConfig?.auth?.bearer}`,
-      });
+      headers["Authorization"] = `Bearer ${requestConfig?.auth?.bearer}`;
       break;
     case "apikey":
       if (requestConfig?.auth?.apikey?.in !== "query") {
-        headers.push({
-          key: requestConfig?.auth?.apikey?.key,
-          value: requestConfig?.auth?.apikey?.value,
-        });
+        headers[requestConfig?.auth?.apikey?.key] =
+          requestConfig?.auth?.apikey?.value;
       } else {
-        query.push({
-          key: requestConfig?.auth?.apikey?.key,
-          value: requestConfig?.auth?.apikey?.value,
-        });
+        query[requestConfig?.auth?.apikey?.key] =
+          requestConfig?.auth?.apikey?.value;
       }
       break;
     default:
@@ -68,35 +88,40 @@ export const handleAuth = (requestConfig, fetchConfig) => {
 
   return {
     ...fetchConfig,
-    headers: [
-      ...(Array.isArray(fetchConfig.headers) ? fetchConfig.headers : []),
+    headers: {
+      ...fetchConfig.headers,
       ...headers,
-    ],
-    query: [
-      ...(Array.isArray(fetchConfig.query) ? fetchConfig.query : []),
+    },
+    query: {
+      ...fetchConfig.query,
       ...query,
-    ],
+    },
   };
 };
 
 export const handleBody = (requestConfig, fetchConfig) => {
-  const headers = [];
+  // const headers = [];
+  const headers = {};
 
   let body;
   switch (requestConfig?.body?.mode) {
     case "raw": {
       switch (requestConfig?.body?.options?.raw?.language) {
         case "json":
-          headers.push({ key: "Content-Type", value: "application/json" });
+          headers["Content-Type"] = "application/json";
+          body = Body.json(JSON.stringify(requestConfig?.body?.raw));
           break;
         case "xml":
-          headers.push({ key: "Content-Type", value: "application/xml" });
+          headers["Content-Type"] = "application/xml";
+          body = Body.text(requestConfig?.body?.raw);
           break;
         case "yaml":
-          headers.push({ key: "Content-Type", value: "text/yaml" });
+          headers["Content-Type"] = "text/yaml";
+          body = Body.text(requestConfig?.body?.raw);
           break;
         default:
-          headers.push({ key: "Content-Type", value: "text/plain" });
+          headers["Content-Type"] = "text/plain";
+          body = Body.text(requestConfig?.body?.raw);
           break;
       }
       break;
@@ -115,16 +140,12 @@ export const handleBody = (requestConfig, fetchConfig) => {
         params[item.key] = item.value;
       });
       body = new URLSearchParams(params);
-      headers.push({
-        key: "Content-Type",
-        value: "application/x-www-form-urlencoded",
-      });
+      headers["Content-Type"] = "application/x-www-form-urlencoded";
       break;
     }
     // https://github.com/tauri-apps/tauri/discussions/3253
     case "file": {
-      headers.push({ key: "Content-Type", value: "multipart/form-data" });
-
+      headers["Content-Type"] = "multipart/form-data";
       body = Body.form({
         fileData: {
           file: requestConfig?.body?.file?.src,
@@ -139,10 +160,10 @@ export const handleBody = (requestConfig, fetchConfig) => {
   }
   const newFetchConfig = {
     ...fetchConfig,
-    headers: [
-      ...(Array.isArray(fetchConfig?.headers) ? fetchConfig.headers : []),
+    headers: {
+      ...fetchConfig.headers,
       ...headers,
-    ],
+    },
   };
   if (body) newFetchConfig.body = body;
   return newFetchConfig;
