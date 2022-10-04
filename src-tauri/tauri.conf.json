@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "postpone",
+    "productName": "polar",
     "version": "0.0.0"
   },
   "tauri": {
@@ -34,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "io.khoi.postpone",
+      "identifier": "io.khoi.polar",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -64,7 +64,7 @@
         "height": 800,
         "minHeight": 800,
         "resizable": true,
-        "title": "postpone",
+        "title": "polar",
         "width": 1200,
         "minWidth": 800
       }

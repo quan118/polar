@@ -1,5 +1,5 @@
 {
-  "name": "postpone",
+  "name": "polar",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config prettier.config.js",
-    "test": "vitest"
+    "test": "vitest",
+    "generate-app-icon": "tauri icon ./src-tauri/icons/app-icon.png"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.2",
