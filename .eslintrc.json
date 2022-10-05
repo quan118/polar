@@ -13,7 +13,7 @@
   },
   "overrides": [
     {
-      "files": ["*.jsx", "*.tsx"]
+      "files": ["*.jsx", "*.tsx", "*.ts", "*.js"]
     }
   ],
   "ignorePatterns": ["/dist", "/src-tauri"],
