@@ -20,7 +20,7 @@ const Editor = () => {
       <Tabbar />
       <RequestInput requestId="draft0" onResponse={handleResponse} />
       <Split
-        class="flex-1 flex-col bg-purple-500"
+        className="flex-1 flex-col bg-purple-500"
         direction="vertical"
         gutterSize={5}
       >
