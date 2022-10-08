@@ -1,5 +1,6 @@
 import { Body } from "@tauri-apps/api/http";
 import { Buffer } from "buffer";
+import mime from "mime";
 
 export const pipe =
   (...fns) =>
@@ -131,7 +132,8 @@ export const handleBody = (requestConfig, fetchConfig) => {
       requestConfig?.body?.formdata?.forEach((item) => {
         formData[item.key] = item.value;
       });
-      body = new Body.form(formData);
+      headers["Content-Type"] = "multipart/form-data";
+      body = Body.form(formData);
       break;
     }
     case "urlencoded": {
@@ -139,19 +141,16 @@ export const handleBody = (requestConfig, fetchConfig) => {
       requestConfig?.body?.urlencoded?.forEach((item) => {
         params[item.key] = item.value;
       });
-      body = new URLSearchParams(params);
-      headers["Content-Type"] = "application/x-www-form-urlencoded";
+      body = Body.form(params);
       break;
     }
     // https://github.com/tauri-apps/tauri/discussions/3253
     case "file": {
-      headers["Content-Type"] = "multipart/form-data";
-      body = Body.form({
-        fileData: {
-          file: requestConfig?.body?.file?.src,
-          // mime: 'image/jpeg', // optional
-          // fileName: 'image.jpg', // optional
-        },
+      headers["Content-Type"] =
+        mime.getType(requestConfig?.body?.file?.src) ||
+        "application/octet-stream";
+      body = new Body("File", {
+        file: requestConfig?.body?.file?.src,
       });
       break;
     }

@@ -14,7 +14,7 @@ const AuthorizationType = ({ selected, onChangeType }) => {
       </label>
       <DropdownInput
         options={["none", "basic", "bearer", "apikey"]}
-        selected={selected}
+        value={selected}
         onChange={onChangeType}
       />
     </div>

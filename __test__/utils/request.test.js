@@ -265,11 +265,13 @@ test("should handle form-data body successfully", () => {
   const expectedFetchConfig = {
     method: "GET",
     url: "https://httpbin.org/basic-auth",
-    headers: { Authorization: "Basic cXVhbjphYmMxMjM=" },
-    body: { type: "Form", payload: { abc: "123", abcd: "1234" } },
+    headers: {
+      Authorization: "Basic cXVhbjphYmMxMjM=",
+      "Content-Type": "multipart/form-data",
+    },
+    body: Body.form({ abc: "123", abcd: "1234" }),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
-  // console.log("========= NewFetchConfig", newFetchConfig);
 
   expect(newFetchConfig).toEqual(expectedFetchConfig);
 });
@@ -295,9 +297,8 @@ test("should handle urlencoded body successfully", () => {
     url: "https://httpbin.org/basic-auth",
     headers: {
       Authorization: "Basic cXVhbjphYmMxMjM=",
-      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams({ aaa: "111" }),
+    body: Body.form({ aaa: "111" }),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
   // console.log("=========UrlEncoded NewFetchConfig", newFetchConfig);
@@ -326,9 +327,9 @@ test("should handle file body successfully", () => {
     url: "https://httpbin.org/basic-auth",
     headers: {
       Authorization: "Basic cXVhbjphYmMxMjM=",
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "image/jpeg",
     },
-    body: Body.form({ fileData: { file: "https://xyz.jpg" } }),
+    body: new Body("File", { file: "https://xyz.jpg" }),
   };
   const newFetchConfig = handleBody(requestConfig, initialFetchConfig);
   // console.log("=========fileNewFetchConfig", newFetchConfig);

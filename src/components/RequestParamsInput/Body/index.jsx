@@ -37,14 +37,14 @@ const ContentType = ({
       </label>
       <DropdownInput
         options={["none", "raw", "form-data", "urlencoded", "file"]}
-        selected={selected}
+        value={selected}
         onChange={onChangeType}
         buttonClassName="w-24"
       />
       {selected === "raw" && (
         <DropdownInput
           options={["text", "json", "xml", "yaml"]}
-          selected={selectedLanguage}
+          value={selectedLanguage}
           onChange={onChangeLanguage}
         />
       )}

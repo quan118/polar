@@ -12,12 +12,12 @@ const Row = ({
   onChangeKey,
   onChangeValue,
 }) => (
-  <div className="flex flex-1 items-center border-b">
+  <div className="flex flex-1 items-center border-b bg-white">
     <input
       type="text"
       autoCapitalize="off"
       autoCorrect="off"
-      className="m-[0.5px] flex h-6 flex-1 rounded-none border-y-0 border-l-0 border-slate-200 text-xs font-medium text-black shadow-none"
+      className="m-[0.5px] flex h-6 flex-1 rounded-none border-y-0 border-l-0 border-slate-200 bg-transparent text-xs font-medium text-black shadow-none"
       placeholder={keyPlaceholder}
       defaultValue={key_}
       onChange={onChangeKey}
@@ -26,7 +26,7 @@ const Row = ({
       type="text"
       autoCapitalize="off"
       autoCorrect="off"
-      className="m-[0.5px] flex h-6 flex-1 rounded-none border-none text-xs font-medium text-black shadow-none"
+      className="m-[0.5px] flex h-6 flex-1 rounded-none border-none bg-transparent text-xs font-medium text-black shadow-none"
       placeholder={valuePlaceholder}
       defaultValue={value}
       onChange={onChangeValue}

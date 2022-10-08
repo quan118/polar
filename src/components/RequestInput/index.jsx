@@ -1,15 +1,11 @@
 import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-import uuid from "react-uuid";
-import { fetch } from "@tauri-apps/api/http";
 import {
   updateCollectionItemAction,
   updateCollectionItemUrlKeyAction,
 } from "../../store/modules/collectionItem";
-import { createResponseAction } from "../../store/modules/response";
-
-import { buildFetchConfig } from "../../utils/request";
+import { sendRequestAction } from "../../store/modules/common";
 import SimpleListBox from "../SimpleListBox";
 
 const methods = [
@@ -25,13 +21,11 @@ const methods = [
 const getMethodObjectFromName = (name) =>
   methods.find((item) => item.name === name);
 
-const RequestInput = ({ requestId, onResponse }) => {
+const RequestInput = ({ requestId }) => {
   const dispatch = useDispatch();
   const request = useSelector((store) =>
     _.get(store, `collectionItem.byId.${requestId}`)
   );
-
-  console.log("REQUEST:", request);
 
   const handleSelectMethod = useCallback(
     (method) => {
@@ -46,61 +40,39 @@ const RequestInput = ({ requestId, onResponse }) => {
     );
   }, []);
 
-  const handleSendRequest = useCallback(async () => {
-    try {
-      const fetchConfig = buildFetchConfig(request);
-      console.log("FETCH CONFIG:");
-      console.log(fetchConfig);
-      const fetchOptions = { ...fetchConfig };
-      delete fetchOptions.url;
-      console.log("FETCH OPTIONS:");
-      console.log(fetchOptions);
-      const response = await fetch(fetchConfig.url, fetchOptions);
-      console.log("RESPONSE:");
-      console.log(response);
-      console.log("Response data");
-      console.log(response.data);
-      const responseId = uuid();
-      dispatch(
-        createResponseAction({
-          id: responseId,
-          requestId: request.id,
-          name: "",
-          originalRequest: {}, // TODO: Update this field,
-          status: `${response.status} ${response.ok ? "OK" : ""}`,
-          code: response.status,
-          header: Object.keys(response.headers).map((key) => ({
-            [key]: response.headers[key],
-          })),
-          cookie: [],
-          body: response.data,
-        })
-      );
-      onResponse(responseId);
-    } catch (error) {
-      console.log("handleSendRequest error");
-      console.log(error);
-    }
-  }, [request]);
+  const handleSendRequest = useCallback(() => {
+    dispatch(sendRequestAction(requestId));
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        handleSendRequest();
+      }
+    },
+    [handleSendRequest]
+  );
 
   return (
-    <div className="flex items-stretch bg-white">
+    <div className="flex h-8 items-stretch bg-white">
       <SimpleListBox
         data={methods}
         defaultValue={getMethodObjectFromName(request.method)}
         onChange={handleSelectMethod}
       />
       <input
+        type="text"
         name="url"
         id="url"
-        className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 text-black focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        placeholder="https://"
+        className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 focus:border-indigo-500 focus:ring-indigo-500"
+        placeholder="URL"
         defaultValue={request.url?.raw}
         onChange={handleChangeURL}
+        onKeyDown={handleKeyDown}
       />
       <button
         type="button"
-        className="mx-2 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="mx-2 inline-flex items-center rounded-md border border-transparent bg-indigo-500 px-3 py-2 text-xs font-bold font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         onClick={handleSendRequest}
       >
         Send

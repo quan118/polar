@@ -32,7 +32,7 @@ const AuthApiKeyTypeForm = ({
       </label>
       <DropdownInput
         options={["Headers", "Query params"]}
-        selected={defaultPassBy}
+        value={defaultPassBy}
         onChange={onChangePassBy}
         buttonClassName="w-28 py-1"
       />

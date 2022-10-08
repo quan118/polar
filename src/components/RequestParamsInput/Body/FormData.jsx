@@ -65,7 +65,7 @@ const FormData = ({ requestId }) => {
 
   const handleChangeKey = useCallback(
     (idx) => (event) => {
-      formdata[idx].key = event.target.key;
+      formdata[idx].key = event.target.value;
       dispatch(
         updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
       );

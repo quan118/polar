@@ -72,7 +72,7 @@ const URLEncoded = ({ requestId }) => {
 
   const handleChangeKey = useCallback(
     (idx) => (event) => {
-      urlencoded[idx].key = event.target.key;
+      urlencoded[idx].key = event.target.value;
       dispatch(
         updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
           ...urlencoded,

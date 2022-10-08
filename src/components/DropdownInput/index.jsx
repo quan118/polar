@@ -3,8 +3,8 @@ import { Listbox, Transition } from "@headlessui/react";
 import { clsx } from "clsx";
 import { ChevronDown } from "react-bootstrap-icons";
 
-const DropdownInput = ({ options, selected, onChange, buttonClassName }) => (
-  <Listbox value={selected} onChange={onChange}>
+const DropdownInput = ({ options, value, onChange, buttonClassName }) => (
+  <Listbox value={value} onChange={onChange}>
     <div className="relative">
       <Listbox.Button
         className={clsx(
@@ -12,7 +12,7 @@ const DropdownInput = ({ options, selected, onChange, buttonClassName }) => (
           buttonClassName
         )}
       >
-        <span className="block truncate text-xs text-black">{selected}</span>
+        <span className="block truncate text-xs text-black">{value}</span>
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
           <ChevronDown size={8} color="rgb(115, 115, 115)" />
         </span>
