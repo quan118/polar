@@ -1,4 +1,4 @@
-# 📮 Postpone
+# 🐻‍❄️ Polar Desktop
 
 Another HTTP Client
 
