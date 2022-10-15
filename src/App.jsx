@@ -6,7 +6,7 @@ import "./App.css";
 import { Sidebar, Library, Editor } from "./components";
 function App() {
   return (
-    <div className="flex h-screen bg-gray-200">
+    <div className="fixed flex h-screen w-screen overflow-hidden bg-gray-200">
       <Sidebar />
       <Split
         className="flex flex-1"

@@ -26,6 +26,7 @@ const RequestInput = ({ requestId }) => {
   const request = useSelector((store) =>
     _.get(store, `collectionItem.byId.${requestId}`)
   );
+  const sendingRequest = useSelector((store) => store.common.sendingRequest);
 
   const handleSelectMethod = useCallback(
     (method) => {
@@ -41,8 +42,9 @@ const RequestInput = ({ requestId }) => {
   }, []);
 
   const handleSendRequest = useCallback(() => {
+    if (sendingRequest) return;
     dispatch(sendRequestAction(requestId));
-  }, []);
+  }, [sendingRequest]);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -54,7 +56,7 @@ const RequestInput = ({ requestId }) => {
   );
 
   return (
-    <div className="flex h-8 items-stretch bg-white">
+    <div className="z-10 flex h-8 items-stretch bg-white">
       <SimpleListBox
         data={methods}
         defaultValue={getMethodObjectFromName(request.method)}
@@ -64,7 +66,7 @@ const RequestInput = ({ requestId }) => {
         type="text"
         name="url"
         id="url"
-        className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 focus:border-indigo-500 focus:ring-indigo-500"
+        className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 shadow-none focus:border-indigo-500 focus:ring-indigo-500"
         placeholder="URL"
         defaultValue={request.url?.raw}
         onChange={handleChangeURL}

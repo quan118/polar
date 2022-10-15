@@ -11,6 +11,7 @@ const Row = ({
   onDelete,
   onChangeKey,
   onChangeValue,
+  readOnly,
 }) => (
   <div className="flex flex-1 items-center border-b">
     <input
@@ -19,6 +20,7 @@ const Row = ({
       placeholder={keyPlaceholder}
       defaultValue={key_}
       onChange={onChangeKey}
+      readOnly={readOnly}
     />
     <input
       type="text"
@@ -26,13 +28,18 @@ const Row = ({
       placeholder={valuePlaceholder}
       defaultValue={value}
       onChange={onChangeValue}
+      readOnly={readOnly}
     />
-    <div className="px-2" onClick={onToggle}>
-      {enabled ? <Check2Circle color="green" /> : <Circle color="green" />}
-    </div>
-    <div className="px-2" onClick={onDelete}>
-      <Trash color="red" />
-    </div>
+    {!readOnly && (
+      <>
+        <div className="px-2" onClick={onToggle}>
+          {enabled ? <Check2Circle color="green" /> : <Circle color="green" />}
+        </div>
+        <div className="px-2" onClick={onDelete}>
+          <Trash color="red" />
+        </div>
+      </>
+    )}
   </div>
 );
 
@@ -44,6 +51,7 @@ const KVForm = ({
   onDelete,
   onChangeKey,
   onChangeValue,
+  readOnly = false,
 }) => {
   return (
     <div className="flex flex-col">
@@ -55,10 +63,11 @@ const KVForm = ({
           value={item.value}
           valuePlaceholder={valuePlaceholder}
           enabled={item.enabled}
-          onToggle={onToggle(idx)}
-          onDelete={onDelete(idx)}
-          onChangeKey={onChangeKey(idx)}
-          onChangeValue={onChangeValue(idx)}
+          onToggle={onToggle && onToggle(idx)}
+          onDelete={onDelete && onDelete(idx)}
+          onChangeKey={onChangeKey && onChangeKey(idx)}
+          onChangeValue={onChangeValue && onChangeValue(idx)}
+          readOnly={readOnly}
         />
       ))}
     </div>

@@ -3,23 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
+import Header from "../Header";
 import KeyValueInput from "./KeyValueInput";
 import { updateCollectionItemHeaderAction } from "../../store/modules/collectionItem";
-
-const HeaderList = ({ onClearAll, onAddNew }) => (
-  <div className="flex flex-1 items-center justify-between border-b py-2 px-2">
-    <label className="text-xs font-semibold text-slate-500">Header List</label>
-    <div className="flex">
-      <Trash
-        className="mr-2"
-        size={18}
-        color="rgb(115, 115, 115)"
-        onClick={onClearAll}
-      />
-      <Plus size={18} color="rgb(115, 115, 115)" onClick={onAddNew} />
-    </div>
-  </div>
-);
 
 const Headers = ({ requestId }) => {
   const dispatch = useDispatch();
@@ -39,7 +25,16 @@ const Headers = ({ requestId }) => {
   }, [dispatch, request]);
 
   const handleClearAll = useCallback(() => {
-    dispatch(updateCollectionItemHeaderAction(requestId, []));
+    dispatch(
+      updateCollectionItemHeaderAction(requestId, [
+        {
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        },
+      ])
+    );
   }, [dispatch]);
 
   const handleToggle = useCallback(
@@ -53,7 +48,16 @@ const Headers = ({ requestId }) => {
   const handleDelete = useCallback(
     (idx) => () => {
       request.header.splice(idx, 1);
-      dispatch(updateCollectionItemHeaderAction(requestId, request.header));
+      const data = request.header;
+      if (data.length === 0) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemHeaderAction(requestId, data));
     },
     [dispatch, request]
   );
@@ -61,7 +65,16 @@ const Headers = ({ requestId }) => {
   const handleChangeKey = useCallback(
     (idx) => (event) => {
       request.header[idx].key = event.target.value;
-      dispatch(updateCollectionItemHeaderAction(requestId, request.header));
+      const data = request.header;
+      if (idx === data.length - 1) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemHeaderAction(requestId, data));
     },
     [dispatch, request]
   );
@@ -69,14 +82,31 @@ const Headers = ({ requestId }) => {
   const handleChangeValue = useCallback(
     (idx) => (event) => {
       request.header[idx].value = event.target.value;
-      dispatch(updateCollectionItemHeaderAction(requestId, request.header));
+      const data = request.header;
+      if (idx === data.length - 1) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemHeaderAction(requestId, data));
     },
     [dispatch, request]
   );
 
   return (
     <>
-      <HeaderList onClearAll={handleClearAll} onAddNew={handleAddNew} />
+      <Header title="Header List">
+        <Trash
+          className="mr-2"
+          size={18}
+          color="rgb(115, 115, 115)"
+          onClick={handleClearAll}
+        />
+        <Plus size={18} color="rgb(115, 115, 115)" onClick={handleAddNew} />
+      </Header>
       <KeyValueInput
         data={request.header || []}
         keyPlaceholder={"Header"}

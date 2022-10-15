@@ -47,7 +47,7 @@ const Body = ({ response }) => {
   );
 
   return (
-    <>
+    <div className="flex flex-1 flex-col overflow-hidden">
       <Header title="Body Response">
         <DropdownInput
           options={["raw", "json", "yaml", "xml"]}
@@ -56,11 +56,16 @@ const Body = ({ response }) => {
         />
       </Header>
       <CodeMirror
-        value={JSON.stringify(response?.body || "", null, 2)}
-        style={{ fontSize: 12 }}
+        style={{
+          fontSize: 12,
+          overflow: "scroll",
+          height: "100%",
+        }}
         extensions={[EditorView.lineWrapping, ...extensions]}
+        editable={false}
+        value={JSON.stringify(response?.body || "", null, 2)}
       />
-    </>
+    </div>
   );
 };
 

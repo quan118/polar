@@ -18,7 +18,7 @@ const RequestParamsInput = ({ requestId }) => {
   const handleChangeTab = useCallback((tab) => () => setTab(tab), [setTab]);
 
   return (
-    <div className="overflow-hidden bg-white">
+    <div className="flex flex-col overflow-hidden bg-white">
       <Tabs tabs={tabs} selected={tab} onChange={handleChangeTab} />
       {tab.key === "PARAMS" && <Parameters requestId={requestId} />}
       {tab.key === "HEADERS" && <Headers requestId={requestId} />}

@@ -34,13 +34,15 @@ export const buildFetchConfig = (requestConfig) => {
 
   const requestHeaders = {};
   requestConfig.header?.forEach((item) => {
-    if (!item.enabled) return;
+    if (!item.enabled || !(item.key?.length > 0 && item.value?.length > 0))
+      return;
     requestHeaders[item.key] = item.value;
   });
 
   const requestQueries = {};
   requestConfig.url?.query?.forEach((item) => {
-    if (!item.enabled) return;
+    if (!item.enabled || !(item.key?.length > 0 && item.value?.length > 0))
+      return;
     requestQueries[item.key] = item.value;
   });
 

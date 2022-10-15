@@ -50,7 +50,7 @@ const KeyValueInput = ({
   onChangeValue,
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-scroll">
       {data.map((item, idx) => (
         <Row
           key={item.id}

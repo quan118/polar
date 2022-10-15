@@ -44,6 +44,28 @@ const defaultState = {
       method: "GET",
       name: "request",
       parentId: "drafts",
+      header: [
+        {
+          id: "0",
+          key: "",
+          value: "",
+          enabled: true,
+        },
+      ],
+      url: {
+        raw: "",
+        protocol: "http",
+        host: ["httpbin", "org"],
+        path: ["get"],
+        query: [
+          {
+            id: "0",
+            key: "",
+            value: "",
+            enabled: true,
+          },
+        ],
+      },
     },
     request_sev: {
       id: "request_sev",

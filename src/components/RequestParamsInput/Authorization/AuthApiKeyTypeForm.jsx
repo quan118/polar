@@ -10,7 +10,7 @@ const AuthApiKeyTypeForm = ({
   onChangePassBy,
 }) => (
   <>
-    <div className="flex flex-1 items-center border-b">
+    <div className="flex items-center border-b">
       <input
         type="text"
         className="flex h-6 flex-1 rounded-none border-y-0 border-r border-l-0 border-slate-200 bg-white text-xs font-medium text-black shadow-none"
@@ -26,7 +26,7 @@ const AuthApiKeyTypeForm = ({
         onChange={onChangeValue}
       />
     </div>
-    <div className="flex flex-1 items-center border-t-0 border-b">
+    <div className="flex items-center border-t-0 border-b">
       <label className="ml-1 mr-4 text-xs font-semibold text-slate-500">
         Pass by
       </label>

@@ -4,24 +4,8 @@ import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import KeyValueInput from "./KeyValueInput";
+import Header from "../Header";
 import { updateCollectionItemQueryAction } from "../../store/modules/collectionItem";
-
-const QueryParameters = ({ onClearAll, onAddNew }) => (
-  <div className="flex flex-1 items-center justify-between border-b py-2 px-2">
-    <label className="text-xs font-semibold text-slate-500">
-      Query Parameters
-    </label>
-    <div className="flex">
-      <Trash
-        className="mr-2"
-        size={18}
-        color="rgb(115, 115, 115)"
-        onClick={onClearAll}
-      />
-      <Plus size={18} color="rgb(115, 115, 115)" onClick={onAddNew} />
-    </div>
-  </div>
-);
 
 const Parameters = ({ requestId }) => {
   const dispatch = useDispatch();
@@ -41,7 +25,16 @@ const Parameters = ({ requestId }) => {
   }, [dispatch, request]);
 
   const handleClearAll = useCallback(() => {
-    dispatch(updateCollectionItemQueryAction(requestId, []));
+    dispatch(
+      updateCollectionItemQueryAction(requestId, [
+        {
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        },
+      ])
+    );
   }, [dispatch]);
 
   const handleToggle = useCallback(
@@ -55,7 +48,16 @@ const Parameters = ({ requestId }) => {
   const handleDelete = useCallback(
     (idx) => () => {
       request.url.query.splice(idx, 1);
-      dispatch(updateCollectionItemQueryAction(requestId, request.url.query));
+      const data = request.url.query;
+      if (data.length === 0) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemQueryAction(requestId, data));
     },
     [dispatch, request]
   );
@@ -63,7 +65,16 @@ const Parameters = ({ requestId }) => {
   const handleChangeKey = useCallback(
     (idx) => (event) => {
       request.url.query[idx].key = event.target.value;
-      dispatch(updateCollectionItemQueryAction(requestId, request.url?.query));
+      const data = request.url.query;
+      if (idx === data.length - 1) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemQueryAction(requestId, data));
     },
     [dispatch, request]
   );
@@ -71,14 +82,31 @@ const Parameters = ({ requestId }) => {
   const handleChangeValue = useCallback(
     (idx) => (event) => {
       request.url.query[idx].value = event.target.value;
-      dispatch(updateCollectionItemQueryAction(requestId, request.url?.query));
+      const data = request.url.query;
+      if (idx === data.length - 1) {
+        data.push({
+          id: uuid(),
+          key: "",
+          value: "",
+          enabled: true,
+        });
+      }
+      dispatch(updateCollectionItemQueryAction(requestId, data));
     },
     [dispatch, request]
   );
 
   return (
     <>
-      <QueryParameters onClearAll={handleClearAll} onAddNew={handleAddNew} />
+      <Header title="Query Parameters">
+        <Trash
+          className="mr-2"
+          size={18}
+          color="rgb(115, 115, 115)"
+          onClick={handleClearAll}
+        />
+        <Plus size={18} color="rgb(115, 115, 115)" onClick={handleAddNew} />
+      </Header>
       <KeyValueInput
         data={request.url?.query || []}
         keyPlaceholder={"Parameter"}
