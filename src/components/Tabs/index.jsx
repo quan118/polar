@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { classNames } from "../../utils/common";
+import { classNames } from "@/utils/common";
 
 const Tabs = ({ tabs, selected, onChange, rightComponent }) => (
   <div className="border-b border-gray-200">

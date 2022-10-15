@@ -4,7 +4,7 @@ import _ from "lodash";
 import DropdownInput from "../../DropdownInput";
 import AuthBasicTypeForm from "./AuthBasicTypeForm";
 import AuthApiKeyTypeForm from "./AuthApiKeyTypeForm";
-import { updateCollectionItemAuthKeyAction } from "../../../store/modules/collectionItem";
+import { updateCollectionItemAuthKeyAction } from "@/store/modules/collectionItem";
 
 const AuthorizationType = ({ selected, onChangeType }) => {
   return (

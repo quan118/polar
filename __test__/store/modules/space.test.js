@@ -3,7 +3,7 @@ import spaceReducer, {
   createSpaceAction,
   deleteSpaceAction,
   updateSpaceAction,
-} from "../../../src/store/modules/space";
+} from "@/store/modules/space";
 
 test("should add a space to store", () => {
   const previousState = {

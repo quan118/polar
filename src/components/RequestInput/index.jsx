@@ -4,8 +4,8 @@ import _ from "lodash";
 import {
   updateCollectionItemAction,
   updateCollectionItemUrlKeyAction,
-} from "../../store/modules/collectionItem";
-import { sendRequestAction } from "../../store/modules/common";
+} from "@/store/modules/collectionItem";
+import { sendRequestAction } from "@/store/modules/common";
 import SimpleListBox from "../SimpleListBox";
 
 const methods = [
@@ -56,7 +56,7 @@ const RequestInput = ({ requestId }) => {
   );
 
   return (
-    <div className="z-10 flex h-8 items-stretch bg-white">
+    <div className="z-10 flex h-8 select-none items-stretch bg-white">
       <SimpleListBox
         data={methods}
         defaultValue={getMethodObjectFromName(request.method)}

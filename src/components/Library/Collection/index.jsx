@@ -3,7 +3,7 @@ import { QuestionCircle, Archive, Plus } from "react-bootstrap-icons";
 import Tippy from "@tippyjs/react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-import { createCollectionItemAction } from "../../../store/modules/collectionItem";
+import { createCollectionItemAction } from "@/store/modules/collectionItem";
 import { EditDialog } from "./Directory/EditDialog";
 import uuid from "react-uuid";
 export function Collection() {

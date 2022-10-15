@@ -2,7 +2,7 @@ import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import More from "./More";
 import _ from "lodash";
-import { setCurrentRequestIdAction } from "../../../../store/modules/common";
+import { setCurrentRequestIdAction } from "@/store/modules/common";
 const Request = ({ id }) => {
   const request = useSelector((store) =>
     _.get(store, `collectionItem.byId.${id}`)

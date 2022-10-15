@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { open } from "@tauri-apps/api/dialog";
 import _ from "lodash";
 import { X } from "react-bootstrap-icons";
-import { updateCollectionItemBodyKeyAction } from "../../../store/modules/collectionItem";
+import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
 
 const File = ({ requestId }) => {
   console.log("REQUEST ID:", requestId);

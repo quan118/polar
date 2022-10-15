@@ -8,7 +8,7 @@ import DropdownInput from "../../DropdownInput";
 import FormData from "./FormData";
 import URLEncoded from "./URLEncoded";
 import File from "./File";
-import { updateCollectionItemBodyKeyAction } from "../../../store/modules/collectionItem";
+import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
 
 // const myTheme = createTheme({
 //   theme: "light",

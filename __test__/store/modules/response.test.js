@@ -3,7 +3,7 @@ import responseReducer, {
   createResponseAction,
   deleteResponseAction,
   updateResponseAction,
-} from "../../../src/store/modules/response";
+} from "@/store/modules/response";
 
 test("should add a response to store", () => {
   const previousState = {

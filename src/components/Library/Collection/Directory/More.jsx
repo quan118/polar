@@ -16,7 +16,7 @@ import {
   createCollectionItemAction,
   createResponseItemAction,
   deleteCollectionItemAction,
-} from "../../../../store/modules/collectionItem";
+} from "@/store/modules/collectionItem";
 const More = ({ id, isDir }) => {
   // const collectionItems = useSelector((store) =>
   //   _.get(store, `collectionItem.byId`)

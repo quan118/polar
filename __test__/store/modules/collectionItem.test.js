@@ -3,7 +3,7 @@ import collectionItemReducer, {
   createCollectionItemAction,
   deleteCollectionItemAction,
   updateCollectionItemAction,
-} from "../../../src/store/modules/collectionItem";
+} from "@/store/modules/collectionItem";
 
 test("should add a collectionItem to store", () => {
   const previousState = {

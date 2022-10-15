@@ -1,5 +1,5 @@
 import { Folder, Folder2Open } from "react-bootstrap-icons";
-import { updateCollectionItemCollapseKey } from "../../../../store/modules/collectionItem";
+import { updateCollectionItemCollapseKey } from "@/store/modules/collectionItem";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import Request from "./Request";

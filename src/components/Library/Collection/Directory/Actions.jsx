@@ -6,7 +6,7 @@ import uuid from "react-uuid";
 import {
   createCollectionItemAction,
   createResponseItemAction,
-} from "../../../../store/modules/collectionItem";
+} from "@/store/modules/collectionItem";
 
 const Actions = ({ id }) => {
   const dispatch = useDispatch();

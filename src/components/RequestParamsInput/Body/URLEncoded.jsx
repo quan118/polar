@@ -4,7 +4,7 @@ import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import KVForm from "../../KVForm";
-import { updateCollectionItemBodyKeyAction } from "../../../store/modules/collectionItem";
+import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
 
 const Header = ({ onClearAll, onAddNew }) => (
   <div className="flex flex-1 items-center justify-between border-y py-2 px-2">

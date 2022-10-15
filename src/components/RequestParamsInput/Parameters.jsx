@@ -5,7 +5,7 @@ import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import KeyValueInput from "./KeyValueInput";
 import Header from "../Header";
-import { updateCollectionItemQueryAction } from "../../store/modules/collectionItem";
+import { updateCollectionItemQueryAction } from "@/store/modules/collectionItem";
 
 const Parameters = ({ requestId }) => {
   const dispatch = useDispatch();

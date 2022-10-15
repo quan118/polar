@@ -6,7 +6,7 @@ import { Body } from "@tauri-apps/api/http";
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { SEND_REQUEST, updateCommonAction } from "../modules/common";
 import { createResponseAction } from "../modules/response";
-import { buildFetchConfig } from "../../utils/request";
+import { buildFetchConfig } from "@/utils/request";
 
 function* handleSendRequest({ requestId }) {
   try {

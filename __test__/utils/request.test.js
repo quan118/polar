@@ -1,9 +1,5 @@
 import { expect, test } from "vitest";
-import {
-  buildFetchConfig,
-  handleAuth,
-  handleBody,
-} from "../../src/utils/request";
+import { buildFetchConfig, handleAuth, handleBody } from "@/utils/request";
 import { Body } from "@tauri-apps/api/http";
 
 test("should handle basic auth successfully", () => {

@@ -1,4 +1,4 @@
-import { removeUndefinedKeys } from "../../utils/common";
+import { removeUndefinedKeys } from "@/utils/common";
 
 export const CREATE_SPACE = "CREATE_SPACE";
 export const DELETE_SPACE = "DELETE_SPACE";

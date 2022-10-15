@@ -1,4 +1,4 @@
-import { removeUndefinedKeys } from "../../utils/common";
+import { removeUndefinedKeys } from "@/utils/common";
 
 export const CREATE_COLLECTION = "CREATE_COLLECTION";
 export const DELETE_COLLECTION = "DELETE_COLLECTION";
