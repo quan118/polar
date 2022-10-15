@@ -1,4 +1,5 @@
 export const CREATE_COLLECTION_ITEM = "CREATE_COLLECTION_ITEM";
+export const CREATE_RESPONSE_ITEM = "CREATE_REST_ITEM";
 export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
 export const UPDATE_COLLECTION_ITEM = "UPDATE_COLLECTION_ITEM";
 export const UPDATE_COLLECTION_ITEM_QUERY = "UPDATE_COLLECTION_ITEM_QUERY";
@@ -8,6 +9,8 @@ export const UPDATE_COLLECTION_ITEM_AUTH_KEY =
 export const UPDATE_COLLECTION_ITEM_BODY_KEY =
   "UPDATE_COLLECTION_ITEM_BODY_KEY"; // update a key in body object of collection item
 export const UPDATE_COLLECTION_ITEM_URL_KEY = "UPDATE_COLLECTION_ITEM_URL_KEY";
+export const UPDATE_COLLECTION_ITEM_COLLAPSE_KEY =
+  "UPDATE_COLLECTION_ITEM_COLLAPSE_KEY";
 
 const defaultState = {
   byId: {
@@ -15,12 +18,61 @@ const defaultState = {
       id: "drafts",
       type: "group",
       name: "drafts",
-      items: ["draft0"],
+      subGroups: [],
+      requests: ["draft0"],
+      // items: ["draft0"],
+      // collapse: true | false
+    },
+    twitter: {
+      id: "twitter",
+      type: "group",
+      name: "twitter-api",
+      subGroups: ["tesla", "google"],
+      requests: [],
+    },
+    tesla: {
+      id: "tesla",
+      type: "group",
+      name: "tesla-api",
+      subGroups: [],
+      requests: ["request_sev"],
+      parentId: "twitter",
     },
     draft0: {
       id: "draft0",
       type: "request",
       method: "GET",
+      name: "request",
+      parentId: "drafts",
+    },
+    request_sev: {
+      id: "request_sev",
+      type: "request",
+      method: "GET",
+      name: "tesla_request",
+      parentId: "tesla",
+    },
+    google: {
+      id: "google",
+      type: "group",
+      name: "google-api",
+      subGroups: [],
+      requests: ["req_google", "apple_req"],
+      parentId: "twitter",
+    },
+    req_google: {
+      id: "req_google",
+      type: "request",
+      method: "GET",
+      name: "google_request",
+      parentId: "google",
+    },
+    apple_req: {
+      id: "apple_req",
+      type: "request",
+      method: "GET",
+      name: "apple_request",
+      parentId: "google",
     },
   },
 };
@@ -105,23 +157,78 @@ export default function collectionItemReducer(state = defaultState, action) {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];
       if (noId || idExisted) return state;
-      return {
-        byId: {
-          ...state.byId,
-          [action.payload.id]: { ...action.payload },
-        },
+
+      const byId = {
+        ...state.byId,
+        [action.payload.id]: { ...action.payload },
       };
+
+      if (action.parentId?.length > 0) {
+        byId[action.parentId] = {
+          ...state.byId[action.parentId],
+          subGroups: [
+            ...state.byId[action.parentId].subGroups,
+            action.payload.id,
+          ],
+        };
+      }
+
+      return { byId };
     }
+
+    case CREATE_RESPONSE_ITEM: {
+      const noId = !(action.payload.id.length > 0);
+      const idExisted = !!state.byId[action.payload.id];
+      if (noId || idExisted) return state;
+
+      const byId = {
+        ...state.byId,
+        [action.payload.id]: { ...action.payload },
+      };
+
+      if (action.parentId?.length > 0) {
+        byId[action.parentId] = {
+          ...state.byId[action.parentId],
+          requests: [
+            ...state.byId[action.parentId].requests,
+            action.payload.id,
+          ],
+        };
+      }
+
+      return { byId };
+    }
+
     case DELETE_COLLECTION_ITEM: {
       const noId = !(action.id.length > 0);
       if (noId) return state;
+      const parentId = state.byId[action.id].parentId;
+
       delete state.byId[action.id];
+
+      if (parentId) {
+        state.byId[parentId] = {
+          ...state.byId[parentId],
+          subGroups: [
+            ...state.byId[parentId].subGroups.filter(
+              (item) => item != action.id
+            ),
+          ],
+          requests: [
+            ...state.byId[parentId].requests.filter(
+              (item) => item != action.id
+            ),
+          ],
+        };
+      }
+
       return {
         byId: {
           ...state.byId,
         },
       };
     }
+
     case UPDATE_COLLECTION_ITEM: {
       const noId = !(action.id.length > 0);
       const idExisted = !!state.byId[action.id];
@@ -224,17 +331,38 @@ export default function collectionItemReducer(state = defaultState, action) {
         },
       };
     }
+    case UPDATE_COLLECTION_ITEM_COLLAPSE_KEY: {
+      const noId = !(action.id.length > 0);
+      const idExisted = !!state.byId[action.id];
+      if (noId || !idExisted) return state;
+      return {
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            collapse: action.payload,
+          },
+        },
+      };
+    }
     default:
       return state;
   }
 }
 
-export const createCollectionItemAction = (payload) => ({
+export const createCollectionItemAction = (payload, parentId) => ({
   type: CREATE_COLLECTION_ITEM,
+  parentId,
   payload,
 });
 
-export const deleteCollectionItemAction = ({ id }) => ({
+export const createResponseItemAction = (payload, parentId) => ({
+  type: CREATE_RESPONSE_ITEM,
+  parentId,
+  payload,
+});
+
+export const deleteCollectionItemAction = (id) => ({
   type: DELETE_COLLECTION_ITEM,
   id,
 });
@@ -275,5 +403,11 @@ export const updateCollectionItemUrlKeyAction = (id, key, payload) => ({
   type: UPDATE_COLLECTION_ITEM_URL_KEY,
   id,
   key,
+  payload,
+});
+
+export const updateCollectionItemCollapseKey = (id, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_COLLAPSE_KEY,
+  id,
   payload,
 });

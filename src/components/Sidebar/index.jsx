@@ -1,11 +1,11 @@
 import { memo, useState } from "react";
 import {
-  BsBook,
-  BsGlobe2,
-  BsGearWideConnected,
-  BsCodeSlash,
-  BsLink,
-} from "react-icons/bs";
+  Book,
+  Globe2,
+  GearWideConnected,
+  CodeSlash,
+  Link,
+} from "react-bootstrap-icons";
 
 const Sidebar = () => {
   const [menuSelected, setMenuSelected] = useState([SIDEBAR[0].name]);
@@ -25,7 +25,7 @@ const Sidebar = () => {
             onClick={() => setMenuSelected(item.name)}
           >
             <i
-              className={`w-4 text-gray-800 opacity-70 ${
+              className={` p-1 text-gray-800 opacity-70 ${
                 menuSelected == item.name && "text-gray-900 opacity-100"
               }`}
             >
@@ -49,23 +49,23 @@ const Sidebar = () => {
 const SIDEBAR = [
   {
     name: "REST",
-    icon: <BsLink />,
+    icon: <Link />,
   },
   {
     name: "GraphQL",
-    icon: <BsCodeSlash />,
+    icon: <CodeSlash />,
   },
   {
     name: "Realtime",
-    icon: <BsGlobe2 />,
+    icon: <Globe2 />,
   },
   {
     name: "Docs",
-    icon: <BsBook />,
+    icon: <Book />,
   },
   {
     name: "Settings",
-    icon: <BsGearWideConnected />,
+    icon: <GearWideConnected />,
   },
 ];
 

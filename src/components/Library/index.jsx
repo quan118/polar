@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { BsClock, BsFolder, BsLayers } from "react-icons/bs";
+import { Clock, Folder, Layers } from "react-bootstrap-icons";
 import { History } from "./History";
 import { Collection } from "./Collection/index";
 import { Environment } from "./Environment";
@@ -52,13 +52,13 @@ const LibSideBar = ({ onChangeLibSideBarIdx }) => {
 };
 const BUTTONS = [
   {
-    icon: <BsClock />,
+    icon: <Clock />,
     label: "History",
     isOpen: true,
     component: <History />,
   },
   {
-    icon: <BsFolder />,
+    icon: <Folder />,
     label: "Collections",
     isOpen: false,
     component: (
@@ -68,7 +68,7 @@ const BUTTONS = [
     ),
   },
   {
-    icon: <BsLayers />,
+    icon: <Layers />,
     label: "Environments",
     isOpen: false,
     component: <Environment />,

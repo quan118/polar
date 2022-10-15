@@ -183,9 +183,7 @@ test("should delete collectionItem from store", () => {
       },
     },
   };
-  const action = deleteCollectionItemAction({
-    id: "t2",
-  });
+  const action = deleteCollectionItemAction("t2");
   const nextState = {
     byId: {},
   };

@@ -1,4 +1,4 @@
-import { BsQuestionCircle, BsTrash } from "react-icons/bs";
+import { QuestionCircle, Trash } from "react-bootstrap-icons";
 
 export function Environment() {
   return (
@@ -11,10 +11,10 @@ export function Environment() {
         />
         <div className="flex items-center gap-x-2">
           <i className="cursor-pointer px-2 text-gray-700 opacity-80 transition-none duration-200 hover:opacity-100">
-            <BsQuestionCircle className="text-gray-500" />
+            <QuestionCircle className="text-gray-500" />
           </i>
           <i className="cursor-pointer text-gray-700 opacity-80 transition-none duration-200 hover:opacity-100">
-            <BsTrash className=" text-gray-500" />
+            <Trash className=" text-gray-500" />
           </i>
         </div>
       </div>

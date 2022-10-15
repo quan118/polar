@@ -1,16 +1,16 @@
+import { Fragment, useState } from "react";
 import { Transition, Dialog } from "@headlessui/react";
-import { BsXLg } from "react-icons/bs";
-import { useCollections } from "../Providers/Collections-provider";
-import { useState, Fragment } from "react";
-export function EditFolderDialog() {
-  const { folderEdit, setFolderEdit, handleEditFolder } = useCollections();
+import { XLg } from "react-bootstrap-icons";
+import { useCollections } from "../../Providers/Collections-provider";
+export function EditRestDialog() {
+  const { restEdit, setRestEdit, handleEditRest } = useCollections();
   const [newName, setNewName] = useState("");
-
+  console.log("RestEdit", restEdit);
   return (
-    <Transition.Root show={folderEdit != null} as={Fragment}>
+    <Transition.Root show={restEdit != null} as={Fragment}>
       <Dialog
-        open={folderEdit != null}
-        onClose={() => setFolderEdit(null)}
+        open={restEdit != null}
+        onClose={() => setRestEdit(null)}
         as="div"
         className="fixed inset-0 z-10 flex items-start justify-center overflow-y-auto text-gray-700 backdrop-blur-sm"
       >
@@ -20,12 +20,12 @@ export function EditFolderDialog() {
               "mb-4 flex items-center justify-between px-6 pb-2 text-lg font-bold"
             }
           >
-            <div className="">Edit Folder</div>
+            <div className="">Edit Request</div>
             <i
               className="cursor-pointer text-xs text-gray-500 transition-all duration-200 hover:text-gray-800"
-              onClick={() => setFolderEdit(null)}
+              onClick={() => setRestEdit(null)}
             >
-              <BsXLg />
+              <XLg />
             </i>
           </Dialog.Title>
           <Dialog.Panel
@@ -41,10 +41,10 @@ export function EditFolderDialog() {
                 type="text"
                 name="name"
                 id="name"
-                defaultValue={folderEdit?.label}
+                defaultValue={restEdit?.name}
                 onChange={(e) => setNewName(e.target.value)}
                 className="m-0 block w-full bg-white p-0 text-gray-700 shadow-none transition-all duration-300 focus:ring-0 sm:text-xs"
-                placeholder={folderEdit?.label || "Name"}
+                placeholder={restEdit?.name || "Name"}
               />
             </div>
           </Dialog.Panel>
@@ -52,13 +52,13 @@ export function EditFolderDialog() {
             <div className="flex items-center gap-4">
               <button
                 className="rounded-md bg-indigo-500 py-1.5 text-sm text-white transition-all duration-300 hover:bg-indigo-700"
-                onClick={() => handleEditFolder(newName)}
+                onClick={() => handleEditRest(newName)}
               >
                 Save
               </button>
               <button
                 className="bg-white-900 border-none text-sm text-gray-500 shadow-none transition-all duration-300 hover:text-gray-900"
-                onClick={() => setFolderEdit(null)}
+                onClick={() => setRestEdit(null)}
               >
                 Cancel
               </button>
