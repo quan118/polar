@@ -34,7 +34,7 @@ const File = ({ requestId }) => {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-1 border-t py-2">
+    <div className="flex border-t py-2">
       {selectedFile && (
         <div className="flex items-center rounded-md border border-green-500 px-1 text-slate-500">
           <span className="text-sm">{selectedFile}</span>
