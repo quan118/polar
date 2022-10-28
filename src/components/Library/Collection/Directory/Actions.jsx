@@ -6,7 +6,13 @@ import uuid from "react-uuid";
 import {
   createCollectionItemAction,
   createResponseItemAction,
+  updateCollectionItemCollapseKey,
 } from "@/store/modules/collectionItem";
+import {
+  setEditItemIdAction,
+  setCurrentRequestIdAction,
+} from "@/store/modules/common";
+import { addTabAction } from "@/store/modules/tab";
 
 const Actions = ({ id }) => {
   const dispatch = useDispatch();
@@ -22,6 +28,8 @@ const Actions = ({ id }) => {
     };
 
     dispatch(createCollectionItemAction(d, id));
+    dispatch(updateCollectionItemCollapseKey(id, true));
+    dispatch(setEditItemIdAction(d.id));
   }, [id, dispatch]);
 
   const handleAddResponse = useCallback(() => {
@@ -34,20 +42,20 @@ const Actions = ({ id }) => {
     };
 
     dispatch(createResponseItemAction(d, id));
+    dispatch(updateCollectionItemCollapseKey(id, true));
+    dispatch(setEditItemIdAction(d.id));
+    dispatch(addTabAction(d));
+    dispatch(setCurrentRequestIdAction(d.id));
   }, [id, dispatch]);
 
   return (
     <div className="z-100 hidden items-center gap-4 text-gray-500 group-hover:flex">
       <Tippy content={"New Request"} arrow={false} animation="scale">
-        <i className="cursor-pointer" onClick={handleAddResponse}>
-          <FilePlus />
-        </i>
+        <FilePlus className="cursor-pointer" onClick={handleAddResponse} />
       </Tippy>
 
       <Tippy content={"New Folder"} arrow={false} animation="scale">
-        <i className="cursor-pointer" onClick={handleAddDirectory}>
-          <FolderPlus />
-        </i>
+        <FolderPlus className="cursor-pointer" onClick={handleAddDirectory} />
       </Tippy>
     </div>
   );

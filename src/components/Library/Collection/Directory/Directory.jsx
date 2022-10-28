@@ -1,24 +1,28 @@
 import { Folder, Folder2Open } from "react-bootstrap-icons";
-import { updateCollectionItemCollapseKey } from "@/store/modules/collectionItem";
+import {
+  updateCollectionItemCollapseKey,
+  updateCollectionItemAction,
+} from "@/store/modules/collectionItem";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import Request from "./Request";
 import Actions from "./Actions";
 import More from "./More";
-import { useCallback } from "react";
+import { useCallback, useRef, useEffect } from "react";
+import { setEditItemIdAction } from "@/store/modules/common";
 
 const DirectoryTree = ({ data }) => {
   return (
-    <div className="ml-5 border-l-2 border-gray-200">
+    <div className=" ml-5 border-l-2 border-gray-200">
       {data?.subGroups?.length > 0 &&
         data?.subGroups?.map((id) => <Directory id={id} key={id} />)}
 
-      <div className="">
+      <>
         {data?.requests.length > 0 &&
           data?.requests.map((id) => (
             <Request key={id} id={id} selected={false} />
           ))}
-      </div>
+      </>
     </div>
   );
 };
@@ -34,20 +38,79 @@ export function Directory({ id }) {
     let current = data.collapse;
     dispatch(updateCollectionItemCollapseKey(id, !current));
   }, [id, dispatch, data.collapse]);
+
+  const handleFinishEditItem = useCallback(() => {
+    dispatch(setEditItemIdAction(undefined));
+  }, [dispatch, id]);
+
+  const editItemId = useSelector((store) => _.get(store, `common.editItemId`));
+
+  const handleUpdateItemName = useCallback(
+    (event) => {
+      dispatch(updateCollectionItemAction(id, { name: event.target.value }));
+    },
+    [dispatch]
+  );
+
+  // -- TODO: Consider to refactor
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          handleFinishEditItem();
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
+  // --
+
+  const editting = editItemId === id;
+
+  useEffect(() => {
+    // if Directory name is switched from normal state -> editting state, select all texts in input box
+    if (typeof window !== "undefined" && editItemId === id) {
+      window.document.getElementById("textbox")?.select();
+    }
+  }, [editItemId]);
+
   return (
-    <div className="">
-      <div className="group flex cursor-pointer items-center justify-between px-3 py-[0.1rem]  duration-200 hover:bg-gray-100">
+    <>
+      <div className=" group flex cursor-pointer items-center justify-between px-3 py-[0.1rem]  duration-200 hover:bg-gray-100">
         <div
           className="group flex h-full w-full cursor-pointer items-center gap-2"
           onClick={handleToggle}
         >
-          <i className="">{data?.collapse ? <Folder2Open /> : <Folder />}</i>
-          <span className="text-xs">{data?.name}</span>
+          {data?.collapse ? <Folder2Open /> : <Folder />}
+          {editting ? (
+            <form onSubmit={handleFinishEditItem}>
+              <input
+                type="text"
+                className="w-full rounded border border-gray-300 py-1 px-1 text-xs shadow-none"
+                value={data?.name}
+                onChange={handleUpdateItemName}
+                id="textbox"
+                ref={wrapperRef}
+              />
+            </form>
+          ) : (
+            <span className="text-xs">{data?.name}</span>
+          )}
         </div>
-        <Actions id={id} />
+        {!editting && <Actions id={id} />}
         <More id={id} isDir={true} />
       </div>
       {data?.collapse && <DirectoryTree data={data} />}
-    </div>
+    </>
   );
 }

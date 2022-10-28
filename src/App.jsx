@@ -11,8 +11,8 @@ function App() {
       <Split
         className="flex flex-1"
         gutterSize={5}
-        minSize={[200]}
-        sizes={[25, 75]}
+        minSize={[0]}
+        sizes={[30, 70]}
       >
         <Library />
         <Editor />

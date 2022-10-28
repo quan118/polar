@@ -173,6 +173,41 @@ const defaultState = {
 //   },
 // };
 
+export const deleteSubGroup = (collectionItemById, groupId) => {
+  const noId = groupId;
+  if (!noId) return collectionItemById;
+  // delete requests
+  collectionItemById[groupId]?.requests?.forEach((requestId) => {
+    delete collectionItemById[requestId];
+  });
+
+  // delete sub groups
+  collectionItemById[groupId]?.subGroups?.forEach((g) => {
+    deleteSubGroup(collectionItemById, g);
+  });
+
+  // delete parent
+  const parentId = collectionItemById[groupId]?.parentId;
+  if (parentId) {
+    collectionItemById[parentId] = {
+      ...collectionItemById[parentId],
+      subGroups: [
+        ...collectionItemById[parentId].subGroups.filter(
+          (item) => item !== groupId
+        ),
+      ],
+      requests: [
+        ...collectionItemById[parentId].requests.filter(
+          (item) => item !== groupId
+        ),
+      ],
+    };
+  }
+  // delete itself
+  delete collectionItemById[groupId];
+  return collectionItemById;
+};
+
 export default function collectionItemReducer(state = defaultState, action) {
   switch (action.type) {
     case CREATE_COLLECTION_ITEM: {
@@ -224,26 +259,35 @@ export default function collectionItemReducer(state = defaultState, action) {
     case DELETE_COLLECTION_ITEM: {
       const noId = !(action.id.length > 0);
       if (noId) return state;
-      const parentId = state.byId[action.id].parentId;
+      const parentId = state.byId[action.id]?.parentId;
 
-      delete state.byId[action.id];
+      // delete requests;
+      state.byId[action.id]?.requests?.forEach((requestId) => {
+        delete state.byId[requestId];
+      });
 
+      // delete sub groups
+      state.byId[action.id]?.subGroups?.forEach((groupId) => {
+        deleteSubGroup(state.byId, groupId);
+      });
+
+      // delete parent
       if (parentId) {
         state.byId[parentId] = {
           ...state.byId[parentId],
           subGroups: [
             ...state.byId[parentId].subGroups.filter(
-              (item) => item != action.id
+              (itemId) => itemId != action.id
             ),
           ],
           requests: [
             ...state.byId[parentId].requests.filter(
-              (item) => item != action.id
+              (itemId) => itemId != action.id
             ),
           ],
         };
       }
-
+      delete state.byId[action.id];
       return {
         byId: {
           ...state.byId,

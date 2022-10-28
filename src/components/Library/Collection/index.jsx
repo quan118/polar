@@ -1,18 +1,31 @@
+import { memo, useCallback } from "react";
 import { Directory } from "./Directory/Directory";
 import { QuestionCircle, Archive, Plus } from "react-bootstrap-icons";
 import Tippy from "@tippyjs/react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-import { createCollectionItemAction } from "@/store/modules/collectionItem";
+import {
+  createCollectionItemAction,
+  updateCollectionItemCollapseKey,
+} from "@/store/modules/collectionItem";
 import { EditDialog } from "./Directory/EditDialog";
+import { setEditItemIdAction } from "@/store/modules/common";
 import uuid from "react-uuid";
-export function Collection() {
+
+const getOutermostItems = (itemsInDict) =>
+  Object.keys(itemsInDict)
+    .map((key) => itemsInDict[key])
+    .filter((item) => item.type === "group")
+    .filter((item) => !item.parentId);
+
+const Collection = () => {
+  const dispatch = useDispatch();
+
   const collectionItems = useSelector((store) =>
     _.get(store, `collectionItem.byId`)
   );
 
-  const dispatch = useDispatch();
-  const handleAddDirectory = () => () => {
+  const handleAddDirectory = useCallback(() => {
     let d = {
       id: uuid(),
       type: "group",
@@ -20,58 +33,45 @@ export function Collection() {
       subGroups: [],
       requests: [],
     };
-    console.log("New group", d);
     dispatch(createCollectionItemAction(d));
-  };
+    dispatch(updateCollectionItemCollapseKey(d.id, true));
+    dispatch(setEditItemIdAction(d.id));
+  }, [dispatch]);
 
   return (
     <div className="flex max-h-screen w-full flex-col text-gray-700">
-      <div className="flex items-center border-b pr-4">
-        <input
-          type="text"
-          className="w-full bg-white py-2 text-xs font-bold text-gray-700 shadow-none"
-          placeholder="Search"
-        />
-      </div>
+      <input
+        type="text"
+        className="w-full rounded-none border-b-gray-200 bg-white py-2 text-xs font-bold text-gray-700 shadow-none"
+        placeholder="Search"
+      />
       <div className="flex w-full items-center justify-between border-b py-2 px-4">
         <div
           className="flex cursor-pointer items-center gap-1 text-gray-700"
-          onClick={handleAddDirectory()}
+          onClick={handleAddDirectory}
         >
-          <i className="">
-            <Plus />
-          </i>
+          <Plus />
           <span className="text-xs">New</span>
         </div>
+
         <div className="flex items-center gap-x-2">
           <Tippy content={"Wiki"} arrow={false} animation="scale">
-            <i className="cursor-pointer px-2 text-gray-500 opacity-80 transition-none duration-200 hover:opacity-100">
-              <QuestionCircle />
-            </i>
+            <QuestionCircle className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
           </Tippy>
 
           <Tippy content={"Import/Export"} arrow={false} animation="scale">
-            <i className="cursor-pointer px-1 text-gray-500 opacity-80 transition-none duration-200 hover:opacity-100">
-              <Archive />
-            </i>
+            <Archive className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
           </Tippy>
         </div>
       </div>
       <div className="h-full w-full overflow-y-auto">
-        {Object.keys(collectionItems)
-          .map((key) => collectionItems[key])
-          .filter((item) => item.type === "group")
-          .filter((item) => !item.parentId)
-          .map((item) => (
-            <Directory
-              id={item.id}
-              // folder={item}
-              key={item.id}
-              // openFolder={(folder, id) => openFolder(folder, id)}
-            />
-          ))}
+        {getOutermostItems(collectionItems).map((item) => (
+          <Directory id={item.id} key={item.id} />
+        ))}
       </div>
       <EditDialog visible={false} type={"New Folder"} />
     </div>
   );
-}
+};
+
+export default memo(Collection);

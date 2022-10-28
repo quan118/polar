@@ -128,62 +128,41 @@ test("should add a collectionItem to store", () => {
 test("should delete collectionItem from store", () => {
   const previousState = {
     byId: {
-      t2: {
-        id: "t2",
-        type: "request",
+      g0: {
+        id: "g0",
+        type: "group",
         name: "login",
         method: "POST",
-        header: [
-          {
-            key: "Content-Type",
-            value: "application/json",
-          },
-        ],
-        url: {
-          raw: "http://httpbin.org/get?key1=value1&key2=value2",
-          protocol: "http",
-          host: ["httpbin", "org"],
-          path: ["get"],
-          query: [
-            {
-              key: "key1",
-              value: "value1",
-            },
-            {
-              key: "key2",
-              value: "value2",
-            },
-          ],
-        },
-        auth: {
-          type: "basic",
-          basic: [
-            {
-              key: "password",
-              value: "abc123",
-              type: "string",
-            },
-            {
-              key: "username",
-              value: "quan",
-              type: "string",
-            },
-          ],
-        },
-        body: {
-          mode: "raw",
-          raw: "Hello work",
-          options: {
-            raw: {
-              language: "json",
-            },
-          },
-        },
-        response: ["r1", "r2"],
+        response: [],
+        subGroups: ["g1"],
+      },
+      g1: {
+        id: "g1",
+        type: "group",
+        name: "login",
+        method: "POST",
+        response: [],
+        subGroups: ["g2"],
+      },
+      g2: {
+        id: "g2",
+        type: "group",
+        name: "login",
+        method: "POST",
+        response: [],
+        subGroups: ["g3"],
+      },
+      g3: {
+        id: "g3",
+        type: "group",
+        name: "login",
+        method: "POST",
+        response: [],
+        subGroups: [],
       },
     },
   };
-  const action = deleteCollectionItemAction("t2");
+  const action = deleteCollectionItemAction("g0");
   const nextState = {
     byId: {},
   };

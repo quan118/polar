@@ -7,7 +7,7 @@ import ResponseViewer from "../ResponseViewer";
 
 const Editor = () => {
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="z-10 flex flex-col overflow-hidden">
       <Tabbar />
       <RequestInput requestId="draft0" />
 
