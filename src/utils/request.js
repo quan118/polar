@@ -1,4 +1,4 @@
-import { Body } from "@tauri-apps/api/http";
+import { Body, ResponseType } from "@tauri-apps/api/http";
 import { Buffer } from "buffer";
 import mime from "mime";
 
@@ -56,6 +56,7 @@ export const buildFetchConfig = (requestConfig) => {
       ...finalFetchConfig.query,
       ...requestQueries,
     },
+    responseType: ResponseType.Binary,
   };
 };
 

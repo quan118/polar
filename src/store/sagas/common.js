@@ -26,7 +26,6 @@ function* handleSendRequest({ requestId }) {
     }
 
     const response = yield call(fetch, fetchConfig.url, fetchConfig);
-
     const responseId = uuid();
 
     yield put(

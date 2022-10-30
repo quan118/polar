@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { buildFetchConfig, handleAuth, handleBody } from "@/utils/request";
-import { Body } from "@tauri-apps/api/http";
+import { Body, ResponseType } from "@tauri-apps/api/http";
 
 test("should handle basic auth successfully", () => {
   const requestConfig = {
@@ -359,6 +359,7 @@ test("should handle a request with basic auth + raw body successfully", () => {
     },
     query: {},
     body: Body.text("Hello Postpone"),
+    responseType: ResponseType.Binary,
   };
   const newFetchConfig = buildFetchConfig(requestConfig);
   expect(newFetchConfig).toEqual(expectedFetchConfig);

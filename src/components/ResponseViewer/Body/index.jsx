@@ -3,6 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import { EditorView } from "@codemirror/view";
 import mime from "mime";
+import { getDataPresentation } from "@/utils/common";
 import Header from "../../Header";
 import DropdownInput from "../../DropdownInput";
 
@@ -49,22 +50,34 @@ const Body = ({ response }) => {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <Header title="Body Response">
-        <DropdownInput
-          options={["raw", "json", "yaml", "xml"]}
-          value={format}
-          onChange={handleSelectFormat}
-        />
+        {!["jpeg", "png", "jpg"].includes(format) && (
+          <DropdownInput
+            options={["raw", "json", "yaml", "xml"]}
+            value={format}
+            onChange={handleSelectFormat}
+          />
+        )}
       </Header>
-      <CodeMirror
-        style={{
-          fontSize: 12,
-          overflow: "scroll",
-          height: "100%",
-        }}
-        extensions={[EditorView.lineWrapping, ...extensions]}
-        editable={false}
-        value={JSON.stringify(response?.body || "", null, 2)}
-      />
+      {["jpeg", "png", "jpg"].includes(format) ? (
+        <div>
+          <img src={getDataPresentation(format, response?.body)} />
+        </div>
+      ) : (
+        <CodeMirror
+          style={{
+            fontSize: 12,
+            overflow: "scroll",
+            height: "100%",
+          }}
+          extensions={[EditorView.lineWrapping, ...extensions]}
+          editable={false}
+          value={JSON.stringify(
+            getDataPresentation(format, response?.body) || "",
+            null,
+            2
+          )}
+        />
+      )}
     </div>
   );
 };
