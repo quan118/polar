@@ -2,9 +2,9 @@ import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
-import uuid from "react-uuid";
 import { KVForm, Header } from "@/components";
 import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
+import { addNewRow } from "@/utils/form";
 
 // const Header = ({ onClearAll, onAddNew }) => (
 //   <div className="flex flex-1 items-center justify-between border-y py-2 px-2">
@@ -27,20 +27,21 @@ const FormData = ({ requestId }) => {
     useSelector((store) =>
       _.get(store, `collectionItem.byId.${requestId}.body.formdata`)
     ) || [];
+
   const handleAddNew = useCallback(() => {
-    formdata.push({
-      id: uuid(),
-      key: "",
-      value: "",
-      enabled: true,
-    });
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
+      updateCollectionItemBodyKeyAction(
+        requestId,
+        "formdata",
+        addNewRow(formdata)
+      )
     );
   }, [formdata]);
 
   const handleClearAll = useCallback(() => {
-    dispatch(updateCollectionItemBodyKeyAction(requestId, "formdata", []));
+    dispatch(
+      updateCollectionItemBodyKeyAction(requestId, "formdata", addNewRow([]))
+    );
   }, [dispatch]);
 
   const handleToggle = useCallback(
@@ -57,7 +58,11 @@ const FormData = ({ requestId }) => {
     (idx) => () => {
       formdata.splice(idx, 1);
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "formdata",
+          formdata?.length === 0 ? addNewRow(formdata) : [...formdata]
+        )
       );
     },
     [dispatch, formdata]
@@ -66,8 +71,13 @@ const FormData = ({ requestId }) => {
   const handleChangeKey = useCallback(
     (idx) => (event) => {
       formdata[idx].key = event.target.value;
+      const isLastRow = idx === formdata.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "formdata",
+          isLastRow ? addNewRow(formdata) : [...formdata]
+        )
       );
     },
     [dispatch, formdata]
@@ -76,8 +86,13 @@ const FormData = ({ requestId }) => {
   const handleChangeValue = useCallback(
     (idx) => (event) => {
       formdata[idx].value = event.target.value;
+      const isLastRow = idx === formdata.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "formdata",
+          isLastRow ? addNewRow(formdata) : [...formdata]
+        )
       );
     },
     [dispatch, formdata]
