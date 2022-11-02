@@ -5,6 +5,7 @@ import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import { KVForm, Header } from "@/components";
 import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
+import { addNewRow } from "@/utils/form";
 
 const URLEncoded = ({ requestId }) => {
   const dispatch = useDispatch();
@@ -14,21 +15,19 @@ const URLEncoded = ({ requestId }) => {
   );
 
   const handleAddNew = useCallback(() => {
-    urlencoded.push({
-      id: uuid(),
-      key: "",
-      value: "",
-      enabled: true,
-    });
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
-        ...urlencoded,
-      ])
+      updateCollectionItemBodyKeyAction(
+        requestId,
+        "urlencoded",
+        addNewRow(urlencoded)
+      )
     );
   }, [urlencoded]);
 
   const handleClearAll = useCallback(() => {
-    dispatch(updateCollectionItemBodyKeyAction(requestId, "urlencoded", []));
+    dispatch(
+      updateCollectionItemBodyKeyAction(requestId, "urlencoded", addNewRow([]))
+    );
   }, [dispatch]);
 
   const handleToggle = useCallback(
@@ -47,9 +46,11 @@ const URLEncoded = ({ requestId }) => {
     (idx) => () => {
       urlencoded.splice(idx, 1);
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
-          ...urlencoded,
-        ])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "urlencoded",
+          urlencoded?.length === 0 ? addNewRow(urlencoded) : [...urlencoded]
+        )
       );
     },
     [dispatch, urlencoded]
@@ -58,10 +59,13 @@ const URLEncoded = ({ requestId }) => {
   const handleChangeKey = useCallback(
     (idx) => (event) => {
       urlencoded[idx].key = event.target.value;
+      const isLastRow = idx === urlencoded.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
-          ...urlencoded,
-        ])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "urlencoded",
+          isLastRow ? addNewRow(urlencoded) : [...urlencoded]
+        )
       );
     },
     [dispatch, urlencoded]
@@ -70,10 +74,13 @@ const URLEncoded = ({ requestId }) => {
   const handleChangeValue = useCallback(
     (idx) => (event) => {
       urlencoded[idx].value = event.target.value;
+      const isLastRow = idx === urlencoded.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
-          ...urlencoded,
-        ])
+        updateCollectionItemBodyKeyAction(
+          requestId,
+          "urlencoded",
+          isLastRow ? addNewRow(urlencoded) : [...urlencoded]
+        )
       );
     },
     [dispatch, urlencoded]

@@ -66,6 +66,35 @@ const defaultState = {
           },
         ],
       },
+      body: {
+        // mode: "raw", // raw | form-data | urlencoded | file
+        raw: "",
+        formdata: [
+          {
+            id: "0",
+            key: "",
+            value: "",
+            enabled: true,
+          },
+        ],
+        urlencoded: [
+          {
+            id: "0",
+            key: "",
+            value: "",
+            enabled: true,
+          },
+        ],
+        /*file: {
+          src
+        },
+        */
+        options: {
+          raw: {
+            language: "json",
+          },
+        },
+      },
     },
     request_sev: {
       id: "request_sev",
@@ -152,22 +181,22 @@ const defaultState = {
 
 //         */
 //       },
-//       body: {
-//         mode: "raw", // raw | form-data | urlencoded | file
-//         raw: "Hello work",
-//         /*
-//         formdata: [{key, value, type}],
-//         urlencoded: [{key, value, type}],
-//         file: {
-//           src
-//         },
-//         */
-//         options: {
-//           raw: {
-//             language: "json",
-//           },
-//         },
-//       },
+// body: {
+//   mode: "raw", // raw | form-data | urlencoded | file
+//   raw: "Hello work",
+//   /*
+//   formdata: [{key, value, type}],
+//   urlencoded: [{key, value, type}],
+//   file: {
+//     src
+//   },
+//   */
+//   options: {
+//     raw: {
+//       language: "json",
+//     },
+//   },
+// },
 //       response: ["r1", "r2"],
 //     },
 //   },
