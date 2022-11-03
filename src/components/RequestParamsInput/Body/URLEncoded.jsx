@@ -2,7 +2,6 @@ import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
-import uuid from "react-uuid";
 import { KVForm, Header } from "@/components";
 import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
 import { addNewRow } from "@/utils/form";
