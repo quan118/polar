@@ -13,6 +13,22 @@ const langExtensions = {
   xml: langs.xml(),
 };
 
+const getFormattedCodeMirrorValue = (data, format) => {
+  switch (format) {
+    case "json":
+      try {
+        return JSON.stringify(getDataPresentation(format, data) || "", null, 2);
+      } catch {
+        return getDataPresentation("raw", data);
+      }
+    case "html":
+    case "xml":
+      return getDataPresentation(format, data);
+    default:
+      return getDataPresentation(format, data);
+  }
+};
+
 const Body = ({ response }) => {
   const contentType = response?.header?.find(
     (item) => item["content-type"] !== undefined
@@ -71,11 +87,7 @@ const Body = ({ response }) => {
           }}
           extensions={[EditorView.lineWrapping, ...extensions]}
           editable={false}
-          value={JSON.stringify(
-            getDataPresentation(format, response?.body) || "",
-            null,
-            2
-          )}
+          value={getFormattedCodeMirrorValue(response?.body, format)}
         />
       )}
     </div>

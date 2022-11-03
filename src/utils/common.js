@@ -23,9 +23,13 @@ export const getDataPresentation = (format, body) => {
     case "jpg":
       dataPresentation = `data:image/${format};base64,` + bytesToBase64(body);
       break;
-    default:
+    case "json":
       dataPresentation = JSON.parse(Buffer.from(body).toString());
       break;
+    default:
+      dataPresentation = Buffer.from(body).toString();
+      break;
   }
+
   return dataPresentation;
 };
