@@ -68,7 +68,7 @@ const RequestInput = ({ requestId }) => {
         id="url"
         className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 shadow-none focus:border-indigo-500 focus:ring-indigo-500"
         placeholder="URL"
-        defaultValue={request.url?.raw}
+        value={request.url?.raw}
         onChange={handleChangeURL}
         onKeyDown={handleKeyDown}
       />

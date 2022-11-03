@@ -4,6 +4,7 @@ import uuid from "react-uuid";
 import { fetch } from "@tauri-apps/api/http";
 import { Body } from "@tauri-apps/api/http";
 import { readBinaryFile } from "@tauri-apps/api/fs";
+import { updateCollectionItemUrlKeyAction } from "@/store/modules/collectionItem";
 import { SEND_REQUEST, updateCommonAction } from "../modules/common";
 import { createResponseAction } from "../modules/response";
 import { buildFetchConfig } from "@/utils/request";
@@ -11,9 +12,25 @@ import { buildFetchConfig } from "@/utils/request";
 function* handleSendRequest({ requestId }) {
   try {
     yield put(updateCommonAction({ sendingRequest: true }));
-    const request = yield select((store) =>
+    let request = yield select((store) =>
       _.get(store, `collectionItem.byId.${requestId}`)
     );
+
+    // prepend https if needed
+    const tokens = request.url.raw.split("//");
+    if (tokens.length < 2 || !tokens[0].toLowerCase().startsWith("http")) {
+      yield put(
+        updateCollectionItemUrlKeyAction(
+          requestId,
+          "raw",
+          "https://" + request.url.raw
+        )
+      );
+
+      request = yield select((store) =>
+        _.get(store, `collectionItem.byId.${requestId}`)
+      );
+    }
 
     const fetchConfig = buildFetchConfig(request);
 
