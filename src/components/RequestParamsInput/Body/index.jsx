@@ -40,7 +40,6 @@ const ContentType = ({
         options={["none", "raw", "form-data", "urlencoded", "file"]}
         value={selected}
         onChange={onChangeType}
-        buttonClassName="w-24"
       />
       {selected === "raw" && (
         <DropdownInput
