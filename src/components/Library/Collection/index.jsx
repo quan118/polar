@@ -16,7 +16,8 @@ const getOutermostItems = (itemsInDict) =>
   Object.keys(itemsInDict)
     .map((key) => itemsInDict[key])
     .filter((item) => item.type === "group")
-    .filter((item) => !item.parentId);
+    .filter((item) => !item.parentId)
+    .filter((item) => item.id !== "drafts"); // don't show drafts folder
 
 const Collection = () => {
   const dispatch = useDispatch();

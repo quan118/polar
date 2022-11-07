@@ -3,7 +3,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:storybook/recommended"
   ],
   "plugins": ["react"],
   "settings": {
@@ -16,7 +17,7 @@
       "files": ["*.jsx", "*.tsx", "*.ts", "*.js"]
     }
   ],
-  "ignorePatterns": ["/dist", "/src-tauri"],
+  "ignorePatterns": ["/dist", "/src-tauri", "/storybook-static"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -29,6 +30,7 @@
     "node": true
   },
   "rules": {
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "react/no-unescaped-entities": 0
   }
 }
