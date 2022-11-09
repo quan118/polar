@@ -78,7 +78,9 @@
         "resizable": true,
         "title": "Polar",
         "width": 1200,
-        "minWidth": 800
+        "minWidth": 800,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
       }
     ]
   }
