@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.2",
+    "@sentry/react": "^7.18.0",
+    "@sentry/tracing": "^7.18.0",
     "@tauri-apps/api": "^1.2.0",
     "@tippyjs/react": "^4.2.6",
     "@uiw/codemirror-extensions-langs": "^4.12.4",
