@@ -11,7 +11,7 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true,
+      "all": false,
       "http": {
         "all": true,
         "request": true,
