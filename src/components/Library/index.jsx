@@ -2,7 +2,7 @@ import { memo, useCallback } from "react";
 import { Clock, Folder, Layers } from "react-bootstrap-icons";
 import { History } from "./History";
 import Collection from "./Collection";
-import { Environment } from "./Environment";
+import Environment from "./Environment";
 import Tippy from "@tippyjs/react";
 import { setCurrentLibIdAction } from "@/store/modules/common";
 import { useSelector, useDispatch } from "react-redux";

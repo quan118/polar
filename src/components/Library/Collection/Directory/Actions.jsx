@@ -12,23 +12,31 @@ import { setEditItemIdAction } from "@/store/modules/common";
 const Actions = ({ id }) => {
   const dispatch = useDispatch();
 
-  const handleAddDirectory = useCallback(() => {
-    let d = {
-      id: uuid(),
-      type: "group",
-      name: "new folder",
-      subGroups: [],
-      requests: [],
-      parentId: id,
-    };
+  const handleAddDirectory = useCallback(
+    (e) => {
+      e.stopPropagation();
+      let d = {
+        id: uuid(),
+        type: "group",
+        name: "new folder",
+        subGroups: [],
+        requests: [],
+        parentId: id,
+      };
 
-    dispatch(createCollectionItemAction(d, id));
-    dispatch(setEditItemIdAction(d.id));
-  }, [id, dispatch]);
+      dispatch(createCollectionItemAction(d, id));
+      dispatch(setEditItemIdAction(d.id));
+    },
+    [id, dispatch]
+  );
 
-  const handleAddRequest = useCallback(() => {
-    dispatch(createNewRequestAction(uuid(), "New request", id));
-  }, [id, dispatch]);
+  const handleAddRequest = useCallback(
+    (e) => {
+      e.stopPropagation();
+      dispatch(createNewRequestAction(uuid(), "New request", id));
+    },
+    [id, dispatch]
+  );
 
   return (
     <div className="z-100 hidden items-center gap-4 text-gray-500 group-hover:flex">

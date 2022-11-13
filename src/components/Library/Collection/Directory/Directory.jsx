@@ -102,7 +102,9 @@ export function Directory({ id }) {
               />
             </form>
           ) : (
-            <span className="text-xs">{data?.name}</span>
+            <span className="min-w-[4rem] max-w-[8rem] truncate text-xs">
+              {data?.name}
+            </span>
           )}
         </div>
         {!editting && <Actions id={id} />}

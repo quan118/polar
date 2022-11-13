@@ -64,24 +64,31 @@ const Tabbar = () => {
           return (
             <div key={item.id}>
               <div
-                className={`group flex cursor-pointer items-center gap-x-1 rounded-md bg-gray-300 px-1 py-1 shadow-sm ${
-                  curentRequestId === item.id ? "opacity-100" : "opacity-50"
+                className={`group flex cursor-pointer items-center gap-x-1 bg-gray-300 py-1 px-1 shadow-sm ${
+                  currentRequestId === item.id
+                    ? "rounded-t-md pb-2 opacity-100"
+                    : "mb-1 rounded-md opacity-50"
                 }`}
                 key={item.id}
-                onClick={() => {
-                  handleSetRequestActive(item.id);
+                onMouseDown={(e) => {
+                  x_mouse_down = e.clientX;
+                }}
+                onClick={(e) => {
+                  handleSetRequestActive(item.id, x_mouse_down, e.clientX);
                 }}
               >
-                <span className="">{item.name}</span>
+                <span className="min-w-[4rem] max-w-[6rem] truncate">
+                  {item.name}
+                </span>
                 <div
                   className={` min-w-[5px] rounded-md p-1 transition-all duration-200 hover:bg-gray-400`}
-                  onClick={() => {
-                    handleDeleteTabAction(item);
+                  onClick={(e) => {
+                    handleDeleteTabAction(item, e);
                   }}
                 >
                   <X
                     className={`${
-                      curentRequestId === item.id
+                      currentRequestId === item.id
                         ? "opacity-100"
                         : "opacity-0 transition-all duration-200 group-hover:opacity-100"
                     }`}

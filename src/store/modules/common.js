@@ -3,6 +3,8 @@ export const SEND_REQUEST = "SEND_REQUEST";
 export const CURRENT_REQUEST_ID = "CURRENT_REQUEST_ID";
 export const EDIT_ITEM_ID = "EDIT_ITEM_ID";
 export const CURRENT_LIB_ID = "CURRENT_LIB_ID";
+export const CURRENT_ENV_ID = "CURRENT_ENV_ID";
+export const EDIT_ENV_ID = "EDIT_ENV_ID";
 
 const defaultState = {
   sendingRequest: false,
@@ -11,6 +13,8 @@ const defaultState = {
   currentRequestId: "draft0", // current requestId
   editItemId: "",
   currentLibId: "1",
+  currentEnvId: "global",
+  editEnvId: "",
 };
 
 export default function commonReducer(state = defaultState, action) {
@@ -39,6 +43,19 @@ export default function commonReducer(state = defaultState, action) {
         editItemId: action.editItemId,
       };
     }
+    case CURRENT_ENV_ID: {
+      return {
+        ...state,
+        currentEnvId: action.currentEnvId,
+      };
+    }
+    case EDIT_ENV_ID: {
+      return {
+        ...state,
+        editEnvId: action.editEnvId,
+      };
+    }
+
     default:
       return state;
   }
@@ -67,4 +84,14 @@ export const setEditItemIdAction = (itemId) => ({
 export const setCurrentLibIdAction = (libId) => ({
   type: CURRENT_LIB_ID,
   currentLibId: libId,
+});
+
+export const setCurrentEnvIdAction = (envId) => ({
+  type: CURRENT_ENV_ID,
+  currentEnvId: envId,
+});
+
+export const setEditEnvIdAction = (envId) => ({
+  type: EDIT_ENV_ID,
+  editEnvId: envId,
 });

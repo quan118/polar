@@ -18,7 +18,7 @@ const Request = ({ id }) => {
     _.get(store, `collectionItem.byId.${id}`)
   );
 
-  const curentRequestId = useSelector((store) =>
+  const currentRequestId = useSelector((store) =>
     _.get(store, "common.currentRequestId")
   );
 
@@ -115,10 +115,12 @@ const Request = ({ id }) => {
             />
           </form>
         ) : (
-          <span className={``}>{request.name}</span>
+          <span className="min-w-[2rem] max-w-[8rem] truncate">
+            {request.name}
+          </span>
         )}
 
-        {curentRequestId === id && (
+        {currentRequestId === id && (
           <span className="relative mx-3 flex h-1.5 w-1.5 flex-shrink-0">
             <span className="absolute inline-flex h-full w-full flex-shrink-0 animate-ping rounded-full bg-green-500 opacity-75"></span>
             <span className="relative inline-flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-500"></span>

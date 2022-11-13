@@ -2,7 +2,6 @@
 import Split from "react-split";
 import "./libs/fonts/Inter/inter.css";
 import "./App.css";
-
 import { Sidebar, Library, Editor } from "./components";
 function App() {
   return (
@@ -10,7 +9,7 @@ function App() {
       <Sidebar />
       <Split
         className="flex flex-1"
-        gutterSize={5}
+        gutterSize={4}
         minSize={[0]}
         sizes={[30, 70]}
       >
