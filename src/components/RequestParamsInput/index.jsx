@@ -12,7 +12,7 @@ const tabs = [
   { key: "AUTH", name: "Authorization", href: "#", current: false },
 ];
 
-const RequestParamsInput = ({ requestId }) => {
+const RequestParamsInput = ({ tabId }) => {
   const [tab, setTab] = useState(tabs[0]);
 
   const handleChangeTab = useCallback((tab) => () => setTab(tab), [setTab]);
@@ -20,10 +20,10 @@ const RequestParamsInput = ({ requestId }) => {
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Tabs tabs={tabs} selected={tab} onChange={handleChangeTab} />
-      {tab.key === "PARAMS" && <Parameters requestId={requestId} />}
-      {tab.key === "HEADERS" && <Headers requestId={requestId} />}
-      {tab.key === "AUTH" && <Authorization requestId={requestId} />}
-      {tab.key === "BODY" && <Body requestId={requestId} />}
+      {tab.key === "PARAMS" && <Parameters tabId={tabId} />}
+      {tab.key === "HEADERS" && <Headers tabId={tabId} />}
+      {tab.key === "AUTH" && <Authorization tabId={tabId} />}
+      {tab.key === "BODY" && <Body tabId={tabId} />}
     </div>
   );
 };

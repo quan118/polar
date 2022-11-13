@@ -132,18 +132,22 @@ export const handleBody = (requestConfig, fetchConfig) => {
     }
     case "form-data": {
       var formData = {};
-      requestConfig?.body?.formdata?.forEach((item) => {
-        formData[item.key] = item.value;
-      });
+      requestConfig?.body?.formdata
+        ?.filter((item) => item.enabled)
+        .forEach((item) => {
+          formData[item.key] = item.value;
+        });
       headers["Content-Type"] = "multipart/form-data";
       body = Body.form(formData);
       break;
     }
     case "urlencoded": {
       const params = {};
-      requestConfig?.body?.urlencoded?.forEach((item) => {
-        params[item.key] = item.value;
-      });
+      requestConfig?.body?.urlencoded
+        ?.filter((item) => item.enabled)
+        .forEach((item) => {
+          params[item.key] = item.value;
+        });
       body = Body.form(params);
       break;
     }

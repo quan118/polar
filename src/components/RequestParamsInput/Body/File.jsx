@@ -3,13 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { open } from "@tauri-apps/api/dialog";
 import _ from "lodash";
 import { X } from "react-bootstrap-icons";
-import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 
-const File = ({ requestId }) => {
-  console.log("REQUEST ID:", requestId);
+const File = ({ tabId }) => {
   const dispatch = useDispatch();
   const selectedFile = useSelector((store) =>
-    _.get(store, `collectionItem.byId.${requestId}.body.file.src`)
+    _.get(store, `tab.byId.${tabId}.body.file.src`)
   );
   const handleSelectFile = useCallback(async () => {
     const selected = await open({
@@ -20,16 +19,16 @@ const File = ({ requestId }) => {
       // }]
     });
 
-    console.log("SELECTED");
-    console.log(selected);
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "file", { src: selected })
+      updateTabItemByKeyPathLevel2Action(tabId, "body", "file", {
+        src: selected,
+      })
     );
   }, [dispatch]);
 
   const handleClearFile = useCallback(() => {
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "file", { src: null })
+      updateTabItemByKeyPathLevel2Action(tabId, "body", "file", { src: null })
     );
   }, [dispatch]);
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import { KVForm, Header } from "@/components";
-import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import { addNewRow } from "@/utils/form";
 
 // const Header = ({ onClearAll, onAddNew }) => (
@@ -21,17 +21,17 @@ import { addNewRow } from "@/utils/form";
 //   </div>
 // );
 
-const FormData = ({ requestId }) => {
+const FormData = ({ tabId }) => {
   const dispatch = useDispatch();
   const formdata =
-    useSelector((store) =>
-      _.get(store, `collectionItem.byId.${requestId}.body.formdata`)
-    ) || [];
+    useSelector((store) => _.get(store, `tab.byId.${tabId}.body.formdata`)) ||
+    [];
 
   const handleAddNew = useCallback(() => {
     dispatch(
-      updateCollectionItemBodyKeyAction(
-        requestId,
+      updateTabItemByKeyPathLevel2Action(
+        tabId,
+        "body",
         "formdata",
         addNewRow(formdata)
       )
@@ -40,7 +40,12 @@ const FormData = ({ requestId }) => {
 
   const handleClearAll = useCallback(() => {
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "formdata", addNewRow([]))
+      updateTabItemByKeyPathLevel2Action(
+        tabId,
+        "body",
+        "formdata",
+        addNewRow([])
+      )
     );
   }, [dispatch]);
 
@@ -48,7 +53,9 @@ const FormData = ({ requestId }) => {
     (idx) => () => {
       formdata[idx].enabled = !formdata[idx].enabled;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "formdata", [...formdata])
+        updateTabItemByKeyPathLevel2Action(tabId, "body", "formdata", [
+          ...formdata,
+        ])
       );
     },
     [dispatch, formdata]
@@ -58,8 +65,9 @@ const FormData = ({ requestId }) => {
     (idx) => () => {
       formdata.splice(idx, 1);
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "formdata",
           formdata?.length === 0 ? addNewRow(formdata) : [...formdata]
         )
@@ -70,11 +78,15 @@ const FormData = ({ requestId }) => {
 
   const handleChangeKey = useCallback(
     (idx) => (event) => {
+      if (!formdata[idx].key && !formdata[idx].value) {
+        formdata[idx].enabled = true;
+      }
       formdata[idx].key = event.target.value;
       const isLastRow = idx === formdata.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "formdata",
           isLastRow ? addNewRow(formdata) : [...formdata]
         )
@@ -85,11 +97,15 @@ const FormData = ({ requestId }) => {
 
   const handleChangeValue = useCallback(
     (idx) => (event) => {
+      if (!formdata[idx].key && !formdata[idx].value) {
+        formdata[idx].enabled = true;
+      }
       formdata[idx].value = event.target.value;
       const isLastRow = idx === formdata.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "formdata",
           isLastRow ? addNewRow(formdata) : [...formdata]
         )

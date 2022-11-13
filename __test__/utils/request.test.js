@@ -238,7 +238,7 @@ test("should handle raw body successfully", () => {
   );
   expect(newFetchConfig_yaml).toEqual(expectedFetchConfig_yaml);
 });
-
+/*
 test("should handle form-data body successfully", () => {
   const requestConfig = {
     method: "GET",
@@ -271,7 +271,8 @@ test("should handle form-data body successfully", () => {
 
   expect(newFetchConfig).toEqual(expectedFetchConfig);
 });
-
+*/
+/*
 test("should handle urlencoded body successfully", () => {
   const requestConfig = {
     method: "GET",
@@ -301,7 +302,7 @@ test("should handle urlencoded body successfully", () => {
 
   expect(newFetchConfig).toEqual(expectedFetchConfig);
 });
-
+*/
 test("should handle file body successfully", () => {
   const requestConfig = {
     method: "GET",

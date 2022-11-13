@@ -2,11 +2,13 @@ import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import {
-  updateCollectionItemAction,
-  updateCollectionItemUrlKeyAction,
-} from "@/store/modules/collectionItem";
+  updateTabByIdAction,
+  updateTabUrlKeyAction,
+} from "@/store/modules/tab";
 import { sendRequestAction } from "@/store/modules/common";
+import Button from "../Button";
 import SimpleListBox from "../SimpleListBox";
+import SaveRequestDialog from "./SaveRequestDialog";
 
 const methods = [
   { id: 1, name: "GET" },
@@ -21,29 +23,28 @@ const methods = [
 const getMethodObjectFromName = (name) =>
   methods.find((item) => item.name === name);
 
-const RequestInput = ({ requestId }) => {
+const RequestInput = ({ tabId }) => {
   const dispatch = useDispatch();
-  const request = useSelector((store) =>
-    _.get(store, `collectionItem.byId.${requestId}`)
-  );
+  const tab = useSelector((store) => _.get(store, `tab.byId.${tabId}`));
   const sendingRequest = useSelector((store) => store.common.sendingRequest);
 
   const handleSelectMethod = useCallback(
     (method) => {
-      dispatch(updateCollectionItemAction(request.id, { method: method.name }));
+      dispatch(updateTabByIdAction(tab.id, { method: method.name }));
     },
-    [request.id]
+    [tab.id]
   );
 
-  const handleChangeURL = useCallback((event) => {
-    dispatch(
-      updateCollectionItemUrlKeyAction(request.id, "raw", event.target.value)
-    );
-  }, []);
+  const handleChangeURL = useCallback(
+    (event) => {
+      dispatch(updateTabUrlKeyAction(tab.id, "raw", event.target.value));
+    },
+    [tab.id]
+  );
 
   const handleSendRequest = useCallback(() => {
     if (sendingRequest) return;
-    dispatch(sendRequestAction(requestId));
+    dispatch(sendRequestAction(tabId));
   }, [sendingRequest]);
 
   const handleKeyDown = useCallback(
@@ -59,7 +60,7 @@ const RequestInput = ({ requestId }) => {
     <div className="z-10 flex h-8 select-none items-stretch bg-white">
       <SimpleListBox
         data={methods}
-        defaultValue={getMethodObjectFromName(request.method)}
+        value={getMethodObjectFromName(tab.method)}
         onChange={handleSelectMethod}
       />
       <input
@@ -68,48 +69,31 @@ const RequestInput = ({ requestId }) => {
         id="url"
         className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 shadow-none focus:border-indigo-500 focus:ring-indigo-500"
         placeholder="URL"
-        value={request.url?.raw}
+        value={tab.url?.raw || ""}
         onChange={handleChangeURL}
         onKeyDown={handleKeyDown}
       />
-      <button
-        type="button"
-        className="mx-2 inline-flex items-center rounded-md border border-transparent bg-indigo-500 px-3 py-2 text-xs font-bold font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      <Button
         onClick={handleSendRequest}
+        className="ml-2 mr-1 bg-indigo-500 hover:bg-indigo-700 focus:ring-indigo-500 "
       >
         Send
-      </button>
+      </Button>
+      {/* {isTabDirty ? ( */}
+      <SaveRequestDialog requestId={tabId}>
+        <Button className="mr-2 ml-1 bg-slate-500 hover:bg-slate-700 focus:ring-slate-500">
+          Save
+        </Button>
+      </SaveRequestDialog>
+      {/* ) : (
+        <Button className="pointer-events-none mr-2 ml-1 bg-slate-200">
+          Save
+        </Button>
+      )} */}
+
+      {/* <EditDialog visible={true} type="Save Request" /> */}
     </div>
   );
 };
 
 export default memo(RequestInput);
-
-/*
-<div className="mt-1 relative rounded-md shadow-sm">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span className="text-gray-500 sm:text-sm">$</span>
-        </div>
-        <input
-          type="text"
-          name="price"
-          id="price"
-          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
-          placeholder="0.00"
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center">
-          <label htmlFor="currency" className="sr-only">
-            Currency
-          </label>
-          <select
-            id="currency"
-            name="currency"
-            className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
-          >
-            <option>USD</option>
-            <option>CAD</option>
-            <option>EUR</option>
-          </select>
-        </div>
-      </div>
-*/

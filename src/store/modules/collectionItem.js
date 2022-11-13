@@ -1,6 +1,6 @@
 export const CREATE_COLLECTION_ITEM = "CREATE_COLLECTION_ITEM";
-export const CREATE_RESPONSE_ITEM = "CREATE_REST_ITEM";
-export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
+export const CREATE_REQUEST_ITEM = "CREATE_REQUEST_ITEM";
+export const SET_COLLECTION_ITEM_BY_ID_KEY = "SET_COLLECTION_ITEM_BY_ID_KEY";
 export const UPDATE_COLLECTION_ITEM = "UPDATE_COLLECTION_ITEM";
 export const UPDATE_COLLECTION_ITEM_QUERY = "UPDATE_COLLECTION_ITEM_QUERY";
 export const UPDATE_COLLECTION_ITEM_HEADER = "UPDATE_COLLECTION_ITEM_HEADER";
@@ -9,8 +9,17 @@ export const UPDATE_COLLECTION_ITEM_AUTH_KEY =
 export const UPDATE_COLLECTION_ITEM_BODY_KEY =
   "UPDATE_COLLECTION_ITEM_BODY_KEY"; // update a key in body object of collection item
 export const UPDATE_COLLECTION_ITEM_URL_KEY = "UPDATE_COLLECTION_ITEM_URL_KEY";
-export const UPDATE_COLLECTION_ITEM_COLLAPSE_KEY =
-  "UPDATE_COLLECTION_ITEM_COLLAPSE_KEY";
+
+export const UPDATE_COLLECTION_ITEM_BY_KEY_PATH_LEVEL_1 =
+  "UPDATE_COLLECTION_ITEM_BY_KEY_PATH_LEVEL_1";
+
+export const SET_EDIT_ITEM_ID = "SET_EDIT_ITEM_ID";
+
+export const SAVE_REQUEST = "SAVE_REQUEST";
+
+// actions handled by sagas
+export const CREATE_NEW_REQUEST = "CREATE_NEW_REQUEST";
+export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
 
 const defaultState = {
   byId: {
@@ -19,113 +28,71 @@ const defaultState = {
       type: "group",
       name: "drafts",
       subGroups: [],
-      requests: ["draft0"],
+      requests: [],
+      //expanded: true,
       // items: ["draft0"],
       // collapse: true | false
     },
-    twitter: {
-      id: "twitter",
-      type: "group",
-      name: "twitter-api",
-      subGroups: ["tesla", "google"],
-      requests: [],
-    },
-    tesla: {
-      id: "tesla",
-      type: "group",
-      name: "tesla-api",
-      subGroups: [],
-      requests: ["request_sev"],
-      parentId: "twitter",
-    },
-    draft0: {
-      id: "draft0",
-      type: "request",
-      method: "GET",
-      name: "request",
-      parentId: "drafts",
-      header: [
-        {
-          id: "0",
-          key: "",
-          value: "",
-          enabled: true,
-        },
-      ],
-      url: {
-        raw: "",
-        protocol: "http",
-        host: ["httpbin", "org"],
-        path: ["get"],
-        query: [
-          {
-            id: "0",
-            key: "",
-            value: "",
-            enabled: true,
-          },
-        ],
-      },
-      body: {
-        // mode: "raw", // raw | form-data | urlencoded | file
-        raw: "",
-        formdata: [
-          {
-            id: "0",
-            key: "",
-            value: "",
-            enabled: true,
-          },
-        ],
-        urlencoded: [
-          {
-            id: "0",
-            key: "",
-            value: "",
-            enabled: true,
-          },
-        ],
-        /*file: {
-          src
-        },
-        */
-        options: {
-          raw: {
-            language: "json",
-          },
-        },
-      },
-    },
-    request_sev: {
-      id: "request_sev",
-      type: "request",
-      method: "GET",
-      name: "tesla_request",
-      parentId: "tesla",
-    },
-    google: {
-      id: "google",
-      type: "group",
-      name: "google-api",
-      subGroups: [],
-      requests: ["req_google", "apple_req"],
-      parentId: "twitter",
-    },
-    req_google: {
-      id: "req_google",
-      type: "request",
-      method: "GET",
-      name: "google_request",
-      parentId: "google",
-    },
-    apple_req: {
-      id: "apple_req",
-      type: "request",
-      method: "GET",
-      name: "apple_request",
-      parentId: "google",
-    },
+    // "draft-req0": {
+    //   id: "draft-req0",
+    //   type: "request",
+    //   method: "GET",
+    //   name: "Untitled Request",
+    //   parentId: "drafts",
+    //   header: [
+    //     {
+    //       id: "0",
+    //       key: "",
+    //       value: "",
+    //       enabled: true,
+    //     },
+    //   ],
+    //   url: {
+    //     raw: "",
+    //     protocol: "http",
+    //     host: ["httpbin", "org"],
+    //     path: ["get"],
+    //     query: [
+    //       {
+    //         id: "0",
+    //         key: "",
+    //         value: "",
+    //         enabled: true,
+    //       },
+    //     ],
+    //   },
+    //   body: {
+    //     // mode: "raw", // raw | form-data | urlencoded | file
+    //     raw: "",
+    //     formdata: [
+    //       {
+    //         id: "0",
+    //         key: "",
+    //         value: "",
+    //         enabled: true,
+    //       },
+    //     ],
+    //     urlencoded: [
+    //       {
+    //         id: "0",
+    //         key: "",
+    //         value: "",
+    //         enabled: true,
+    //       },
+    //     ],
+    //     /*file: {
+    //       src
+    //     },
+    //     */
+    //     options: {
+    //       raw: {
+    //         language: "json",
+    //       },
+    //     },
+    //   },
+    // },
   },
+  editItemId: "",
 };
 
 // const mockState = {
@@ -262,7 +229,7 @@ export default function collectionItemReducer(state = defaultState, action) {
       return { byId };
     }
 
-    case CREATE_RESPONSE_ITEM: {
+    case CREATE_REQUEST_ITEM: {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];
       if (noId || idExisted) return state;
@@ -283,45 +250,6 @@ export default function collectionItemReducer(state = defaultState, action) {
       }
 
       return { byId };
-    }
-
-    case DELETE_COLLECTION_ITEM: {
-      const noId = !(action.id.length > 0);
-      if (noId) return state;
-      const parentId = state.byId[action.id]?.parentId;
-
-      // delete requests;
-      state.byId[action.id]?.requests?.forEach((requestId) => {
-        delete state.byId[requestId];
-      });
-
-      // delete sub groups
-      state.byId[action.id]?.subGroups?.forEach((groupId) => {
-        deleteSubGroup(state.byId, groupId);
-      });
-
-      // delete parent
-      if (parentId) {
-        state.byId[parentId] = {
-          ...state.byId[parentId],
-          subGroups: [
-            ...state.byId[parentId].subGroups.filter(
-              (itemId) => itemId != action.id
-            ),
-          ],
-          requests: [
-            ...state.byId[parentId].requests.filter(
-              (itemId) => itemId != action.id
-            ),
-          ],
-        };
-      }
-      delete state.byId[action.id];
-      return {
-        byId: {
-          ...state.byId,
-        },
-      };
     }
 
     case UPDATE_COLLECTION_ITEM: {
@@ -426,18 +354,61 @@ export default function collectionItemReducer(state = defaultState, action) {
         },
       };
     }
-    case UPDATE_COLLECTION_ITEM_COLLAPSE_KEY: {
-      const noId = !(action.id.length > 0);
-      const idExisted = !!state.byId[action.id];
-      if (noId || !idExisted) return state;
+    case UPDATE_COLLECTION_ITEM_BY_KEY_PATH_LEVEL_1: {
       return {
+        ...state,
         byId: {
           ...state.byId,
           [action.id]: {
             ...state.byId[action.id],
-            collapse: action.payload,
+            [action.key]: action.payload,
           },
         },
+      };
+    }
+
+    case SET_EDIT_ITEM_ID: {
+      return {
+        ...state,
+        editItemId: action.editItemId,
+      };
+    }
+    case SAVE_REQUEST: {
+      const byId = state.byId;
+
+      // syncing collection items
+      Object.keys(action.dirties).forEach((id) => {
+        if (action.dirties[id] === "rename") {
+          byId[id].name = action.data[id].name;
+        } else if (action.dirties[id] === "new") {
+          byId[id] = { ...action.data[id] };
+        }
+      });
+
+      byId[action.requestId] = { ...action.tab };
+      byId[action.requestId].name = action.requestName;
+      byId[action.requestId].parentId = action.parentId;
+
+      // save request
+
+      if (action.parentId !== action.tab.parentId) {
+        if (Array.isArray(byId[action.parentId].requests)) {
+          byId[action.parentId].requests.push(action.requestId);
+        } else {
+          byId[action.parentId].requests = [action.requestId];
+        }
+
+        byId[action.tab.parentId].requests = byId[
+          action.tab.parentId
+        ].requests.filter((id) => id !== action.requestId);
+      }
+
+      return { ...state, byId: { ...byId } };
+    }
+    case SET_COLLECTION_ITEM_BY_ID_KEY: {
+      return {
+        ...state,
+        byId: action.payload,
       };
     }
     default:
@@ -451,8 +422,8 @@ export const createCollectionItemAction = (payload, parentId) => ({
   payload,
 });
 
-export const createResponseItemAction = (payload, parentId) => ({
-  type: CREATE_RESPONSE_ITEM,
+export const createRequestItemAction = (payload, parentId) => ({
+  type: CREATE_REQUEST_ITEM,
   parentId,
   payload,
 });
@@ -501,8 +472,43 @@ export const updateCollectionItemUrlKeyAction = (id, key, payload) => ({
   payload,
 });
 
-export const updateCollectionItemCollapseKey = (id, payload) => ({
-  type: UPDATE_COLLECTION_ITEM_COLLAPSE_KEY,
+export const setEditItemIdAction = (itemId) => ({
+  type: SET_EDIT_ITEM_ID,
+  editItemId: itemId,
+});
+
+export const createNewRequestAction = (requestId, requestName, parentId) => ({
+  type: CREATE_NEW_REQUEST,
+  requestId,
+  requestName,
+  parentId,
+});
+
+export const saveRequestAction = (
+  requestId,
+  requestName,
+  parentId,
+  dirties,
+  data,
+  tab
+) => ({
+  type: SAVE_REQUEST,
+  requestId,
+  requestName,
+  parentId,
+  dirties,
+  data,
+  tab,
+});
+
+export const updateCollectionItemByKeyPathLevel1 = (id, key, payload) => ({
+  type: UPDATE_COLLECTION_ITEM_BY_KEY_PATH_LEVEL_1,
   id,
+  key,
+  payload,
+});
+
+export const setCollectionItemByIdKey = (payload) => ({
+  type: SET_COLLECTION_ITEM_BY_ID_KEY,
   payload,
 });

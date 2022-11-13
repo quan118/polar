@@ -4,11 +4,11 @@ import _ from "lodash";
 import CodeMirror from "@uiw/react-codemirror";
 // import { createTheme } from "@uiw/codemirror-themes";
 import { langs } from "@uiw/codemirror-extensions-langs";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import DropdownInput from "../../DropdownInput";
 import FormData from "./FormData";
 import URLEncoded from "./URLEncoded";
 import File from "./File";
-import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
 
 // const myTheme = createTheme({
 //   theme: "light",
@@ -58,11 +58,9 @@ const langExtensions = {
   xml: langs.xml(),
 };
 
-const Body = ({ requestId }) => {
+const Body = ({ tabId }) => {
   const dispatch = useDispatch();
-  const body = useSelector((store) =>
-    _.get(store, `collectionItem.byId[${requestId}].body`)
-  );
+  const body = useSelector((store) => _.get(store, `tab.byId[${tabId}].body`));
 
   const [extensions, setExtensions] = useState([]);
 
@@ -74,7 +72,7 @@ const Body = ({ requestId }) => {
 
   const handleChangeType = useCallback(
     (mode) => {
-      dispatch(updateCollectionItemBodyKeyAction(requestId, "mode", mode));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "body", "mode", mode));
     },
     [dispatch]
   );
@@ -82,7 +80,7 @@ const Body = ({ requestId }) => {
   const handleChangeLanguage = useCallback(
     (value) => {
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "options", {
+        updateTabItemByKeyPathLevel2Action(tabId, "body", "options", {
           raw: {
             language: value,
           },
@@ -94,7 +92,7 @@ const Body = ({ requestId }) => {
 
   const handleChangeRawContent = useCallback(
     (value) => {
-      dispatch(updateCollectionItemBodyKeyAction(requestId, "raw", value));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "body", "raw", value));
     },
     [dispatch]
   );
@@ -128,9 +126,9 @@ const Body = ({ requestId }) => {
           // }}
         />
       )}
-      {body?.mode === "form-data" && <FormData requestId={requestId} />}
-      {body?.mode === "urlencoded" && <URLEncoded requestId={requestId} />}
-      {body?.mode === "file" && <File requestId={requestId} />}
+      {body?.mode === "form-data" && <FormData tabId={tabId} />}
+      {body?.mode === "urlencoded" && <URLEncoded tabId={tabId} />}
+      {body?.mode === "file" && <File tabId={tabId} />}
     </div>
   );
 };

@@ -3,20 +3,20 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import { KVForm, Header } from "@/components";
-import { updateCollectionItemBodyKeyAction } from "@/store/modules/collectionItem";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import { addNewRow } from "@/utils/form";
 
-const URLEncoded = ({ requestId }) => {
+const URLEncoded = ({ tabId }) => {
   const dispatch = useDispatch();
   const urlencoded = useSelector(
-    (store) =>
-      _.get(store, `collectionItem.byId.${requestId}.body.urlencoded`) || []
+    (store) => _.get(store, `tab.byId.${tabId}.body.urlencoded`) || []
   );
 
   const handleAddNew = useCallback(() => {
     dispatch(
-      updateCollectionItemBodyKeyAction(
-        requestId,
+      updateTabItemByKeyPathLevel2Action(
+        tabId,
+        "body",
         "urlencoded",
         addNewRow(urlencoded)
       )
@@ -25,7 +25,12 @@ const URLEncoded = ({ requestId }) => {
 
   const handleClearAll = useCallback(() => {
     dispatch(
-      updateCollectionItemBodyKeyAction(requestId, "urlencoded", addNewRow([]))
+      updateTabItemByKeyPathLevel2Action(
+        tabId,
+        "body",
+        "urlencoded",
+        addNewRow([])
+      )
     );
   }, [dispatch]);
 
@@ -33,7 +38,7 @@ const URLEncoded = ({ requestId }) => {
     (idx) => () => {
       urlencoded[idx].enabled = !urlencoded[idx].enabled;
       dispatch(
-        updateCollectionItemBodyKeyAction(requestId, "urlencoded", [
+        updateTabItemByKeyPathLevel2Action(tabId, "body", "urlencoded", [
           ...urlencoded,
         ])
       );
@@ -45,8 +50,9 @@ const URLEncoded = ({ requestId }) => {
     (idx) => () => {
       urlencoded.splice(idx, 1);
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "urlencoded",
           urlencoded?.length === 0 ? addNewRow(urlencoded) : [...urlencoded]
         )
@@ -57,11 +63,15 @@ const URLEncoded = ({ requestId }) => {
 
   const handleChangeKey = useCallback(
     (idx) => (event) => {
+      if (!urlencoded[idx].key && !urlencoded[idx].value) {
+        urlencoded[idx].enabled = true;
+      }
       urlencoded[idx].key = event.target.value;
       const isLastRow = idx === urlencoded.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "urlencoded",
           isLastRow ? addNewRow(urlencoded) : [...urlencoded]
         )
@@ -72,11 +82,15 @@ const URLEncoded = ({ requestId }) => {
 
   const handleChangeValue = useCallback(
     (idx) => (event) => {
+      if (!urlencoded[idx].key && !urlencoded[idx].value) {
+        urlencoded[idx].enabled = true;
+      }
       urlencoded[idx].value = event.target.value;
       const isLastRow = idx === urlencoded.length - 1;
       dispatch(
-        updateCollectionItemBodyKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
           "urlencoded",
           isLastRow ? addNewRow(urlencoded) : [...urlencoded]
         )

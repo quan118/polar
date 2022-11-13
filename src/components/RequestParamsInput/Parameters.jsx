@@ -5,13 +5,11 @@ import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import KeyValueInput from "./KeyValueInput";
 import Header from "../Header";
-import { updateCollectionItemQueryAction } from "@/store/modules/collectionItem";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 
-const Parameters = ({ requestId }) => {
+const Parameters = ({ tabId }) => {
   const dispatch = useDispatch();
-  const request = useSelector((store) =>
-    _.get(store, `collectionItem.byId.${requestId}`)
-  );
+  const request = useSelector((store) => _.get(store, `tab.byId.${tabId}`));
 
   const handleAddNew = useCallback(() => {
     const data = request.url?.query || [];
@@ -21,12 +19,12 @@ const Parameters = ({ requestId }) => {
       value: "",
       enabled: true,
     });
-    dispatch(updateCollectionItemQueryAction(requestId, data));
+    dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
   }, [dispatch, request]);
 
   const handleClearAll = useCallback(() => {
     dispatch(
-      updateCollectionItemQueryAction(requestId, [
+      updateTabItemByKeyPathLevel2Action(tabId, "url", "query", [
         {
           id: uuid(),
           key: "",
@@ -40,7 +38,14 @@ const Parameters = ({ requestId }) => {
   const handleToggle = useCallback(
     (idx) => () => {
       request.url.query[idx].enabled = !request.url?.query[idx].enabled;
-      dispatch(updateCollectionItemQueryAction(requestId, request.url.query));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "url",
+          "query",
+          request.url.query
+        )
+      );
     },
     [dispatch, request]
   );
@@ -57,7 +62,7 @@ const Parameters = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemQueryAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
     },
     [dispatch, request]
   );
@@ -74,7 +79,7 @@ const Parameters = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemQueryAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
     },
     [dispatch, request]
   );
@@ -91,7 +96,7 @@ const Parameters = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemQueryAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
     },
     [dispatch, request]
   );

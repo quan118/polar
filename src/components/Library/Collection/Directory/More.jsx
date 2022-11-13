@@ -15,9 +15,8 @@ import uuid from "react-uuid";
 import _ from "lodash";
 import {
   createCollectionItemAction,
-  createResponseItemAction,
+  createRequestItemAction,
   deleteCollectionItemAction,
-  updateCollectionItemCollapseKey,
 } from "@/store/modules/collectionItem";
 import {
   setEditItemIdAction,
@@ -47,7 +46,6 @@ const More = ({ id, isDir }) => {
     };
 
     dispatch(createCollectionItemAction(d, id));
-    dispatch(updateCollectionItemCollapseKey(id, true));
     dispatch(setEditItemIdAction(d.id));
   }, [id, dispatch]);
 
@@ -60,8 +58,7 @@ const More = ({ id, isDir }) => {
       parentId: id,
     };
 
-    dispatch(createResponseItemAction(d, id));
-    dispatch(updateCollectionItemCollapseKey(id, true));
+    dispatch(createRequestItemAction(d, id));
     dispatch(setEditItemIdAction(d.id));
     dispatch(addTabAction(d));
     dispatch(setCurrentRequestIdAction(d.id));
@@ -71,7 +68,7 @@ const More = ({ id, isDir }) => {
     let d = _.cloneDeep(request);
     d.id = uuid();
     d.name += " copy";
-    dispatch(createResponseItemAction(d, d.parentId));
+    dispatch(createRequestItemAction(d, d.parentId));
     dispatch(addTabAction(d));
     dispatch(setCurrentRequestIdAction(d.id));
   }, [id, request, dispatch]);
@@ -121,27 +118,31 @@ const More = ({ id, isDir }) => {
                     <span>New Request</span>
                   </div>
                 </Menu.Item>
-                <Menu.Item>
-                  <div
-                    className=" flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                    onClick={handleAddDirectory}
-                  >
-                    <FolderPlus />
-                    <span>New Folder</span>
-                  </div>
-                </Menu.Item>
+                {id !== "drafts" && (
+                  <Menu.Item>
+                    <div
+                      className=" flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
+                      onClick={handleAddDirectory}
+                    >
+                      <FolderPlus />
+                      <span>New Folder</span>
+                    </div>
+                  </Menu.Item>
+                )}
               </>
             )}
+            {id !== "drafts" && (
+              <Menu.Item>
+                <div
+                  className=" flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
+                  onClick={handleEditItem}
+                >
+                  <PencilSquare />
+                  <span>Edit</span>
+                </div>
+              </Menu.Item>
+            )}
 
-            <Menu.Item>
-              <div
-                className=" flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                onClick={handleEditItem}
-              >
-                <PencilSquare />
-                <span>Edit</span>
-              </div>
-            </Menu.Item>
             {!isDir && (
               <Menu.Item>
                 <div
@@ -153,16 +154,17 @@ const More = ({ id, isDir }) => {
                 </div>
               </Menu.Item>
             )}
-
-            <Menu.Item>
-              <div
-                className="mb-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                onClick={handleDeleteItem}
-              >
-                <Trash />
-                <span>Delete</span>
-              </div>
-            </Menu.Item>
+            {id !== "drafts" && (
+              <Menu.Item>
+                <div
+                  className="mb-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
+                  onClick={handleDeleteItem}
+                >
+                  <Trash />
+                  <span>Delete</span>
+                </div>
+              </Menu.Item>
+            )}
           </Menu.Items>
         </Transition>
       </Menu>

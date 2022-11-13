@@ -7,7 +7,11 @@ import {
   setEditItemIdAction,
 } from "@/store/modules/common";
 import { updateCollectionItemAction } from "@/store/modules/collectionItem";
-import { addTabAction, updateTabAction } from "@/store/modules/tab";
+import {
+  addTabAction,
+  updateTabByIdAction,
+  setCurrentTabAction,
+} from "@/store/modules/tab";
 
 const Request = ({ id }) => {
   const request = useSelector((store) =>
@@ -19,9 +23,11 @@ const Request = ({ id }) => {
   );
 
   const dispatch = useDispatch();
-  const handleSetRequestActive = useCallback(() => {
+
+  const handleOnClickRequest = useCallback(() => {
     dispatch(setCurrentRequestIdAction(id));
     dispatch(addTabAction(request));
+    dispatch(setCurrentTabAction(id));
   }, [id, request, dispatch]);
 
   const handleEditItem = useCallback(
@@ -33,12 +39,13 @@ const Request = ({ id }) => {
   const editItemId = useSelector((store) => _.get(store, `common.editItemId`));
 
   const handleUpdateItemName = useCallback(
-    (_name) => {
-      dispatch(updateCollectionItemAction(id, { name: _name }));
-      dispatch(updateTabAction({ id: id, name: _name }));
+    (newName) => {
+      dispatch(updateCollectionItemAction(id, { name: newName }));
+      dispatch(updateTabByIdAction(id, { name: newName }));
     },
     [id, dispatch]
   );
+
   function useOutsideAlerter(ref) {
     useEffect(() => {
       /**
@@ -78,9 +85,7 @@ const Request = ({ id }) => {
       <div
         className="ml-0 flex w-full cursor-pointer items-center gap-2 py-2 text-xs hover:font-bold"
         key={id}
-        onClick={() => {
-          handleSetRequestActive();
-        }}
+        onClick={handleOnClickRequest}
       >
         <span
           className={`${

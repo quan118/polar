@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import collectionItemReducer, {
   createCollectionItemAction,
-  deleteCollectionItemAction,
+  // deleteCollectionItemAction,
   updateCollectionItemAction,
 } from "@/store/modules/collectionItem";
 
@@ -125,50 +125,50 @@ test("should add a collectionItem to store", () => {
   expect(collectionItemReducer(previousState, action)).toEqual(nextState);
 });
 
-test("should delete collectionItem from store", () => {
-  const previousState = {
-    byId: {
-      g0: {
-        id: "g0",
-        type: "group",
-        name: "login",
-        method: "POST",
-        response: [],
-        subGroups: ["g1"],
-      },
-      g1: {
-        id: "g1",
-        type: "group",
-        name: "login",
-        method: "POST",
-        response: [],
-        subGroups: ["g2"],
-      },
-      g2: {
-        id: "g2",
-        type: "group",
-        name: "login",
-        method: "POST",
-        response: [],
-        subGroups: ["g3"],
-      },
-      g3: {
-        id: "g3",
-        type: "group",
-        name: "login",
-        method: "POST",
-        response: [],
-        subGroups: [],
-      },
-    },
-  };
-  const action = deleteCollectionItemAction("g0");
-  const nextState = {
-    byId: {},
-  };
+// test("should delete collectionItem from store", () => {
+//   const previousState = {
+//     byId: {
+//       g0: {
+//         id: "g0",
+//         type: "group",
+//         name: "login",
+//         method: "POST",
+//         response: [],
+//         subGroups: ["g1"],
+//       },
+//       g1: {
+//         id: "g1",
+//         type: "group",
+//         name: "login",
+//         method: "POST",
+//         response: [],
+//         subGroups: ["g2"],
+//       },
+//       g2: {
+//         id: "g2",
+//         type: "group",
+//         name: "login",
+//         method: "POST",
+//         response: [],
+//         subGroups: ["g3"],
+//       },
+//       g3: {
+//         id: "g3",
+//         type: "group",
+//         name: "login",
+//         method: "POST",
+//         response: [],
+//         subGroups: [],
+//       },
+//     },
+//   };
+//   const action = deleteCollectionItemAction("g0");
+//   const nextState = {
+//     byId: {},
+//   };
 
-  expect(collectionItemReducer(previousState, action)).toEqual(nextState);
-});
+//   expect(collectionItemReducer(previousState, action)).toEqual(nextState);
+// });
 
 test("should update collectionItem name", () => {
   const previousState = {

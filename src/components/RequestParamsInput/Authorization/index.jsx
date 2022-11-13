@@ -1,10 +1,10 @@
 import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
+import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import DropdownInput from "../../DropdownInput";
 import AuthBasicTypeForm from "./AuthBasicTypeForm";
 import AuthApiKeyTypeForm from "./AuthApiKeyTypeForm";
-import { updateCollectionItemAuthKeyAction } from "@/store/modules/collectionItem";
 
 const AuthorizationType = ({ selected, onChangeType }) => {
   return (
@@ -21,15 +21,13 @@ const AuthorizationType = ({ selected, onChangeType }) => {
   );
 };
 
-const Authorization = ({ requestId }) => {
+const Authorization = ({ tabId }) => {
   const dispatch = useDispatch();
-  const auth = useSelector((store) =>
-    _.get(store, `collectionItem.byId[${requestId}].auth`)
-  );
+  const auth = useSelector((store) => _.get(store, `tab.byId[${tabId}].auth`));
 
   const handleChangeType = useCallback(
     (type) => {
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "type", type));
+      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "auth", "type", type));
     },
     [dispatch]
   );
@@ -38,7 +36,9 @@ const Authorization = ({ requestId }) => {
     (event) => {
       const basic = auth?.basic || {};
       basic.username = event.target.value;
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "basic", basic));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "auth", "basic", basic)
+      );
     },
     [dispatch, auth?.basic]
   );
@@ -47,7 +47,9 @@ const Authorization = ({ requestId }) => {
     (event) => {
       const basic = auth?.basic || {};
       basic.password = event.target.value;
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "basic", basic));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "auth", "basic", basic)
+      );
     },
     [dispatch, auth?.basic]
   );
@@ -55,8 +57,9 @@ const Authorization = ({ requestId }) => {
   const handleChangeBearer = useCallback(
     (event) => {
       dispatch(
-        updateCollectionItemAuthKeyAction(
-          requestId,
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "auth",
           "bearer",
           event.target.value
         )
@@ -69,7 +72,9 @@ const Authorization = ({ requestId }) => {
     (event) => {
       const apikey = auth?.apikey || {};
       apikey.key = event.target.value;
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "apikey", apikey));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "auth", "apikey", apikey)
+      );
     },
     [dispatch, auth?.apikey]
   );
@@ -78,7 +83,9 @@ const Authorization = ({ requestId }) => {
     (event) => {
       const apikey = auth?.apikey || {};
       apikey.value = event.target.value;
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "apikey", apikey));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "auth", "apikey", apikey)
+      );
     },
     [dispatch, auth?.apikey]
   );
@@ -87,7 +94,9 @@ const Authorization = ({ requestId }) => {
     (value) => {
       const apikey = auth?.apikey || {};
       apikey.in = value === "Query params" ? "query" : null;
-      dispatch(updateCollectionItemAuthKeyAction(requestId, "apikey", apikey));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "auth", "apikey", apikey)
+      );
     },
     [dispatch, auth?.apikey]
   );

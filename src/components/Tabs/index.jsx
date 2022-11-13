@@ -2,7 +2,7 @@ import { memo } from "react";
 import { classNames } from "@/utils/common";
 
 const Tabs = ({ tabs, selected, onChange, rightComponent }) => (
-  <div className="border-b border-gray-200">
+  <div className="-mb-px flex space-x-8 border-b border-gray-200">
     <nav className="-mb-px flex space-x-8" aria-label="Tabs">
       {tabs.map((tab) => (
         <a
@@ -21,6 +21,9 @@ const Tabs = ({ tabs, selected, onChange, rightComponent }) => (
         </a>
       ))}
     </nav>
+    {/* {tabs.map((tab) => (
+      <Tab key={tab.key} id={tab.id} selected={selected} />
+    ))} */}
     {rightComponent}
   </div>
 );

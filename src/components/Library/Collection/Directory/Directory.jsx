@@ -1,6 +1,6 @@
 import { Folder, Folder2Open } from "react-bootstrap-icons";
 import {
-  updateCollectionItemCollapseKey,
+  updateCollectionItemByKeyPathLevel1,
   updateCollectionItemAction,
 } from "@/store/modules/collectionItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,17 +11,15 @@ import More from "./More";
 import { useCallback, useRef, useEffect } from "react";
 import { setEditItemIdAction } from "@/store/modules/common";
 
-const DirectoryTree = ({ data }) => {
+const DirectoryTree = ({ subGroups, requests }) => {
   return (
     <div className=" ml-5 border-l-2 border-gray-200">
-      {data?.subGroups?.length > 0 &&
-        data?.subGroups?.map((id) => <Directory id={id} key={id} />)}
+      {subGroups?.length > 0 &&
+        subGroups?.map((id) => <Directory id={id} key={id} />)}
 
       <>
-        {data?.requests.length > 0 &&
-          data?.requests.map((id) => (
-            <Request key={id} id={id} selected={false} />
-          ))}
+        {requests?.length > 0 &&
+          requests.map((id) => <Request key={id} id={id} selected={false} />)}
       </>
     </div>
   );
@@ -32,12 +30,12 @@ export function Directory({ id }) {
   const data = useSelector((store) =>
     _.get(store, `collectionItem.byId[${id}]`)
   );
+
   const handleToggle = useCallback(() => {
-    // set isOpen = true|false
-    // update to store
-    let current = data.collapse;
-    dispatch(updateCollectionItemCollapseKey(id, !current));
-  }, [id, dispatch, data.collapse]);
+    const current = data.expanded;
+    console.log("[handleToggle] current:", current);
+    dispatch(updateCollectionItemByKeyPathLevel1(id, "expanded", !current));
+  }, [id, dispatch, data.expanded]);
 
   const handleFinishEditItem = useCallback(() => {
     dispatch(setEditItemIdAction(undefined));
@@ -91,7 +89,7 @@ export function Directory({ id }) {
           className="group flex h-full w-full cursor-pointer items-center gap-2"
           onClick={handleToggle}
         >
-          {data?.collapse ? <Folder2Open /> : <Folder />}
+          {data?.expanded ? <Folder2Open /> : <Folder />}
           {editting ? (
             <form onSubmit={handleFinishEditItem}>
               <input
@@ -110,7 +108,9 @@ export function Directory({ id }) {
         {!editting && <Actions id={id} />}
         <More id={id} isDir={true} />
       </div>
-      {data?.collapse && <DirectoryTree data={data} />}
+      {data?.expanded && (
+        <DirectoryTree subGroups={data.subGroups} requests={data.requests} />
+      )}
     </>
   );
 }

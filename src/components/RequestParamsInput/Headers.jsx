@@ -5,13 +5,11 @@ import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import Header from "../Header";
 import KeyValueInput from "./KeyValueInput";
-import { updateCollectionItemHeaderAction } from "@/store/modules/collectionItem";
+import { updateTabItemByKeyPathLevel1Action } from "@/store/modules/tab";
 
-const Headers = ({ requestId }) => {
+const Headers = ({ tabId }) => {
   const dispatch = useDispatch();
-  const request = useSelector((store) =>
-    _.get(store, `collectionItem.byId.${requestId}`)
-  );
+  const request = useSelector((store) => _.get(store, `tab.byId.${tabId}`));
 
   const handleAddNew = useCallback(() => {
     const data = request?.header || [];
@@ -21,12 +19,12 @@ const Headers = ({ requestId }) => {
       value: "",
       enabled: true,
     });
-    dispatch(updateCollectionItemHeaderAction(requestId, data));
+    dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
   }, [dispatch, request]);
 
   const handleClearAll = useCallback(() => {
     dispatch(
-      updateCollectionItemHeaderAction(requestId, [
+      updateTabItemByKeyPathLevel1Action(tabId, "header", [
         {
           id: uuid(),
           key: "",
@@ -40,7 +38,9 @@ const Headers = ({ requestId }) => {
   const handleToggle = useCallback(
     (idx) => () => {
       request.header[idx].enabled = !request.header[idx].enabled;
-      dispatch(updateCollectionItemHeaderAction(requestId, request.header));
+      dispatch(
+        updateTabItemByKeyPathLevel1Action(tabId, "header", request.header)
+      );
     },
     [dispatch, request]
   );
@@ -57,7 +57,7 @@ const Headers = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemHeaderAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
     },
     [dispatch, request]
   );
@@ -74,7 +74,7 @@ const Headers = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemHeaderAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
     },
     [dispatch, request]
   );
@@ -91,7 +91,7 @@ const Headers = ({ requestId }) => {
           enabled: true,
         });
       }
-      dispatch(updateCollectionItemHeaderAction(requestId, data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
     },
     [dispatch, request]
   );

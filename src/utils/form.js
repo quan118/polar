@@ -9,7 +9,7 @@ export const addNewRow = (formdata) => {
         id: uuid(),
         key: "",
         value: "",
-        enabled: true,
+        enabled: false,
       },
     ];
   }
