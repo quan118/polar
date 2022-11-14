@@ -9,7 +9,12 @@ function App() {
       <Sidebar />
       <Split
         className="flex flex-1"
-        gutterSize={4}
+        // gutterSize={4}
+        gutterStyle={() => ({
+          "z-index": 100,
+          "background-color": "#e7e7e7",
+          width: "0.3rem",
+        })}
         minSize={[0]}
         sizes={[30, 70]}
       >

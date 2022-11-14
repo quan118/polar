@@ -8,16 +8,17 @@ import { classNames } from "@/utils/common";
 
 const Tab = ({ id, selected, onSelect, onDelete }) => {
   const name = useSelector((store) => _.get(store, `tab.byId[${id}].name`));
+  // TODO: Research why button width doesn't work when there are many tabs
   return (
     <button
       type="button"
       className={classNames(
-        "flex items-center justify-between gap-x-1 bg-slate-100 shadow-none",
+        "flex h-8 items-center justify-between gap-x-1 bg-slate-100 shadow-none",
         selected && "bg-slate-400"
       )}
       onClick={onSelect(id)}
     >
-      <span>{name}</span>
+      <span className="min-w-[2rem] max-w-[6rem] truncate">{name}</span>
       <X className="h-4 w-4" onClick={onDelete(id)} />
     </button>
   );
@@ -58,9 +59,9 @@ const Tabbar = () => {
   );
   console.log("[Tabbar] tabs: ", tabIds);
   return (
-    <div className="flex bg-white py-1">
-      <section className="dragscroll flex items-center gap-x-1 text-xs text-gray-800">
-        {/* {tabs.map((item) => {
+    // TODO: research resize tabbar and button for add new tab bar
+    <div className="flex items-center gap-x-1 overflow-x-auto bg-white py-1 text-xs text-gray-800 scrollbar-hide">
+      {/* {tabs.map((item) => {
           return (
             <div key={item.id}>
               <div
@@ -98,16 +99,15 @@ const Tabbar = () => {
             </div>
           );
         })} */}
-        {tabIds.map((id) => (
-          <Tab
-            id={id}
-            key={id}
-            onSelect={handleSetRequestActive}
-            selected={currentTabId === id}
-            onDelete={handleDeleteTabAction}
-          />
-        ))}
-      </section>
+      {tabIds.map((id) => (
+        <Tab
+          id={id}
+          key={id}
+          onSelect={handleSetRequestActive}
+          selected={currentTabId === id}
+          onDelete={handleDeleteTabAction}
+        />
+      ))}
     </div>
   );
 };
