@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateTabItemByKeyPathLevel1Action } from "@/store/modules/tab";
 import { saveRequestAction } from "@/store/modules/collectionItem";
 import Directories from "./Directories";
+import Button from "../Button";
 
 const SaveRequestDialog = ({ requestId, children }) => {
   const dispatch = useDispatch();
@@ -132,28 +133,15 @@ const SaveRequestDialog = ({ requestId, children }) => {
               </div>
 
               <div className="mt-4 flex justify-end">
-                <DialogPrimitive.Close
-                  className={classNames(
-                    "inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium",
-                    "bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:text-gray-100 dark:hover:bg-purple-600",
-                    "border border-transparent",
-                    "mr-4 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
-                  )}
-                >
-                  Close
+                <DialogPrimitive.Close asChild>
+                  <Button variant="secondary">Close</Button>
                 </DialogPrimitive.Close>
                 <DialogPrimitive.Close
-                  className={classNames(
-                    "inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium",
-                    "bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:text-gray-100 dark:hover:bg-purple-600",
-                    "border border-transparent",
-                    "focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75",
-                    (!selectedDirId || !tab.name) &&
-                      "pointer pointer-events-none bg-slate-200 hover:bg-slate-200 focus:bg-slate-200"
-                  )}
+                  className="ml-2"
+                  asChild
                   onClick={handleSave}
                 >
-                  Save
+                  <Button>Save</Button>
                 </DialogPrimitive.Close>
               </div>
             </DialogPrimitive.Content>

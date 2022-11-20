@@ -100,11 +100,7 @@ const RequestInput = ({ tabId }) => {
         onChange={handleChangeURL}
         onKeyDown={handleKeyDown}
       />
-
-      <Button
-        onClick={handleSendRequest}
-        className="ml-2 mr-1 bg-indigo-500 hover:bg-indigo-700 focus:ring-indigo-500 "
-      >
+      <Button onClick={handleSendRequest} className="ml-2 mr-1">
         Send
       </Button>
       {/* <button
@@ -117,7 +113,7 @@ const RequestInput = ({ tabId }) => {
       </button> */}
       {/* {isTabDirty ? ( */}
       <SaveRequestDialog requestId={tabId}>
-        <Button className="mr-2 ml-1 bg-slate-500 hover:bg-slate-700 focus:ring-slate-500">
+        <Button variant="secondary" className="mr-2 ml-1">
           Save
         </Button>
       </SaveRequestDialog>
