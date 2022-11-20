@@ -2,37 +2,21 @@ export const CREATE_ENV = "CREATE_ENV";
 export const DELETE_ENV = "DELETE_ENV";
 export const UPDATE_ENV = "UPDATE_ENV";
 export const CREATE_ENV_VAR = "CREATE_ENV_VAR";
+
+export const SET_ENV_PROPERTIES_LEVEL_1 = "SET_ENV_PROPERTIES_LEVEL_1";
+
+// actions handled by sagas
+export const ADD_NEW_ENV = "ADD_NEW_ENV";
+export const DELETE_ALL_VARS_OF_ENV = "DELETE_ALL_VARS_OF_ENV";
 export const DELETE_ENV_VAR = "DELETE_ENV_VAR";
-export const UPDATE_ENV_VAR = "UPDATE_ENV_VAR";
+export const DELETE_ENV_AND_RELATED_VARS = "DELETE_ENV_AND_RELATED_VARS";
 
 const defaultState = {
-  env: {
+  byId: {
     global: {
       id: "global",
       name: "Global",
-      variables: [
-        {
-          id: "g0",
-          variable: "google",
-          value: "http://google.com",
-        },
-        {
-          id: "g1",
-          variable: "youtube",
-          value: "http://youtube.com",
-        },
-      ],
-    },
-    env1: {
-      id: "env1",
-      name: "Env1",
-      variables: [
-        {
-          id: "v1",
-          variable: "facebook",
-          value: "https://facebook.com",
-        },
-      ],
+      // variables: ['id1', 'id2']
     },
   },
 };
@@ -40,91 +24,73 @@ export default function envReducer(state = defaultState, action) {
   switch (action.type) {
     case CREATE_ENV: {
       const noId = !(action.payload.id.length > 0);
-      const idExisted = !!state.env[action.payload.id];
+      const idExisted = !!state.byId[action.payload.id];
       if (noId || idExisted) return state;
-      const env = {
-        ...state.env,
-        [action.payload.id]: { ...action.payload },
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: action.payload,
+        },
       };
-      return { env };
     }
     case DELETE_ENV: {
       const noId = !(action.id.length > 0);
-      const idExisted = !!state.env[action.id];
+      const idExisted = !!state.byId[action.id];
       if (noId || !idExisted) return state;
-      delete state.env[action.id];
+      delete state.byId[action.id];
       return {
-        env: {
-          ...state.env,
-        },
+        ...state,
+        byId: { ...state.byId },
       };
     }
     case UPDATE_ENV: {
       const noId = !(action.id.length > 0);
-      const idExisted = !!state.env[action.id];
+      const idExisted = !!state.byId[action.id];
       if (noId || !idExisted) return state;
-      const tmp = {
-        env: {
-          ...state.env,
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
           [action.id]: {
-            ...state.env[action.id],
+            ...state.byId[action.id],
             ...action.payload,
           },
         },
       };
-
-      return tmp;
     }
     case CREATE_ENV_VAR: {
       const noId = !(action.id.length > 0);
-      const idExisted = !!state.env[action.id];
+      const idExisted = !!state.byId[action.id];
       if (noId || !idExisted) return state;
-      const env = {
-        env: {
-          ...state.env,
-          [action.id]: {
-            ...state.env[action.id],
-            variables: [...state.env[action.id].variables, action.payload],
-          },
-        },
-      };
 
-      return env;
-    }
-    case DELETE_ENV_VAR: {
-      const noId = !(action.pid.length > 0);
-      const idExisted = !!state.env[action.pid];
-      if (noId || !idExisted) return state;
-      const variables = [
-        ...state.env[action.pid].variables.filter((item) => {
-          return item.id !== action.id;
-        }),
-      ];
       return {
-        env: {
-          ...state.env,
-          [action.pid]: { ...state.env[action.pid], variables: variables },
-        },
-      };
-    }
-    case UPDATE_ENV_VAR: {
-      const noId = !(action.pid.length > 0);
-      const idExisted = !!state.env[action.pid];
-      if (noId || !idExisted) return state;
-
-      const env = {
-        env: {
-          ...state.env,
-          [action.pid]: {
-            ...state.env[action.pid],
-            variables: action.payload,
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            variables: [
+              ...(state.byId[action.id].variables || []),
+              action.payload.id,
+            ],
           },
         },
       };
-
-      return env;
     }
 
+    case SET_ENV_PROPERTIES_LEVEL_1: {
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            [action.key]: action.payload,
+          },
+        },
+      };
+    }
     default:
       return state;
   }
@@ -147,13 +113,31 @@ export const createEnvVarAction = (id, payload) => ({
   id,
   payload,
 });
-export const deleteEnvVarAction = (pid, id) => ({
+export const deleteEnvVarAction = (varId) => ({
   type: DELETE_ENV_VAR,
-  pid,
+  varId,
+});
+
+export const deleteAllVarsOfEnvAction = (id) => ({
+  type: DELETE_ALL_VARS_OF_ENV,
   id,
 });
-export const updateEnvVarAction = (pid, payload) => ({
-  type: UPDATE_ENV_VAR,
-  pid,
+
+export const setEnvPropertyLevel1Action = (id, key, payload) => ({
+  type: SET_ENV_PROPERTIES_LEVEL_1,
+  id,
+  key,
   payload,
+});
+
+export const addNewEnvAction = (id, name, varId) => ({
+  type: ADD_NEW_ENV,
+  id,
+  name,
+  varId,
+});
+
+export const deleteEnvAndRelatedVarsAction = (id) => ({
+  type: DELETE_ENV_AND_RELATED_VARS,
+  id,
 });

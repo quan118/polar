@@ -9,6 +9,10 @@ export const removeUndefinedKeys = (obj) =>
 
 export const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
+const tagRegex = /(<([^>]+)>)/gi;
+
+export const convertToPureText = (innerHTML) => innerHTML.replace(tagRegex, "");
+
 export const bytesToBase64 = (bytes) => {
   var binary = "";
   bytes.forEach((b) => (binary += String.fromCharCode(b)));

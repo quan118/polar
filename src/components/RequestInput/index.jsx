@@ -35,6 +35,13 @@ const RequestInput = ({ tabId }) => {
     [tab.id]
   );
 
+  // const handleChangeURL = useCallback(
+  //   (event) => {
+  //     dispatch(updateTabUrlKeyAction(tab.id, "raw", event.target.textContent));
+  //   },
+  //   [tab.id]
+  // );
+
   const handleChangeURL = useCallback(
     (event) => {
       dispatch(updateTabUrlKeyAction(tab.id, "raw", event.target.value));
@@ -45,7 +52,7 @@ const RequestInput = ({ tabId }) => {
   const handleSendRequest = useCallback(() => {
     if (sendingRequest) return;
     dispatch(sendRequestAction(tabId));
-  }, [sendingRequest]);
+  }, [sendingRequest, tabId]);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -57,13 +64,13 @@ const RequestInput = ({ tabId }) => {
   );
 
   return (
-    <div className="z-10 flex h-8 select-none items-stretch bg-white">
+    <div className="z-10 flex h-8 items-stretch bg-white">
       <SimpleListBox
         data={methods}
         value={getMethodObjectFromName(tab.method)}
         onChange={handleSelectMethod}
       />
-      <input
+      {/* <input
         type="text"
         name="url"
         id="url"
@@ -72,13 +79,42 @@ const RequestInput = ({ tabId }) => {
         value={tab.url?.raw || ""}
         onChange={handleChangeURL}
         onKeyDown={handleKeyDown}
+      /> */}
+      {/* <div
+        contentEditable="true"
+        autoCapitalize="off"
+        spellCheck="false"
+        autoCorrect="off"
+        translate="no"
+        className="flex w-full items-center items-center rounded-none rounded-r-md border-y border-x border-slate-300 bg-slate-50 bg-yellow-500 pl-2 text-xs font-semibold text-slate-700 shadow-none focus:outline-none"
+        onInput={handleChangeURL}
+      >
+        {tab.url?.raw || ""}
+      </div> */}
+
+      <input
+        id="url"
+        className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 shadow-none focus:border-indigo-500 focus:ring-indigo-500"
+        placeholder="URL"
+        value={tab.url?.raw || ""}
+        onChange={handleChangeURL}
+        onKeyDown={handleKeyDown}
       />
+
       <Button
         onClick={handleSendRequest}
         className="ml-2 mr-1 bg-indigo-500 hover:bg-indigo-700 focus:ring-indigo-500 "
       >
         Send
       </Button>
+      {/* <button
+        type="button"
+        className="mx-2 inline-flex items-center rounded-md border border-transparent bg-indigo-500 px-3 py-2 text-xs font-bold font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        onClick={handleSendRequest}
+        // className="ml-2 mr-1 bg-indigo-500 hover:bg-indigo-700 focus:ring-indigo-500 "
+      >
+        Send
+      </button> */}
       {/* {isTabDirty ? ( */}
       <SaveRequestDialog requestId={tabId}>
         <Button className="mr-2 ml-1 bg-slate-500 hover:bg-slate-700 focus:ring-slate-500">

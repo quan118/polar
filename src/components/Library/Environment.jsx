@@ -15,12 +15,13 @@ import { memo, useCallback, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createEnvAction,
-  deleteEnvAction,
-  updateEnvAction,
+  deleteEnvAndRelatedVarsAction,
   createEnvVarAction,
   deleteEnvVarAction,
-  updateEnvVarAction,
+  deleteAllVarsOfEnvAction,
+  setEnvPropertyLevel1Action,
 } from "@/store/modules/environment";
+import { setVarPropertiesLevel1Action } from "@/store/modules/variable";
 import {
   setCurrentEnvIdAction,
   setEditEnvIdAction,
@@ -33,6 +34,7 @@ import Tippy from "@tippyjs/react";
 
 const Environment = () => {
   const dispatch = useDispatch();
+
   const currentEnvId = useSelector((store) =>
     _.get(store, `common.currentEnvId`)
   );
@@ -43,7 +45,7 @@ const Environment = () => {
     [dispatch]
   );
 
-  const envs = useSelector((store) => _.get(store, `environment.env`));
+  const envs = useSelector((store) => _.get(store, `environment.byId`));
 
   const getKeyArrayOfDict = (itemsInDict) => Object.keys(itemsInDict);
 
@@ -58,7 +60,7 @@ const Environment = () => {
     let env = {
       id: uuid(),
       name: "new env",
-      variables: [{ id: uuid(), variable: "", value: "" }],
+      variables: [uuid()],
     };
     dispatch(createEnvAction(env));
   }, [dispatch]);
@@ -69,17 +71,15 @@ const Environment = () => {
       let clone = _.cloneDeep(envs[id]);
       clone.id = uuid();
       clone.name += " copy";
-      clone.variables.map((item) => {
-        item.id = uuid();
-      });
+      clone.variables.map(uuid);
       dispatch(createEnvAction(clone));
     },
     [dispatch, envs]
   );
 
   const handleDeleteEnvAction = useCallback(
-    (id) => {
-      dispatch(deleteEnvAction(id));
+    (id) => () => {
+      dispatch(deleteEnvAndRelatedVarsAction(id));
     },
     [dispatch]
   );
@@ -248,9 +248,7 @@ const Environment = () => {
                       {() => (
                         <div
                           className="mb-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                          onClick={() => {
-                            handleDeleteEnvAction(id);
-                          }}
+                          onClick={handleDeleteEnvAction(id)}
                         >
                           <i className="">
                             <Trash />
@@ -273,6 +271,7 @@ const Environment = () => {
 
 function EditEnvDialog() {
   const dispatch = useDispatch();
+  const variables = useSelector((store) => store.variable.byId);
   const editEnvId = useSelector((store) => _.get(store, `common.editEnvId`));
   const handleEditEnvIdAction = useCallback(
     (id) => {
@@ -280,57 +279,52 @@ function EditEnvDialog() {
     },
     [dispatch, editEnvId]
   );
-  const envs = useSelector((store) => _.get(store, `environment.env`));
+  const env = useSelector((store) =>
+    _.get(store, `environment.byId[${editEnvId}]`)
+  );
 
   const handleCreateEnvVarAction = useCallback(
-    (id) => {
-      const envVar = {
+    (id) => () => {
+      const variable = {
         id: uuid(),
-        variable: "",
-        value: "",
+        environmentId: id,
+        name: "",
+        type: "default",
+        initialValue: "",
+        currentValue: "",
       };
 
-      dispatch(createEnvVarAction(id, envVar));
+      dispatch(createEnvVarAction(id, variable));
     },
     [dispatch]
   );
+
   const handleDeleteEnvVarAction = useCallback(
-    (pid, cid) => {
-      dispatch(deleteEnvVarAction(pid, cid));
+    (varId) => () => {
+      dispatch(deleteEnvVarAction(varId));
     },
     [dispatch]
   );
+
   const handleDeleteAllEnvVarAction = useCallback(
-    (pid) => {
-      envs[pid].variables.map((item) => {
-        dispatch(deleteEnvVarAction(pid, item.id));
-      });
+    (id) => () => {
+      dispatch(deleteAllVarsOfEnvAction(id));
     },
-    [dispatch, envs]
+    []
   );
+
   const handleUpdateEnvVarAction = useCallback(
-    (pid, cid, vr, vl) => {
-      let edited = {
-        id: cid,
-        variable: vr,
-        value: vl,
-      };
-
-      let variables = [...envs[pid].variables];
-      const cidx = variables.findIndex((obj) => obj.id == cid);
-      variables[cidx] = edited;
-
-      dispatch(updateEnvVarAction(pid, variables));
+    (id, key) => (evt) => {
+      dispatch(setVarPropertiesLevel1Action(id, key, evt.target.value));
     },
-    [dispatch, envs]
+    [dispatch]
   );
-  const handleUpdateEnvNameAction = useCallback(
-    (name) => {
-      let env = { ...envs[editEnvId], name: name };
 
-      dispatch(updateEnvAction(editEnvId, env));
+  const handleUpdateEnvNameAction = useCallback(
+    (e) => {
+      dispatch(setEnvPropertyLevel1Action(editEnvId, "name", e.target.value));
     },
-    [dispatch, envs, editEnvId]
+    [dispatch, editEnvId]
   );
 
   return (
@@ -375,12 +369,10 @@ function EditEnvDialog() {
                   type="text"
                   name="name"
                   id="name"
-                  defaultValue={envs[editEnvId]?.name}
-                  onChange={(e) => {
-                    handleUpdateEnvNameAction(e.target.value);
-                  }}
+                  defaultValue={env?.name}
+                  onChange={handleUpdateEnvNameAction}
                   className="m-0 block w-full bg-white p-0 text-gray-700 shadow-none transition-all duration-300 focus:ring-0 sm:text-xs"
-                  placeholder={envs[editEnvId]?.name || "Name"}
+                  placeholder="Name"
                 />
               </form>
             </div>
@@ -392,9 +384,7 @@ function EditEnvDialog() {
                 <div className="flex items-center justify-end gap-4">
                   <div
                     className=" cursor-pointer"
-                    onClick={() => {
-                      handleDeleteAllEnvVarAction(editEnvId);
-                    }}
+                    onClick={handleDeleteAllEnvVarAction(editEnvId)}
                   >
                     <i className="">
                       <Trash />
@@ -402,7 +392,7 @@ function EditEnvDialog() {
                   </div>
                   <div
                     className=" cursor-pointer"
-                    onClick={() => handleCreateEnvVarAction(editEnvId)}
+                    onClick={handleCreateEnvVarAction(editEnvId)}
                   >
                     <i className="">
                       <Plus />
@@ -411,10 +401,10 @@ function EditEnvDialog() {
                 </div>
               </div>
               <div className="mt-2">
-                {envs[editEnvId]?.variables?.map((item) => (
+                {env?.variables?.map((varId) => (
                   <div
                     className="flex items-center border text-gray-700"
-                    key={item.id}
+                    key={variables[varId].id}
                   >
                     <form
                       action=""
@@ -427,16 +417,8 @@ function EditEnvDialog() {
                         type="text"
                         className="rounded-none border-y-0 border-l-0 border-gray-200 bg-white text-xs text-gray-700 shadow-none"
                         placeholder="Variable"
-                        defaultValue={item.variable}
-                        onChange={(e) => {
-                          handleUpdateEnvVarAction(
-                            editEnvId,
-                            item.id,
-                            e.target.value,
-                            item.value
-                          );
-                          // edit variable
-                        }}
+                        defaultValue={variables[varId].name}
+                        onChange={handleUpdateEnvVarAction(varId, "name")}
                       />
                     </form>
                     <form
@@ -450,23 +432,16 @@ function EditEnvDialog() {
                         type="text"
                         className="rounded-none border-y-0 border-l-0 border-gray-200 bg-white text-xs text-gray-700 shadow-none"
                         placeholder="Value"
-                        defaultValue={item.value}
-                        onChange={(e) => {
-                          handleUpdateEnvVarAction(
-                            editEnvId,
-                            item.id,
-                            item.variable,
-                            e.target.value
-                          );
-                          // edit value
-                        }}
+                        defaultValue={variables[varId].currentValue}
+                        onChange={handleUpdateEnvVarAction(
+                          varId,
+                          "currentValue"
+                        )}
                       />
                     </form>
                     <div
                       className=" flex w-full cursor-pointer items-center justify-center border-gray-200"
-                      onClick={() => {
-                        handleDeleteEnvVarAction(editEnvId, item.id);
-                      }}
+                      onClick={handleDeleteEnvVarAction(varId)}
                     >
                       <i className="">
                         <Trash />

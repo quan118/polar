@@ -8,7 +8,7 @@ import AuthApiKeyTypeForm from "./AuthApiKeyTypeForm";
 
 const AuthorizationType = ({ selected, onChangeType }) => {
   return (
-    <div className="flex h-8 items-center border-b px-2">
+    <div className="flex h-8 select-none items-center border-b px-2">
       <label className="mr-4 text-xs font-semibold text-slate-500">
         Authorization Type
       </label>

@@ -5,3 +5,4 @@ export { default as space } from "./space";
 export { default as common } from "./common";
 export { default as tab } from "./tab";
 export { default as environment } from "./environment";
+export { default as variable } from "./variable";

@@ -32,7 +32,7 @@ const ContentType = ({
   onChangeLanguage,
 }) => {
   return (
-    <div className="flex items-center border-b px-2 ">
+    <div className="flex select-none items-center border-b px-2">
       <label className="mr-4 text-xs font-semibold text-slate-500">
         Content Type
       </label>

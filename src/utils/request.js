@@ -18,9 +18,101 @@ fetchConfig
   timeout,
   url
 }
+
+variables
+{
+  'base_url': 'https://example.com'
+}
 */
 
+export const replace = (s, variables) => {
+  if (!s) return s;
+  let output = s;
+  Object.keys(variables).forEach((k) => {
+    if (Array.isArray(variables[k]) && variables[k].length > 0)
+      output = output.replaceAll(`{{${k}}}`, variables[k][0].currentValue);
+  });
+
+  return output;
+};
+
+export const processVariables = (requestConfig, variables) => {
+  const header = requestConfig?.header.map((item) => ({
+    ...item,
+    key: replace(item.key, variables),
+    value: replace(item.value, variables),
+  }));
+
+  const raw = replace(requestConfig?.url?.raw, variables);
+  const query = requestConfig?.url?.query.map((item) => ({
+    ...item,
+    key: replace(item.key, variables),
+    value: replace(item.value, variables),
+  }));
+  const url = {
+    ...requestConfig.url,
+    raw,
+    query,
+  };
+
+  const authBasicUsername = replace(
+    requestConfig?.auth?.basic?.username,
+    variables
+  );
+  const authBasicPassword = replace(
+    requestConfig?.auth?.basic?.password,
+    variables
+  );
+  const authBearer = replace(requestConfig?.auth?.bearer, variables);
+  const authApikeyKey = replace(requestConfig?.auth?.apikey?.key, variables);
+  const authApikeyValue = replace(
+    requestConfig?.auth?.apikey?.value,
+    variables
+  );
+  const auth = {
+    ...requestConfig?.auth,
+    basic: {
+      username: authBasicUsername,
+      password: authBasicPassword,
+    },
+    bearer: authBearer,
+    apikey: {
+      ...requestConfig?.auth?.apikey,
+      key: authApikeyKey,
+      value: authApikeyValue,
+    },
+  };
+
+  const bodyRaw = replace(requestConfig?.body?.raw, variables);
+  const bodyFormdata = requestConfig?.body?.formdata?.map((item) => ({
+    ...item,
+    key: replace(item.key, variables),
+    value: replace(item.value, variables),
+  }));
+  const bodyUrlencoded = requestConfig?.body?.urlencoded?.map((item) => ({
+    ...item,
+    key: replace(item.key, variables),
+    value: replace(item.value, variables),
+  }));
+  const body = {
+    ...requestConfig?.body,
+    raw: bodyRaw,
+    formdata: bodyFormdata,
+    urlencoded: bodyUrlencoded,
+  };
+
+  return {
+    ...requestConfig,
+    header,
+    url,
+    auth,
+    body,
+  };
+};
+
 export const buildFetchConfig = (requestConfig) => {
+  // const decodedRequestConfig = handleVariables(requestConfig, variables);
+
   let initialFetchConfig = {
     method: requestConfig?.method,
     headers: {},

@@ -4,39 +4,86 @@ import uuid from "react-uuid";
 import { fetch } from "@tauri-apps/api/http";
 import { Body } from "@tauri-apps/api/http";
 import { readBinaryFile } from "@tauri-apps/api/fs";
-import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import { SEND_REQUEST, updateCommonAction } from "../modules/common";
 import { createResponseAction } from "../modules/response";
-import { buildFetchConfig } from "@/utils/request";
+import { buildFetchConfig, processVariables } from "@/utils/request";
+
+const buildNameToVariablesMapping = (
+  variables,
+  environment,
+  variablesByName
+) => {
+  const output = { ...variablesByName };
+  environment?.variables?.forEach((varId) => {
+    const varName = variables[varId].name;
+    if (Array.isArray(output[varName])) {
+      output[varName].push(variables[varId]);
+    } else {
+      output[varName] = [variables[varId]];
+    }
+  });
+
+  return output;
+};
 
 function* handleSendRequest({ requestId }) {
   try {
     yield put(updateCommonAction({ sendingRequest: true }));
+
+    // build variables mapping
+    const currentEnvId = yield select((store) => store.common.currentEnvId);
+    const variables = yield select((store) => store.variable.byId);
+    let nameToVariables = {};
+    if (currentEnvId) {
+      const currentEnv = yield select(
+        (store) => store.environment.byId[currentEnvId]
+      );
+      nameToVariables = buildNameToVariablesMapping(
+        variables,
+        currentEnv,
+        nameToVariables
+      );
+    }
+
+    if (currentEnvId !== "global") {
+      const globalEnv = yield select((store) => store.environment.byId.global);
+      nameToVariables = buildNameToVariablesMapping(
+        variables,
+        globalEnv,
+        nameToVariables
+      );
+    }
+
+    console.log("name to variables");
+    console.log(nameToVariables);
+
+    //
     let request = yield select((store) =>
       _.get(store, `tab.byId.${requestId}`)
     );
 
-    // prepend https if needed
-    const tokens = request.url.raw.split("//");
-    if (tokens.length < 2 || !tokens[0].toLowerCase().startsWith("http")) {
-      // yield put(
-      //   updateCollectionItemUrlKeyAction(
-      //     requestId,
-      //     "raw",
-      //     "https://" + request.url.raw
-      //   )
-      // );
-      yield put(
-        updateTabItemByKeyPathLevel2Action(
-          requestId,
-          "url",
-          "raw",
-          "https://" + request.url.raw
-        )
-      );
+    console.log("request before process variables:");
+    console.log(request);
 
-      request = yield select((store) => _.get(store, `tab.byId.${requestId}`));
-    }
+    request = processVariables(request, nameToVariables);
+
+    console.log("request after process variables:");
+    console.log(request);
+
+    // prepend https if needed
+    // const tokens = request.url.raw.split("//");
+    // if (tokens.length < 2 || !tokens[0].toLowerCase().startsWith("http")) {
+    //   yield put(
+    //     updateTabItemByKeyPathLevel2Action(
+    //       requestId,
+    //       "url",
+    //       "raw",
+    //       "https://" + request.url.raw
+    //     )
+    //   );
+
+    //   request = yield select((store) => _.get(store, `tab.byId.${requestId}`));
+    // }
 
     const fetchConfig = buildFetchConfig(request);
 
