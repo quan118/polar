@@ -39,7 +39,7 @@ const Actions = ({ id }) => {
   );
 
   return (
-    <div className="z-100 hidden items-center gap-4 text-gray-500 group-hover:flex">
+    <div className="z-100 hidden items-center gap-3 pr-3 text-gray-500 group-hover:flex">
       <Tippy content={"New Request"} arrow={false} animation="scale">
         <FilePlus className="cursor-pointer" onClick={handleAddRequest} />
       </Tippy>

@@ -11,7 +11,7 @@ const Sidebar = () => {
   const [menuSelected, setMenuSelected] = useState([SIDEBAR[0].name]);
   return (
     <div
-      className={`flex w-24 min-w-max flex-col items-center border-x border-l-0 bg-white transition-all duration-200 `}
+      className={`flex w-24 min-w-max flex-col items-center border-l-0 bg-white transition-all duration-200 `}
     >
       <div className="w-full">
         {SIDEBAR.map((item) => (

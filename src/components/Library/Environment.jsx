@@ -29,8 +29,13 @@ import {
 import uuid from "react-uuid";
 import _ from "lodash";
 import { Listbox } from "@headlessui/react";
-import { Menu, Transition, Dialog } from "@headlessui/react";
+import { Transition, Dialog } from "@headlessui/react";
 import Tippy from "@tippyjs/react";
+
+import "@radix-ui/colors/blackA.css";
+import "@radix-ui/colors/mauve.css";
+import "@radix-ui/colors/violet.css";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 const Environment = () => {
   const dispatch = useDispatch();
@@ -180,86 +185,61 @@ const Environment = () => {
                 handleEditEnvIdAction(id);
               }}
             >
-              <i className="">
-                <Layers />
-              </i>
+              <Layers className="h-4 w-4" />
+
               <span className="truncate">{envs[id].name}</span>
             </div>
 
             <div className="group flex w-full items-center justify-end text-xs transition-all duration-200 ">
-              <Menu>
-                <div>
-                  <Menu.Button
-                    className={"z-[0] border-0 pr-0 text-gray-700 shadow-none"}
-                  >
-                    <Tippy content={"More"} arrow={false} animation="scale">
-                      <i className=" cursor-pointer text-sm">
-                        <ThreeDotsVertical />
-                      </i>
-                    </Tippy>
-                  </Menu.Button>
-                </div>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <div className="" aria-label="Customise options">
+                    <ThreeDotsVertical />
+                  </div>
+                </DropdownMenu.Trigger>
 
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items
-                    className={
-                      "border-1 absolute right-0 z-10 mt-20 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                    }
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className="DropdownMenuContent alignOffset-start z-20"
+                    sideOffset={5}
+                    align={"end"}
+                    alignOffset={0}
                   >
-                    <Menu.Item>
-                      {() => (
-                        <div
-                          className="mt-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                          onClick={() => {
-                            handleEditEnvIdAction(id);
-                          }}
-                        >
-                          <i className="">
-                            <PencilSquare />
-                          </i>
-                          <span className="">Edit</span>
-                        </div>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {() => (
-                        <div
-                          className="mt-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                          onClick={() => {
-                            handleDuplicateEnvAction(id);
-                          }}
-                        >
-                          <i className="">
-                            <Files />
-                          </i>
-                          <span className="">Duplicate</span>
-                        </div>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {() => (
-                        <div
-                          className="mb-2 flex w-full cursor-pointer items-center justify-start gap-4  bg-white px-4 py-2 text-gray-700 transition-all duration-200 hover:border-0 hover:bg-gray-100"
-                          onClick={handleDeleteEnvAction(id)}
-                        >
-                          <i className="">
-                            <Trash />
-                          </i>
-                          <span className="">Delete</span>
-                        </div>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+                    <DropdownMenu.Item
+                      className="DropdownMenuItem"
+                      onSelect={() => {
+                        handleEditEnvIdAction(id);
+                      }}
+                    >
+                      <PencilSquare className="mr-2" />
+                      Edit
+                      <div className="RightSlot">⌘+E</div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Item
+                      className="DropdownMenuItem"
+                      onSelect={() => {
+                        handleDuplicateEnvAction(id);
+                      }}
+                    >
+                      <Files className="mr-2" />
+                      Duplicate
+                      <div className="RightSlot">⌘+U</div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Item
+                      className="DropdownMenuItem"
+                      onSelect={() => {
+                        handleDeleteEnvAction(id);
+                      }}
+                    >
+                      <Trash className="mr-2" />
+                      Delete
+                      <div className="RightSlot">⌘+D</div>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
             </div>
           </div>
         ))}

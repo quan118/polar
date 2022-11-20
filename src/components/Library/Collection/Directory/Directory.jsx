@@ -86,7 +86,7 @@ export function Directory({ id }) {
     <>
       <div className=" group flex cursor-pointer items-center justify-between px-3 py-[0.1rem]  duration-200 hover:bg-gray-100">
         <div
-          className="group flex h-full w-full cursor-pointer items-center gap-2"
+          className="group flex h-full w-full cursor-pointer items-center gap-2 py-1.5"
           onClick={handleToggle}
         >
           {data?.expanded ? <Folder2Open /> : <Folder />}
@@ -94,7 +94,7 @@ export function Directory({ id }) {
             <form onSubmit={handleFinishEditItem}>
               <input
                 type="text"
-                className="w-full rounded border border-gray-300 py-1 px-1 text-xs shadow-none"
+                className="w-full rounded border border-gray-300 px-1 text-xs shadow-none"
                 value={data?.name}
                 onChange={handleUpdateItemName}
                 id="textbox"

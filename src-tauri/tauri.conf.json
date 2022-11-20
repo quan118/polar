@@ -79,7 +79,7 @@
         "title": "Polar",
         "width": 1200,
         "minWidth": 800,
-        "titleBarStyle": "Overlay",
+        "titleBarStyle": "Visible",
         "hiddenTitle": true
       }
     ]
