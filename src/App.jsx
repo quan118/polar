@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import Split from "react-split";
 import "./libs/fonts/Inter/inter.css";
-import "./App.css";
 import { Sidebar, Library, Editor } from "./components";
 function App() {
   return (
