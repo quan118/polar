@@ -11,11 +11,10 @@ import {
 } from "react";
 import { FolderPlus, Pen, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
-import Tippy from "@tippyjs/react";
 import Fuse from "fuse.js";
 import { getOutermostItems } from "@/utils/common";
-
 import Directory from "../Directory";
+import { Tooltip } from "../Tooltip";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -109,18 +108,19 @@ const DirectoryTree = ({
             >
               {!searchText && (
                 <div className="flex flex-1 flex-row justify-end gap-4">
-                  <Tippy content="New Folder" arrow={false} animation="scale">
+                  <Tooltip content={"New Collection"}>
                     <FolderPlus
                       className="cursor-pointer"
                       onClick={onAddNew(id)}
                     />
-                  </Tippy>
-                  <Tippy content="Rename" arrow={false} animation="scale">
+                  </Tooltip>
+
+                  <Tooltip content={"Rename"}>
                     <Pen
                       className="cursor-pointer"
                       onClick={onToggleRename(id)}
                     />
-                  </Tippy>
+                  </Tooltip>
                 </div>
               )}
             </Directory>
@@ -285,18 +285,19 @@ const Directories = (
             >
               {!searchText && dir.id !== "drafts" && (
                 <div className="flex flex-1 flex-row justify-end gap-4">
-                  <Tippy content="New Folder" arrow={false} animation="scale">
+                  <Tooltip content={"New Collection"}>
                     <FolderPlus
                       className="cursor-pointer"
                       onClick={handleAddNew(dir.id)}
                     />
-                  </Tippy>
-                  <Tippy content="Rename" arrow={false} animation="scale">
+                  </Tooltip>
+
+                  <Tooltip content={"Rename"}>
                     <Pen
                       className="cursor-pointer"
                       onClick={handleToggleRename(dir.id)}
                     />
-                  </Tippy>
+                  </Tooltip>
                 </div>
               )}
             </Directory>

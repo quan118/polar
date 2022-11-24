@@ -1,14 +1,13 @@
 import { memo, useCallback } from "react";
 import { Directory } from "./Directory/Directory";
 import { QuestionCircle, Archive, Plus } from "react-bootstrap-icons";
-import Tippy from "@tippyjs/react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { createCollectionItemAction } from "@/store/modules/collectionItem";
-import { EditDialog } from "./Directory/EditDialog";
 import { setEditItemIdAction } from "@/store/modules/common";
 import { getOutermostItems } from "@/utils/common";
 import uuid from "react-uuid";
+import { Tooltip } from "@/components/Tooltip";
 
 const Collection = () => {
   const dispatch = useDispatch();
@@ -46,13 +45,12 @@ const Collection = () => {
         </div>
 
         <div className="flex items-center gap-x-2">
-          <Tippy content={"Wiki"} arrow={false} animation="scale">
+          <Tooltip content={"Wiki"}>
             <QuestionCircle className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
-          </Tippy>
-
-          <Tippy content={"Import/Export"} arrow={false} animation="scale">
+          </Tooltip>
+          <Tooltip content={"Import/Export"}>
             <Archive className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
-          </Tippy>
+          </Tooltip>
         </div>
       </div>
       <div className="h-full w-full overflow-y-auto">
@@ -60,7 +58,6 @@ const Collection = () => {
           <Directory id={item.id} key={item.id} />
         ))}
       </div>
-      <EditDialog visible={false} type={"New Folder"} />
     </div>
   );
 };

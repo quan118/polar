@@ -122,8 +122,6 @@ const RequestInput = ({ tabId }) => {
           Save
         </Button>
       )} */}
-
-      {/* <EditDialog visible={true} type="Save Request" /> */}
     </div>
   );
 };

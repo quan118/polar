@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Split from "react-split";
 import uuid from "react-uuid";
 import { createNewRequestAction } from "@/store/modules/collectionItem";
+import Button from "../Button";
 import Tabbar from "../Tabbar";
 import RequestInput from "../RequestInput";
 import RequestParamsInput from "../RequestParamsInput";
@@ -37,17 +38,12 @@ const Editor = () => {
       ) : (
         <>
           <div className="flex-1" />
-          <button
-            type="button"
-            className="mx-2 inline-flex items-center self-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={handleCreateRequest}
-          >
+          <Button className="self-center" onClick={handleCreateRequest}>
             Create a request
-          </button>
+          </Button>
           <div className="flex-1" />
         </>
       )}
-      {/* <EditDialog visible={true} type="Save Request" /> */}
     </div>
   );
 };

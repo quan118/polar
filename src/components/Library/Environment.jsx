@@ -30,7 +30,7 @@ import uuid from "react-uuid";
 import _ from "lodash";
 import { Listbox } from "@headlessui/react";
 import { Transition, Dialog } from "@headlessui/react";
-import Tippy from "@tippyjs/react";
+import { Tooltip } from "./../Tooltip";
 
 import "@radix-ui/colors/blackA.css";
 import "@radix-ui/colors/mauve.css";
@@ -160,17 +160,17 @@ const Environment = () => {
           <span className="text-xs">New</span>
         </div>
         <div className="flex items-center gap-x-2">
-          <Tippy content={"Wiki"} arrow={false} animation="scale">
+          <Tooltip content={"Wiki"}>
             <i className="cursor-pointer px-2 text-gray-500 opacity-80 transition-none duration-200 hover:opacity-100">
               <QuestionCircle />
             </i>
-          </Tippy>
+          </Tooltip>
 
-          <Tippy content={"Import/Export"} arrow={false} animation="scale">
+          <Tooltip content={"Import/Export"}>
             <i className="cursor-pointer px-1 text-gray-500 opacity-80 transition-none duration-200 hover:opacity-100">
               <Archive />
             </i>
-          </Tippy>
+          </Tooltip>
         </div>
       </div>
       <div className="flex h-full flex-col items-start overflow-y-auto py-2 text-xs text-gray-600">
@@ -194,7 +194,9 @@ const Environment = () => {
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
                   <div className="" aria-label="Customise options">
-                    <ThreeDotsVertical />
+                    <Tooltip content={"More Actions..."}>
+                      <ThreeDotsVertical />
+                    </Tooltip>
                   </div>
                 </DropdownMenu.Trigger>
 
@@ -335,7 +337,7 @@ function EditEnvDialog() {
             }
           >
             <div className=" relative w-full rounded-md border px-3 py-2 shadow-sm focus-within:border-gray-400 ">
-              <label className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-[0.6rem] font-normal text-gray-500">
+              <label className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-[0.6rem] font-normal text-gray-500">
                 Label
               </label>
               <form
@@ -366,17 +368,21 @@ function EditEnvDialog() {
                     className=" cursor-pointer"
                     onClick={handleDeleteAllEnvVarAction(editEnvId)}
                   >
-                    <i className="">
-                      <Trash />
-                    </i>
+                    <Tooltip content={"Delete All Items"}>
+                      <i className="">
+                        <Trash />
+                      </i>
+                    </Tooltip>
                   </div>
                   <div
                     className=" cursor-pointer"
                     onClick={handleCreateEnvVarAction(editEnvId)}
                   >
-                    <i className="">
-                      <Plus />
-                    </i>
+                    <Tooltip content={"Add Item"}>
+                      <i className="">
+                        <Plus />
+                      </i>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
@@ -423,9 +429,11 @@ function EditEnvDialog() {
                       className=" flex w-full cursor-pointer items-center justify-center border-gray-200"
                       onClick={handleDeleteEnvVarAction(varId)}
                     >
-                      <i className="">
-                        <Trash />
-                      </i>
+                      <Tooltip content={"Delete Item"}>
+                        <i className="">
+                          <Trash />
+                        </i>
+                      </Tooltip>
                     </div>
                   </div>
                 ))}

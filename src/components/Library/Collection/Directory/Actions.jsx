@@ -1,4 +1,3 @@
-import Tippy from "@tippyjs/react";
 import { memo, useCallback } from "react";
 import { FolderPlus, FilePlus } from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
@@ -8,6 +7,7 @@ import {
   createNewRequestAction,
 } from "@/store/modules/collectionItem";
 import { setEditItemIdAction } from "@/store/modules/common";
+import { Tooltip } from "./../../../Tooltip";
 
 const Actions = ({ id }) => {
   const dispatch = useDispatch();
@@ -40,13 +40,14 @@ const Actions = ({ id }) => {
 
   return (
     <div className="z-100 hidden items-center gap-3 pr-3 text-gray-500 group-hover:flex">
-      <Tippy content={"New Request"} arrow={false} animation="scale">
+      <Tooltip content={"New Request"}>
         <FilePlus className="cursor-pointer" onClick={handleAddRequest} />
-      </Tippy>
+      </Tooltip>
+
       {id !== "drafts" && (
-        <Tippy content={"New Folder"} arrow={false} animation="scale">
+        <Tooltip content={"New Collection"}>
           <FolderPlus className="cursor-pointer" onClick={handleAddDirectory} />
-        </Tippy>
+        </Tooltip>
       )}
     </div>
   );

@@ -21,11 +21,10 @@ import {
   setCurrentRequestIdAction,
 } from "@/store/modules/common";
 import { addTabAction, syncTabAction } from "@/store/modules/tab";
-
-import "@radix-ui/colors/blackA.css";
-import "@radix-ui/colors/mauve.css";
-import "@radix-ui/colors/violet.css";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import "./styles.css";
+
+import { Tooltip } from "./../../../../Tooltip";
 
 const More = ({ id, isDir }) => {
   const request = useSelector((store) =>
@@ -111,7 +110,9 @@ const More = ({ id, isDir }) => {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <div className="" aria-label="Customise options">
-            <ThreeDotsVertical />
+            <Tooltip content="More Actions..." avoidCollisions={true}>
+              <ThreeDotsVertical />
+            </Tooltip>
           </div>
         </DropdownMenu.Trigger>
 
@@ -176,4 +177,5 @@ const More = ({ id, isDir }) => {
     </div>
   );
 };
+
 export default memo(More);
