@@ -1,14 +1,11 @@
 /* eslint-disable prettier/prettier */
 import Split from "react-split";
 import "./libs/fonts/Inter/inter.css";
-import { Sidebar, Library, Editor } from "./components";
+import { Library, Editor } from "./components";
 function App() {
   return (
     <div className="h-screen w-screen select-none overflow-hidden bg-gray-200">
-      <div className="fixed top-0 left-0 h-screen bg-white">
-        <Sidebar />
-      </div>
-      <div className="pl-24">
+      <div>
         <Split
           className="flex h-screen w-full flex-1"
           gutterSize={4}
