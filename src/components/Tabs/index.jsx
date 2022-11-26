@@ -1,29 +1,20 @@
 import { memo } from "react";
-import { classNames } from "@/utils/common";
+import Tab from "../Tab";
 
 const Tabs = ({ tabs, selected, onChange, rightComponent }) => (
   <div className="-mb-px flex space-x-8 border-b border-gray-200">
     <nav className="-mb-px flex space-x-8" aria-label="Tabs">
       {tabs.map((tab) => (
-        <a
+        <Tab
           key={tab.name}
-          href={tab.href}
-          className={classNames(
-            tab.key === selected.key
-              ? "border-indigo-500 text-indigo-600"
-              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-            "whitespace-nowrap border-b-2 py-2 px-1 text-xs font-medium"
-          )}
-          aria-current={tab.current ? "page" : undefined}
+          variant="secondary"
+          label={tab.name}
+          selected={tab.key === selected?.key}
           onClick={onChange(tab)}
-        >
-          {tab.name}
-        </a>
+          rightComponent={tab.rightComponent || undefined}
+        />
       ))}
     </nav>
-    {/* {tabs.map((tab) => (
-      <Tab key={tab.key} id={tab.id} selected={selected} />
-    ))} */}
     {rightComponent}
   </div>
 );

@@ -57,7 +57,7 @@ const Headers = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", [...data]));
     },
     [dispatch, request]
   );
@@ -74,7 +74,7 @@ const Headers = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", [...data]));
     },
     [dispatch, request]
   );
@@ -91,7 +91,7 @@ const Headers = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", data));
+      dispatch(updateTabItemByKeyPathLevel1Action(tabId, "header", [...data]));
     },
     [dispatch, request]
   );

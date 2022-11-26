@@ -62,7 +62,9 @@ const Parameters = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "url", "query", [...data])
+      );
     },
     [dispatch, request]
   );
@@ -79,7 +81,9 @@ const Parameters = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "url", "query", [...data])
+      );
     },
     [dispatch, request]
   );
@@ -96,7 +100,9 @@ const Parameters = ({ tabId }) => {
           enabled: true,
         });
       }
-      dispatch(updateTabItemByKeyPathLevel2Action(tabId, "url", "query", data));
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "url", "query", [...data])
+      );
     },
     [dispatch, request]
   );
