@@ -190,7 +190,9 @@ const handleImportRequest = (item, parent, payload) => {
   // url
   if (request.url) {
     payload[item.id].url = {
-      raw: request.url.toString(),
+      raw: `${
+        request.url.protocol
+      }://${request.url.getRemote()}/${request.url.getPath(true)}`,
       query: request.url.query.map((e) => ({
         id: uuid(),
         key: e.key,
