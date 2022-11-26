@@ -9,6 +9,7 @@ const persistConfig = {
   key: "root",
   storage,
   timeout: 0,
+  blacklist: ['response']
 };
 
 const combinedReducers = combineReducers(reducers);
