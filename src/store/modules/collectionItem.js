@@ -1,3 +1,4 @@
+import { REHYDRATE } from "redux-persist";
 export const CREATE_COLLECTION_ITEM = "CREATE_COLLECTION_ITEM";
 export const CREATE_REQUEST_ITEM = "CREATE_REQUEST_ITEM";
 export const SET_COLLECTION_ITEM_BY_ID_KEY = "SET_COLLECTION_ITEM_BY_ID_KEY";
@@ -17,9 +18,12 @@ export const SET_EDIT_ITEM_ID = "SET_EDIT_ITEM_ID";
 
 export const SAVE_REQUEST = "SAVE_REQUEST";
 
+export const ADD_MULTIPLE_COLLECTION_ITEMS = "ADD_MULTIPLE_COLLECTION_ITEMS";
+
 // actions handled by sagas
 export const CREATE_NEW_REQUEST = "CREATE_NEW_REQUEST";
 export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
+export const IMPORT_COLLECTION = "IMPORT_COLLECTION";
 
 const defaultState = {
   byId: {
@@ -206,6 +210,12 @@ export const deleteSubGroup = (collectionItemById, groupId) => {
 
 export default function collectionItemReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.collectionItem,
+      };
+    }
     case CREATE_COLLECTION_ITEM: {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];
@@ -411,6 +421,15 @@ export default function collectionItemReducer(state = defaultState, action) {
         byId: action.payload,
       };
     }
+    case ADD_MULTIPLE_COLLECTION_ITEMS: {
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          ...action.payload,
+        },
+      };
+    }
     default:
       return state;
   }
@@ -510,5 +529,15 @@ export const updateCollectionItemByKeyPathLevel1 = (id, key, payload) => ({
 
 export const setCollectionItemByIdKey = (payload) => ({
   type: SET_COLLECTION_ITEM_BY_ID_KEY,
+  payload,
+});
+
+export const importCollectionAction = (filepath) => ({
+  type: IMPORT_COLLECTION,
+  filepath,
+});
+
+export const addMultipleCollectionItemsAction = (payload) => ({
+  type: ADD_MULTIPLE_COLLECTION_ITEMS,
   payload,
 });

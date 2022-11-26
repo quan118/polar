@@ -1,3 +1,5 @@
+import { REHYDRATE } from "redux-persist";
+
 export const UPDATE_COMMON = "UPDATE_COMMON";
 export const SEND_REQUEST = "SEND_REQUEST";
 export const CURRENT_REQUEST_ID = "CURRENT_REQUEST_ID";
@@ -19,6 +21,12 @@ const defaultState = {
 
 export default function commonReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.common,
+      };
+    }
     case UPDATE_COMMON: {
       return {
         ...state,

@@ -5,12 +5,14 @@ import {
   PencilSquare,
   Files,
   Trash,
+  Download,
 } from "react-bootstrap-icons";
 
 import { memo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import uuid from "react-uuid";
 import _ from "lodash";
+import { save } from "@tauri-apps/api/dialog";
 import {
   createCollectionItemAction,
   createRequestItemAction,
@@ -25,6 +27,8 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import "./styles.css";
 
 import { Tooltip } from "./../../../../Tooltip";
+
+import { exportCollectionToFile } from "@/utils/file";
 
 const More = ({ id, isDir }) => {
   const request = useSelector((store) =>
@@ -105,6 +109,11 @@ const More = ({ id, isDir }) => {
     [id, dispatch]
   );
 
+  const handleSaveCollection = useCallback(async () => {
+    const filePath = await save();
+    await exportCollectionToFile(id, collectionItems, filePath);
+  }, []);
+
   return (
     <div className="group flex items-center justify-between text-xs transition-all duration-200 hover:bg-gray-100 ">
       <DropdownMenu.Root>
@@ -169,6 +178,15 @@ const More = ({ id, isDir }) => {
               >
                 <Trash className="mr-2" />
                 Delete <div className="RightSlot">⌘+D</div>
+              </DropdownMenu.Item>
+            )}
+            {isDir && (
+              <DropdownMenu.Item
+                className="DropdownMenuItem"
+                onSelect={handleSaveCollection}
+              >
+                <Download className="mr-2" />
+                Export <div className="RightSlot">⌘+E</div>
               </DropdownMenu.Item>
             )}
           </DropdownMenu.Content>

@@ -1,4 +1,7 @@
-import { takeLatest, put, select } from "redux-saga/effects";
+import { takeLatest, put, select, call } from "redux-saga/effects";
+import { readTextFile } from "@tauri-apps/api/fs";
+import uuid from "react-uuid";
+import { Collection } from "postman-collection";
 import { NEW_REQUEST_PAYLOAD } from "@/constants";
 import {
   CREATE_NEW_REQUEST,
@@ -6,6 +9,8 @@ import {
   createRequestItemAction,
   updateCollectionItemByKeyPathLevel1,
   setCollectionItemByIdKey,
+  IMPORT_COLLECTION,
+  addMultipleCollectionItemsAction,
 } from "../modules/collectionItem";
 import {
   addTabAction,
@@ -162,9 +167,169 @@ function* handleDeleteCollectionItem({ id }) {
   }
 }
 
+const handleImportRequest = (item, parent, payload) => {
+  payload[parent.id].requests.push(item.id);
+  payload[item.id] = {
+    id: item.id,
+    type: "request",
+    method: item.request.method,
+    name: item.name,
+    parentId: parent.id,
+  };
+  const request = item.request;
+  // header
+  if (request.headers) {
+    payload[item.id].header = request.headers.map((e) => ({
+      id: uuid(),
+      key: e.key,
+      value: e.value,
+      enabled: !e.disabled,
+    }));
+  }
+
+  // url
+  if (request.url) {
+    payload[item.id].url = {
+      raw: request.url.toString(),
+      query: request.url.query.map((e) => ({
+        id: uuid(),
+        key: e.key,
+        value: e.value,
+        enabled: !e.disabled,
+      })),
+    };
+  }
+
+  // auth
+  if (
+    request.auth &&
+    ["basic", "bearer", "apikey"].includes(request.auth.type)
+  ) {
+    payload[item.id].auth = {
+      type: request.auth.type,
+    };
+
+    if (request.auth.type === "basic") {
+      payload[item.id].auth.basic = {
+        username: request.auth.parameters().find((e) => e.key === "username")
+          ?.value,
+        password: request.auth.parameters().find((e) => e.key === "password")
+          ?.value,
+      };
+    } else if (request.auth.type === "bearer") {
+      payload[item.id].auth.bearer = request.auth
+        .parameters()
+        .find((e) => e.key === "token").value;
+    } else if (request.auth.type === "apikey") {
+      payload[item.id].auth.apikey = {
+        key: request.auth.apikey.find((e) => e.key === "key")?.value,
+        value: request.auth.apikey.find((e) => e.key === "value")?.value,
+      };
+
+      if (request.auth.apikey.find((e) => e.key === "in")?.value === "query") {
+        payload[item.id].auth.apikey.in = "query";
+      }
+    }
+  }
+
+  // body
+  if (request.body) {
+    payload[item.id].body = {
+      mode: request.body.mode,
+    };
+
+    if (request.body.raw) {
+      payload[item.id].body.raw = request.body.raw;
+    }
+
+    // formdata
+    if (request.body.formdata) {
+      payload[item.id].body.formdata = request.body.formdata.map((e) => ({
+        id: uuid(),
+        key: e.key,
+        value: e.value,
+        enabled: !e.disabled,
+      }));
+    }
+
+    // urlencoded
+    if (request.body.urlencoded) {
+      payload[item.id].body.urlencoded = request.body.urlencoded.map((e) => ({
+        id: uuid(),
+        key: e.key,
+        value: e.value,
+        enabled: !e.disabled,
+      }));
+    }
+
+    // file
+    if (request.body.file) {
+      payload[item.id].body.file = request.body.file;
+    }
+
+    // options
+    if (request.body.options) {
+      payload[item.id].body.optionsn = request.body.options;
+    }
+  }
+
+  return payload;
+};
+
+const handleImportGroup = (group, parent, payload) => {
+  payload[group.id] = {
+    id: group.id,
+    type: "group",
+    name: group.name,
+    requests: [],
+    subGroups: [],
+    parentId: parent.id,
+  };
+  payload[parent.id].subGroups.push(group.id);
+  group.items.each((item) => {
+    if (item.request) {
+      payload = handleImportRequest(item, group, payload);
+    } else {
+      payload = handleImportGroup(item, group, payload);
+    }
+  });
+
+  return payload;
+};
+
+function* handleImportCollection({ filepath }) {
+  try {
+    const data = yield call(readTextFile, filepath);
+    const collection = new Collection(JSON.parse(data));
+
+    let payload = {
+      [collection.id]: {
+        id: collection.id,
+        type: "group",
+        name: collection.name,
+        requests: [],
+        subGroups: [],
+      },
+    };
+
+    collection.items.each((item) => {
+      if (item.request) {
+        payload = handleImportRequest(item, collection, payload);
+      } else {
+        payload = handleImportGroup(item, collection, payload);
+      }
+    });
+
+    yield put(addMultipleCollectionItemsAction(payload));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function* CollectionItemSaga() {
   yield takeLatest(CREATE_NEW_REQUEST, handleCreateNewRequest);
   yield takeLatest(DELETE_COLLECTION_ITEM, handleDeleteCollectionItem);
+  yield takeLatest(IMPORT_COLLECTION, handleImportCollection);
 }
 
 export default CollectionItemSaga;

@@ -1,3 +1,5 @@
+import { REHYDRATE } from "redux-persist";
+
 export const CREATE_ENV = "CREATE_ENV";
 export const DELETE_ENV = "DELETE_ENV";
 export const UPDATE_ENV = "UPDATE_ENV";
@@ -22,6 +24,12 @@ const defaultState = {
 };
 export default function envReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.environment,
+      };
+    }
     case CREATE_ENV: {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];

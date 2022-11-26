@@ -29,6 +29,10 @@
         "renameFile": true,
         "exists": true,
         "scope": ["*"]
+      },
+      "dialog": {
+        "open": true,
+        "save": true
       }
     },
     "bundle": {

@@ -1,3 +1,5 @@
+import { REHYDRATE } from "redux-persist";
+
 export const ADD_TAB = "ADD_TAB";
 export const DELETE_TAB = "DELETE_TAB";
 export const UPDATE_TAB = "UPDATE_TAB";
@@ -21,6 +23,12 @@ const defaultState = {
 
 export default function tabReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.tab,
+      };
+    }
     case ADD_TAB: {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];

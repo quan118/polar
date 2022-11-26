@@ -1,9 +1,13 @@
 import { memo, useCallback } from "react";
+import { open } from "@tauri-apps/api/dialog";
 import { Directory } from "./Directory/Directory";
 import { QuestionCircle, Archive, Plus } from "react-bootstrap-icons";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-import { createCollectionItemAction } from "@/store/modules/collectionItem";
+import {
+  createCollectionItemAction,
+  importCollectionAction,
+} from "@/store/modules/collectionItem";
 import { setEditItemIdAction } from "@/store/modules/common";
 import { getOutermostItems } from "@/utils/common";
 import uuid from "react-uuid";
@@ -28,6 +32,13 @@ const Collection = () => {
     dispatch(setEditItemIdAction(d.id));
   }, [dispatch]);
 
+  const handleImportCollection = useCallback(async () => {
+    const filepath = await open();
+    console.log("OPEN filepaht:", filepath);
+
+    dispatch(importCollectionAction(filepath));
+  }, []);
+
   return (
     <div className="flex max-h-screen w-full flex-col text-gray-700">
       <input
@@ -49,7 +60,10 @@ const Collection = () => {
             <QuestionCircle className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
           </Tooltip>
           <Tooltip content={"Import/Export"}>
-            <Archive className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100" />
+            <Archive
+              className="w-5 cursor-pointer opacity-80 transition-none duration-200 hover:opacity-100"
+              onClick={handleImportCollection}
+            />
           </Tooltip>
         </div>
       </div>

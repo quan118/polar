@@ -1,3 +1,5 @@
+import { REHYDRATE } from "redux-persist";
+
 import { CREATE_ENV, CREATE_ENV_VAR } from "./environment";
 
 export const CREATE_VARIABLE = "CREATE_VARIABLE";
@@ -29,6 +31,12 @@ const defaultState = {
 
 export default function variableReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.variable,
+      };
+    }
     case CREATE_ENV: {
       if (!Array.isArray(action.payload.variables)) {
         return state;

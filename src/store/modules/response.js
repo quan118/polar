@@ -1,3 +1,5 @@
+import { REHYDRATE } from "redux-persist";
+
 export const CREATE_RESPONSE = "CREATE_RESPONSE";
 export const DELETE_RESPONSE = "DELETE_RESPONSE";
 export const UPDATE_RESPONSE = "UPDATE_RESPONSE";
@@ -29,6 +31,12 @@ const defaultState = {
 
 export default function responseReducer(state = defaultState, action) {
   switch (action.type) {
+    case REHYDRATE: {
+      return {
+        ...state,
+        ...action?.payload?.response,
+      };
+    }
     case CREATE_RESPONSE: {
       const noId = !(action.payload.id.length > 0);
       const idExisted = !!state.byId[action.payload.id];
