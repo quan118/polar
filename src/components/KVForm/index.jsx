@@ -55,7 +55,7 @@ const KVForm = ({
 }) => {
   return (
     <div className="flex flex-col">
-      {data.map((item, idx) => (
+      {data?.map((item, idx) => (
         <Row
           key={item.id}
           key_={item.key}
