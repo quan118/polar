@@ -18,6 +18,7 @@ import {
   updateTabAction,
 } from "../modules/tab";
 import { setCurrentRequestIdAction } from "../modules/common";
+import { toRawString } from "@/utils/postman";
 
 function* handleCreateNewRequest({ requestId, requestName, parentId }) {
   try {
@@ -186,13 +187,10 @@ const handleImportRequest = (item, parent, payload) => {
       enabled: !e.disabled,
     }));
   }
-
   // url
   if (request.url) {
     payload[item.id].url = {
-      raw: `${
-        request.url.protocol
-      }://${request.url.getRemote()}/${request.url.getPath(true)}`,
+      raw: toRawString(request.url),
       query: request.url.query.map((e) => ({
         id: uuid(),
         key: e.key,
