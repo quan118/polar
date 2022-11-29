@@ -1,14 +1,18 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
+import { ChevronDown } from "react-bootstrap-icons";
 import {
   updateTabByIdAction,
   updateTabUrlKeyAction,
 } from "@/store/modules/tab";
 import { sendRequestAction } from "@/store/modules/common";
+import { saveRequestAction } from "@/store/modules/collectionItem";
+import { Toast } from "@/components";
 import Button from "../Button";
 import SimpleListBox from "../SimpleListBox";
 import SaveRequestDialog from "./SaveRequestDialog";
+import SaveRequestDropdownMenu from "./SaveRequestDropdownMenu";
 
 const methods = [
   { id: 1, name: "GET" },
@@ -25,6 +29,7 @@ const getMethodObjectFromName = (name) =>
 
 const RequestInput = ({ tabId }) => {
   const dispatch = useDispatch();
+  const [showToast, setShowToast] = useState(false);
   const tab = useSelector((store) => _.get(store, `tab.byId.${tabId}`));
   const sendingRequest = useSelector((store) => store.common.sendingRequest);
 
@@ -32,7 +37,7 @@ const RequestInput = ({ tabId }) => {
     (method) => {
       dispatch(updateTabByIdAction(tab.id, { method: method.name }));
     },
-    [tab.id]
+    [tab?.id]
   );
 
   // const handleChangeURL = useCallback(
@@ -46,7 +51,7 @@ const RequestInput = ({ tabId }) => {
     (event) => {
       dispatch(updateTabUrlKeyAction(tab.id, "raw", event.target.value));
     },
-    [tab.id]
+    [tab?.id]
   );
 
   const handleSendRequest = useCallback(() => {
@@ -63,11 +68,26 @@ const RequestInput = ({ tabId }) => {
     [handleSendRequest]
   );
 
+  const handleSaveRequest = useCallback(() => {
+    if (!tab) return;
+    dispatch(
+      saveRequestAction(
+        tab.id,
+        tab.name,
+        tab.parentId,
+        undefined,
+        undefined,
+        tab
+      )
+    );
+    setShowToast(true);
+  }, [tab]);
+
   return (
     <div className="z-10 flex h-8 items-stretch bg-white">
       <SimpleListBox
         data={methods}
-        value={getMethodObjectFromName(tab.method)}
+        value={getMethodObjectFromName(tab?.method)}
         onChange={handleSelectMethod}
       />
       {/* <input
@@ -96,32 +116,35 @@ const RequestInput = ({ tabId }) => {
         id="url"
         className="block w-full rounded-none rounded-r-md border-y border-r border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 shadow-none focus:border-indigo-500 focus:ring-indigo-500"
         placeholder="URL"
-        value={tab.url?.raw || ""}
+        value={tab?.url?.raw || ""}
         onChange={handleChangeURL}
         onKeyDown={handleKeyDown}
       />
       <Button onClick={handleSendRequest} className="ml-2 mr-1">
         Send
       </Button>
-      {/* <button
-        type="button"
-        className="mx-2 inline-flex items-center rounded-md border border-transparent bg-indigo-500 px-3 py-2 text-xs font-bold font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        onClick={handleSendRequest}
-        // className="ml-2 mr-1 bg-indigo-500 hover:bg-indigo-700 focus:ring-indigo-500 "
-      >
-        Send
-      </button> */}
-      {/* {isTabDirty ? ( */}
-      <SaveRequestDialog requestId={tabId}>
-        <Button variant="secondary" className="mr-2 ml-1">
+      {tab?.parentId === "drafts" ? (
+        <SaveRequestDialog requestId={tabId}>
+          <Button variant="secondary" className="ml-1 rounded-r-none">
+            Save
+          </Button>
+        </SaveRequestDialog>
+      ) : (
+        <Button
+          variant="secondary"
+          className="ml-1 rounded-r-none"
+          onClick={handleSaveRequest}
+        >
           Save
         </Button>
-      </SaveRequestDialog>
-      {/* ) : (
-        <Button className="pointer-events-none mr-2 ml-1 bg-slate-200">
-          Save
+      )}
+
+      <SaveRequestDropdownMenu tabId={tabId} onSaveAs={() => {}}>
+        <Button variant="secondary" className="mr-2 rounded-l-none px-1">
+          <ChevronDown />
         </Button>
-      )} */}
+      </SaveRequestDropdownMenu>
+      <Toast label="Saved" open={showToast} setOpen={setShowToast} />
     </div>
   );
 };

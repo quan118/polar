@@ -18,7 +18,7 @@ const SimpleListBox = ({ data, value, onChange }) => {
       <div className="relative">
         <Listbox.Button className="relative h-full w-24 cursor-default rounded-none rounded-l-md border-y border-l border-r-0 border-slate-300 bg-slate-50 py-2 pl-2 text-left shadow-none hover:border-r focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
           <span className="block truncate text-xs font-bold text-black">
-            {value.name}
+            {value?.name}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDown

@@ -69,15 +69,6 @@ export default function tabReducer(state = defaultState, action) {
         byId,
         byArrayIds,
       };
-      // const tabs = [
-      //   ...state.tabs.filter((item) => {
-      //     console.log("ITEM:");
-      //     console.log(item);
-      //     return action.payload[item.id]?.id?.length > 0;
-      //   }),
-      // ];
-
-      // return { ...state, tabs };
     }
 
     case UPDATE_TAB: {

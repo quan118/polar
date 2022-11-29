@@ -6,19 +6,22 @@ import { NEW_REQUEST_PAYLOAD } from "@/constants";
 import {
   CREATE_NEW_REQUEST,
   DELETE_COLLECTION_ITEM,
+  SAVE_REQUEST_TO_COLLECTION,
   createRequestItemAction,
   updateCollectionItemByKeyPathLevel1,
   setCollectionItemByIdKey,
   IMPORT_COLLECTION,
   addMultipleCollectionItemsAction,
+  saveRequestAction,
+  SELECT_REQUEST,
 } from "../modules/collectionItem";
 import {
   addTabAction,
   setCurrentTabAction,
   updateTabAction,
+  updateTabByIdAction,
 } from "../modules/tab";
 import { setCurrentRequestIdAction } from "../modules/common";
-import { toRawString } from "@/utils/postman";
 
 function* handleCreateNewRequest({ requestId, requestName, parentId }) {
   try {
@@ -71,14 +74,18 @@ const deleteSubGroup = (collectionItemById, groupId) => {
     collectionItemById[parentId] = {
       ...collectionItemById[parentId],
       subGroups: [
-        ...collectionItemById[parentId].subGroups.filter(
-          (item) => item !== groupId
-        ),
+        ...(Array.isArray(collectionItemById[parentId].subGroups)
+          ? collectionItemById[parentId].subGroups.filter(
+              (item) => item !== groupId
+            )
+          : []),
       ],
       requests: [
-        ...collectionItemById[parentId].requests.filter(
-          (item) => item !== groupId
-        ),
+        ...(Array.isArray(collectionItemById[parentId].requests)
+          ? collectionItemById[parentId].requests.filter(
+              (item) => item !== groupId
+            )
+          : []),
       ],
     };
   }
@@ -190,7 +197,9 @@ const handleImportRequest = (item, parent, payload) => {
   // url
   if (request.url) {
     payload[item.id].url = {
-      raw: toRawString(request.url),
+      raw: `${
+        request.url.protocol
+      }://${request.url.getRemote()}/${request.url.getPath(true)}`,
       query: request.url.query.map((e) => ({
         id: uuid(),
         key: e.key,
@@ -326,10 +335,63 @@ function* handleImportCollection({ filepath }) {
   }
 }
 
+function* handleSaveRequestToCollection({
+  requestId,
+  requestName,
+  parentId,
+  dirties,
+  localState,
+  tab,
+  saveAs,
+}) {
+  try {
+    yield put(
+      saveRequestAction(
+        requestId,
+        requestName,
+        parentId,
+        dirties,
+        localState,
+        tab,
+        saveAs
+      )
+    );
+
+    if (saveAs) {
+      yield handleSelectRequest({ requestId });
+    } else {
+      yield put(
+        updateTabByIdAction(requestId, { parentId, name: requestName })
+      );
+    }
+
+    yield put(updateCollectionItemByKeyPathLevel1(parentId, "expanded", true));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function* handleSelectRequest({ requestId }) {
+  try {
+    yield put(setCurrentRequestIdAction(requestId));
+
+    const request = yield select(
+      (store) => store.collectionItem.byId[requestId]
+    );
+    yield put(addTabAction(request));
+
+    yield put(setCurrentTabAction(requestId));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function* CollectionItemSaga() {
   yield takeLatest(CREATE_NEW_REQUEST, handleCreateNewRequest);
   yield takeLatest(DELETE_COLLECTION_ITEM, handleDeleteCollectionItem);
   yield takeLatest(IMPORT_COLLECTION, handleImportCollection);
+  yield takeLatest(SAVE_REQUEST_TO_COLLECTION, handleSaveRequestToCollection);
+  yield takeLatest(SELECT_REQUEST, handleSelectRequest);
 }
 
 export default CollectionItemSaga;

@@ -8,14 +8,14 @@ import {
 } from "react";
 import { Transition } from "@headlessui/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import uuid from "react-uuid";
 import { classNames } from "@/utils/common";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTabItemByKeyPathLevel1Action } from "@/store/modules/tab";
-import { saveRequestAction } from "@/store/modules/collectionItem";
+import { saveRequestToCollectionAction } from "@/store/modules/collectionItem";
 import Directories from "./Directories";
 import Button from "../Button";
 
-const SaveRequestDialog = ({ requestId, children }) => {
+const SaveRequestDialog = ({ requestId, saveAs, children }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const tab = useSelector((store) => store.tab.byId[requestId]);
@@ -31,25 +31,20 @@ const SaveRequestDialog = ({ requestId, children }) => {
   const handleSave = useCallback(() => {
     const dirties = directoriesRef.current.getDirties();
     const localState = directoriesRef.current.getLocalState();
+    const requestId2 = saveAs ? uuid() : requestId;
+
     dispatch(
-      saveRequestAction(
-        requestId,
+      saveRequestToCollectionAction(
+        requestId2,
         requestName,
         selectedDirId,
         dirties,
         localState,
-        tab
+        tab,
+        saveAs
       )
     );
-
-    // dispatch(updateTabDirtyKeyAction(requestId, false));
-    dispatch(
-      updateTabItemByKeyPathLevel1Action(requestId, "parentId", selectedDirId)
-    );
-    dispatch(
-      updateTabItemByKeyPathLevel1Action(requestId, "name", requestName)
-    );
-  }, [requestId, requestName, tab, selectedDirId, directoriesRef]);
+  }, [requestId, requestName, tab, selectedDirId, directoriesRef, saveAs]);
 
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -83,7 +78,7 @@ const SaveRequestDialog = ({ requestId, children }) => {
               forceMount
               className={classNames(
                 "fixed z-50",
-                "w-[95vw] max-w-md rounded-lg p-4 md:w-full",
+                "w-[95vw] max-w-xl rounded-lg p-4 md:w-full",
                 "top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
                 "bg-white dark:bg-gray-800",
                 "focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"

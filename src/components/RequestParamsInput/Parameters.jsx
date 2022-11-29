@@ -78,7 +78,7 @@ const Parameters = ({ tabId }) => {
           id: uuid(),
           key: "",
           value: "",
-          enabled: true,
+          enabled: false,
         });
       }
       dispatch(
@@ -97,7 +97,7 @@ const Parameters = ({ tabId }) => {
           id: uuid(),
           key: "",
           value: "",
-          enabled: true,
+          enabled: false,
         });
       }
       dispatch(

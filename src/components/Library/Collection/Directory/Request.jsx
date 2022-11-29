@@ -2,16 +2,12 @@ import { memo, useCallback, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import More from "./More";
 import _ from "lodash";
+import { setEditItemIdAction } from "@/store/modules/common";
 import {
-  setCurrentRequestIdAction,
-  setEditItemIdAction,
-} from "@/store/modules/common";
-import { updateCollectionItemAction } from "@/store/modules/collectionItem";
-import {
-  addTabAction,
-  updateTabByIdAction,
-  setCurrentTabAction,
-} from "@/store/modules/tab";
+  updateCollectionItemAction,
+  selectRequestAction,
+} from "@/store/modules/collectionItem";
+import { updateTabByIdAction } from "@/store/modules/tab";
 
 const Request = ({ id }) => {
   const request = useSelector((store) =>
@@ -25,10 +21,8 @@ const Request = ({ id }) => {
   const dispatch = useDispatch();
 
   const handleOnClickRequest = useCallback(() => {
-    dispatch(setCurrentRequestIdAction(id));
-    dispatch(addTabAction(request));
-    dispatch(setCurrentTabAction(id));
-  }, [id, request, dispatch]);
+    dispatch(selectRequestAction(id));
+  }, [id, dispatch]);
 
   const handleEditItem = useCallback(
     (itemId) => {
@@ -89,10 +83,10 @@ const Request = ({ id }) => {
       >
         <span
           className={`${
-            COLOR_TYPE[`${request.method}`]
+            COLOR_TYPE[`${request?.method}`]
           } min-w-[50px] text-center`}
         >
-          {request.method}
+          {request?.method}
         </span>
         {editItemId === id ? (
           <form
@@ -116,7 +110,7 @@ const Request = ({ id }) => {
           </form>
         ) : (
           <span className="min-w-[2rem] max-w-[8rem] truncate">
-            {request.name}
+            {request?.name}
           </span>
         )}
 

@@ -91,13 +91,12 @@ const DirectoryTree = ({
   }, [fuse, searchText]);
 
   return (
-    <div className="ml-4 border-l-2 border-gray-200">
+    <div className="group ml-4 border-l-2 border-gray-200">
       {filteredSubGroups?.length > 0 &&
         filteredSubGroups?.map((id) => (
           <Fragment key={id}>
             <Directory
               id={id}
-              key={id}
               className={selectedId === id ? "bg-blue-500" : ""}
               name={allDirectories[id].name}
               open={!allDirectories[id].collapse}
@@ -107,7 +106,7 @@ const DirectoryTree = ({
               onFinishEditing={onFinishEditing}
             >
               {!searchText && (
-                <div className="flex flex-1 flex-row justify-end gap-4">
+                <div className="hidden flex-1 flex-row justify-end gap-4 group-hover:flex">
                   <Tooltip content={"New Collection"}>
                     <FolderPlus
                       className="cursor-pointer"
@@ -127,7 +126,7 @@ const DirectoryTree = ({
             {!allDirectories[id].collapse &&
               allDirectories[id].subGroups?.length > 0 && (
                 <DirectoryTree
-                  key={id}
+                  key={`directory-tree-${id}`}
                   allDirectories={allDirectories}
                   subGroups={allDirectories[id].subGroups}
                   selectedId={selectedId}
@@ -269,7 +268,7 @@ const Directories = (
           <span className="text-xs">New</span>
         </button>
       </div>
-      <div className="h-44 w-full overflow-auto">
+      <div className="h-80 w-full overflow-auto">
         {directories.map((dir) => (
           <Fragment key={dir.id}>
             <Directory
@@ -284,7 +283,7 @@ const Directories = (
               onUpdateName={handleUpdateName}
             >
               {!searchText && dir.id !== "drafts" && (
-                <div className="flex flex-1 flex-row justify-end gap-4">
+                <div className="hidden flex-1 flex-row justify-end gap-4 group-hover:flex">
                   <Tooltip content={"New Collection"}>
                     <FolderPlus
                       className="cursor-pointer"

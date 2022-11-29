@@ -24,6 +24,8 @@ export const ADD_MULTIPLE_COLLECTION_ITEMS = "ADD_MULTIPLE_COLLECTION_ITEMS";
 export const CREATE_NEW_REQUEST = "CREATE_NEW_REQUEST";
 export const DELETE_COLLECTION_ITEM = "DELETE_COLLECTION_ITEM";
 export const IMPORT_COLLECTION = "IMPORT_COLLECTION";
+export const SAVE_REQUEST_TO_COLLECTION = "SAVE_REQUEST_TO_COLLECTION";
+export const SELECT_REQUEST = "SELECT_REQUEST";
 
 const defaultState = {
   byId: {
@@ -387,17 +389,19 @@ export default function collectionItemReducer(state = defaultState, action) {
       const byId = state.byId;
 
       // syncing collection items
-      Object.keys(action.dirties).forEach((id) => {
-        if (action.dirties[id] === "rename") {
-          byId[id].name = action.data[id].name;
-        } else if (action.dirties[id] === "new") {
-          byId[id] = { ...action.data[id] };
-        }
-      });
+      action.dirties &&
+        Object.keys(action.dirties).forEach((id) => {
+          if (action.dirties[id] === "rename") {
+            byId[id].name = action.data[id].name;
+          } else if (action.dirties[id] === "new") {
+            byId[id] = { ...action.data[id] };
+          }
+        });
 
       byId[action.requestId] = { ...action.tab };
       byId[action.requestId].name = action.requestName;
       byId[action.requestId].parentId = action.parentId;
+      byId[action.requestId].id = action.requestId;
 
       // save request
 
@@ -408,9 +412,20 @@ export default function collectionItemReducer(state = defaultState, action) {
           byId[action.parentId].requests = [action.requestId];
         }
 
-        byId[action.tab.parentId].requests = byId[
-          action.tab.parentId
-        ].requests.filter((id) => id !== action.requestId);
+        if (!action.saveAs) {
+          // remove from old parent
+          byId[action.tab.parentId].requests = byId[
+            action.tab.parentId
+          ].requests.filter((id) => id !== action.requestId);
+        }
+      } else {
+        if (action.saveAs) {
+          if (Array.isArray(byId[action.parentId].requests)) {
+            byId[action.parentId].requests.push(action.requestId);
+          } else {
+            byId[action.parentId].requests = [action.requestId];
+          }
+        }
       }
 
       return { ...state, byId: { ...byId } };
@@ -509,7 +524,8 @@ export const saveRequestAction = (
   parentId,
   dirties,
   data,
-  tab
+  tab,
+  saveAs
 ) => ({
   type: SAVE_REQUEST,
   requestId,
@@ -518,6 +534,7 @@ export const saveRequestAction = (
   dirties,
   data,
   tab,
+  saveAs,
 });
 
 export const updateCollectionItemByKeyPathLevel1 = (id, key, payload) => ({
@@ -540,4 +557,28 @@ export const importCollectionAction = (filepath) => ({
 export const addMultipleCollectionItemsAction = (payload) => ({
   type: ADD_MULTIPLE_COLLECTION_ITEMS,
   payload,
+});
+
+export const saveRequestToCollectionAction = (
+  requestId,
+  requestName,
+  parentId,
+  dirties,
+  localState,
+  tab,
+  saveAs
+) => ({
+  type: SAVE_REQUEST_TO_COLLECTION,
+  requestId,
+  requestName,
+  parentId,
+  dirties,
+  localState,
+  tab,
+  saveAs,
+});
+
+export const selectRequestAction = (requestId) => ({
+  type: SELECT_REQUEST,
+  requestId,
 });

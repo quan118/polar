@@ -31,10 +31,17 @@ const Directory = ({
     };
   }, [textInputRef]);
 
+  useEffect(() => {
+    // if Directory name is switched from normal state -> editting state, select all texts in input box
+    if (typeof window !== "undefined" && editing) {
+      window.document.getElementById(`textbox-${id}`)?.select();
+    }
+  }, [editing, id]);
+
   return (
     <div
       className={classNames(
-        "flex h-8 w-full cursor-pointer items-center  px-2",
+        "group flex h-8 w-full cursor-pointer items-center  px-2 hover:bg-blue-300",
         className
       )}
       onClick={onToggle(id)}
@@ -48,7 +55,7 @@ const Directory = ({
             className="w-full rounded border border-gray-300 py-1 px-1 text-xs shadow-none"
             defaultValue={name}
             onChange={onUpdateName(id)}
-            id="textbox"
+            id={`textbox-${id}`}
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"

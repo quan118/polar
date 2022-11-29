@@ -22,7 +22,7 @@ import {
   setEditItemIdAction,
   setCurrentRequestIdAction,
 } from "@/store/modules/common";
-import { addTabAction, syncTabAction } from "@/store/modules/tab";
+import { addTabAction } from "@/store/modules/tab";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import "./styles.css";
 
@@ -96,9 +96,8 @@ const More = ({ id, isDir }) => {
     (e) => {
       e.stopPropagation();
       dispatch(deleteCollectionItemAction(id));
-      dispatch(syncTabAction(collectionItems));
     },
-    [id, collectionItems, dispatch]
+    [id, dispatch]
   );
 
   const handleEditItem = useCallback(
