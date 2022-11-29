@@ -7,8 +7,9 @@ Another HTTP Client
 1. [Setup runtime](#runtime)
 2. [Setup App](#app)
 3. [Run App](#run-app)
-4. [Run Unit Tests](#run-unit-test)
-5. [Store Structure Overview](#store-structure-overview)
+4. [Run Redux Devtools](#run-redux-devtools)
+5. [Run Unit Tests](#run-unit-test)
+6. [Store Structure Overview](#store-structure-overview)
 
 ## <a id="runtime">Setup runtime</a>:
 
@@ -46,6 +47,12 @@ yarn install
 
 ```bash
 yarn tauri dev
+```
+
+## <a id="run-redux-devtools">Run Redux Devtools</a>
+```bash
+yarn redux-devtools
+yarn remotedev
 ```
 
 ## <a id="run-unit-tests">Run Unit Tests</a>
