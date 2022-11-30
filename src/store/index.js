@@ -4,6 +4,14 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import * as reducers from "./modules";
 import rootSaga from "./sagas";
+import { createLogger } from "redux-logger";
+
+const DEBUG = import.meta.env.TAURI_DEBUG;
+
+const logger = createLogger({
+  diff: true,
+  duration: true,
+});
 
 const persistConfig = {
   key: "root",
@@ -16,13 +24,15 @@ const combinedReducers = combineReducers(reducers);
 
 const rootReducer = (state, action) => combinedReducers(state, action);
 
-const composeEnhancers =
-  (typeof window !== "undefined" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
-
 const sagaMiddleware = createSagaMiddleware();
-const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware));
+
+let middlewares = [sagaMiddleware];
+
+if (DEBUG) {
+  middlewares = [...middlewares, logger];
+}
+
+const enhancer = compose(applyMiddleware(...middlewares));
 
 const store = createStore(persistReducer(persistConfig, rootReducer), enhancer);
 
