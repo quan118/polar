@@ -1,6 +1,5 @@
-import { applyMiddleware, createStore, combineReducers } from "redux";
+import { applyMiddleware, compose, createStore, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { composeWithDevTools } from "remote-redux-devtools";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import * as reducers from "./modules";
@@ -17,13 +16,13 @@ const combinedReducers = combineReducers(reducers);
 
 const rootReducer = (state, action) => combinedReducers(state, action);
 
-const sagaMiddleware = createSagaMiddleware();
+const composeEnhancers =
+  (typeof window !== "undefined" &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
 
-const enhancer = composeWithDevTools({
-  realtime: true,
-  host: "localhost",
-  port: 8000,
-})(applyMiddleware(sagaMiddleware));
+const sagaMiddleware = createSagaMiddleware();
+const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware));
 
 const store = createStore(persistReducer(persistConfig, rootReducer), enhancer);
 

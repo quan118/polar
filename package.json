@@ -13,9 +13,7 @@
     "test": "vitest",
     "generate-app-icon": "tauri icon ./src-tauri/icons/app-icon.png",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "redux-devtools": "redux-devtools-app",
-    "remotedev": "remotedev --hostname=localhost --port=8000"
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
@@ -74,9 +72,6 @@
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
-    "redux-devtools-app": "^1.2.0",
-    "remote-redux-devtools": "^0.5.16",
-    "remotedev-server": "^0.3.1",
     "tailwindcss": "^3.1.8",
     "vite": "^3.0.2",
     "vite-tsconfig-paths": "^3.5.2",
