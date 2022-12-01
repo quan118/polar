@@ -37,7 +37,7 @@ const ContentType = ({
         Content Type
       </label>
       <DropdownInput
-        options={["none", "raw", "form-data", "urlencoded", "file"]}
+        options={["none", "raw", "formdata", "urlencoded", "file"]}
         value={selected}
         onChange={onChangeType}
       />
@@ -126,7 +126,7 @@ const Body = ({ tabId }) => {
           // }}
         />
       )}
-      {body?.mode === "form-data" && <FormData tabId={tabId} />}
+      {body?.mode === "formdata" && <FormData tabId={tabId} />}
       {body?.mode === "urlencoded" && <URLEncoded tabId={tabId} />}
       {body?.mode === "file" && <File tabId={tabId} />}
     </div>

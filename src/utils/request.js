@@ -222,7 +222,7 @@ export const handleBody = (requestConfig, fetchConfig) => {
       }
       break;
     }
-    case "form-data": {
+    case "formdata": {
       var formData = {};
       requestConfig?.body?.formdata
         ?.filter((item) => item.enabled)
