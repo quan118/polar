@@ -25,6 +25,7 @@ export const getDataPresentation = (format, body) => {
     case "jpeg":
     case "png":
     case "jpg":
+    case "webp":
       dataPresentation = `data:image/${format};base64,` + bytesToBase64(body);
       break;
     case "json":

@@ -11,6 +11,7 @@ const langExtensions = {
   json: langs.json(),
   yaml: langs.yaml(),
   xml: langs.xml(),
+  html: langs.html(),
 };
 
 const getFormattedCodeMirrorValue = (data, format) => {
@@ -66,7 +67,7 @@ const Body = ({ response }) => {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <Header title="Body Response">
-        {!["jpeg", "png", "jpg"].includes(format) && (
+        {!["jpeg", "png", "jpg", "webp"].includes(format) && (
           <DropdownInput
             options={["raw", "json", "yaml", "xml"]}
             value={format}
@@ -74,8 +75,8 @@ const Body = ({ response }) => {
           />
         )}
       </Header>
-      {["jpeg", "png", "jpg"].includes(format) ? (
-        <div>
+      {["jpeg", "png", "jpg", "webp"].includes(format) ? (
+        <div className="overflow-scroll">
           <img src={getDataPresentation(format, response?.body)} />
         </div>
       ) : (

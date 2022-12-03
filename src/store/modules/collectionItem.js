@@ -77,6 +77,13 @@ const defaultState = {
     //         value: "",
     //         enabled: true,
     //       },
+    //      {
+    //        id: "1",
+    //        key: "abc",
+    //        type: "file",
+    //        value: "/Users/home/Desktop/data.json",
+    //        enabled: true,
+    //      },
     //     ],
     //     urlencoded: [
     //       {

@@ -2,24 +2,11 @@ import { memo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
-import { KVForm, Header } from "@/components";
+import { open } from "@tauri-apps/api/dialog";
+import { Header } from "@/components";
 import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 import { addNewRow } from "@/utils/form";
-
-// const Header = ({ onClearAll, onAddNew }) => (
-//   <div className="flex flex-1 items-center justify-between border-y py-2 px-2">
-//     <label className="text-xs font-semibold text-slate-500">Request Body</label>
-//     <div className="flex">
-// <Trash
-//   className="mr-2"
-//   size={18}
-//   color="rgb(115, 115, 115)"
-//   onClick={onClearAll}
-// />
-// <Plus size={18} color="rgb(115, 115, 115)" onClick={onAddNew} />
-//     </div>
-//   </div>
-// );
+import Row from "./Row";
 
 const FormData = ({ tabId }) => {
   const dispatch = useDispatch();
@@ -101,6 +88,7 @@ const FormData = ({ tabId }) => {
         formdata[idx].enabled = true;
       }
       formdata[idx].value = event.target.value;
+      delete formdata[idx].type;
       const isLastRow = idx === formdata.length - 1;
       dispatch(
         updateTabItemByKeyPathLevel2Action(
@@ -111,7 +99,41 @@ const FormData = ({ tabId }) => {
         )
       );
     },
-    [dispatch, formdata]
+    [dispatch, formdata, tabId]
+  );
+
+  const handleDeleteFile = useCallback(
+    (idx) => () => {
+      formdata[idx].value = "";
+      delete formdata[idx].type;
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(tabId, "body", "formdata", [
+          ...formdata,
+        ])
+      );
+    },
+    [dispatch, formdata, tabId]
+  );
+
+  const handleSelectFile = useCallback(
+    (idx) => async () => {
+      const selected = await open({ multiple: false });
+      if (!formdata[idx].key && !formdata[idx].value) {
+        formdata[idx].enabled = true;
+      }
+      formdata[idx].value = selected;
+      formdata[idx].type = "file";
+      const isLastRow = idx === formdata.length - 1;
+      dispatch(
+        updateTabItemByKeyPathLevel2Action(
+          tabId,
+          "body",
+          "formdata",
+          isLastRow ? addNewRow(formdata) : [...formdata]
+        )
+      );
+    },
+    [dispatch, formdata, tabId]
   );
 
   return (
@@ -125,15 +147,26 @@ const FormData = ({ tabId }) => {
         />
         <Plus size={18} color="rgb(115, 115, 115)" onClick={handleAddNew} />
       </Header>
-      <KVForm
-        data={formdata}
-        keyPlaceholder="Parameter"
-        valuePlaceholder="Value"
-        onToggle={handleToggle}
-        onDelete={handleDelete}
-        onChangeKey={handleChangeKey}
-        onChangeValue={handleChangeValue}
-      />
+      <div className="flex flex-col">
+        {formdata?.map((item, idx) => (
+          <Row
+            className={"border-t-0"}
+            key={item.id}
+            keyPlaceholder={"Parameter " + idx}
+            key_={item.key}
+            onChangeKey={handleChangeKey(idx)}
+            value={item.value}
+            valuePlaceholder={"Value " + idx}
+            onChangeValue={handleChangeValue(idx)}
+            enabled={item.enabled}
+            onToggle={handleToggle(idx)}
+            onDelete={handleDelete(idx)}
+            onDeleteFile={handleDeleteFile(idx)}
+            onSelectFile={handleSelectFile(idx)}
+            isFile={formdata[idx].type === "file"}
+          />
+        ))}
+      </div>
     </>
   );
 };

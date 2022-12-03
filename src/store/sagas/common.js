@@ -1,6 +1,7 @@
 import { takeLatest, put, select, call } from "redux-saga/effects";
 import _ from "lodash";
 import uuid from "react-uuid";
+import { getReasonPhrase } from "http-status-codes";
 import { fetch } from "@tauri-apps/api/http";
 import { Body } from "@tauri-apps/api/http";
 import { readBinaryFile } from "@tauri-apps/api/fs";
@@ -94,8 +95,9 @@ function* handleSendRequest({ requestId }) {
       );
       fetchConfig.body = Body.bytes(contents);
     }
-
+    const startTime = new Date().getTime();
     const response = yield call(fetch, fetchConfig.url, fetchConfig);
+    const endTime = new Date().getTime();
     const responseId = uuid();
 
     yield put(
@@ -104,13 +106,15 @@ function* handleSendRequest({ requestId }) {
         requestId,
         name: "",
         originalRequest: {}, // TODO: Update this field
-        status: `${response.status} ${response.ok ? "OK" : ""}`,
+        status: `${response.status} ${getReasonPhrase(response.status)}`,
         code: response.status,
         header: Object.keys(response.headers).map((key) => ({
           [key]: response.headers[key],
         })),
         cookie: [],
         body: response.data,
+        contentLength: response?.headers["content-length"] || undefined,
+        responseTime: endTime - startTime,
       })
     );
 
@@ -123,10 +127,24 @@ function* handleSendRequest({ requestId }) {
   } catch (error) {
     console.log("handleSendRequest exception");
     console.log(error);
+    const responseId = uuid();
 
-    updateCommonAction({
-      responseStatus: "failed",
-    });
+    if (typeof error === "string" && error.startsWith("Network Error")) {
+      yield put(
+        createResponseAction({
+          id: responseId,
+          requestId,
+          error: "Network Error",
+        })
+      );
+    }
+
+    yield put(
+      updateCommonAction({
+        responseId,
+        responseStatus: "failed",
+      })
+    );
   } finally {
     yield put(updateCommonAction({ sendingRequest: false }));
   }

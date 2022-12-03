@@ -13,6 +13,18 @@ const tabs = [
   { key: "HEADERS", name: "Headers", current: false },
 ];
 
+const ResponseSummary = ({ status, time, size }) => (
+  <div className="flex flex-1 items-center p-2">
+    <div className="flex-1" />
+    <span className="text-xs">Status:</span>
+    <span className="ml-1 text-xs text-green-500">{status}</span>
+    <span className="ml-2 text-xs">Time:</span>
+    <span className="ml-1 text-xs text-green-500">{time} ms</span>
+    <span className="ml-2 text-xs">Size:</span>
+    <span className="ml-1 text-xs text-green-500">{size} B</span>
+  </div>
+);
+
 const ResponseViewer = () => {
   const responseId = useSelector((store) => _.get(store, "common.responseId"));
   const response = useSelector((store) =>
@@ -22,8 +34,7 @@ const ResponseViewer = () => {
   const handleChangeTab = useCallback((tab) => () => setTab(tab), [setTab]);
   const sendingRequest = useSelector((store) => store.common.sendingRequest);
 
-  console.log("response:", response);
-  const headers = response?.header.map((item) => ({
+  const headers = response?.header?.map((item) => ({
     id: Object.keys(item)[0],
     key: Object.keys(item)[0],
     value: Object.values(item)[0],
@@ -35,9 +46,28 @@ const ResponseViewer = () => {
           <span className="mr-2 text-xs text-slate-500">Please wait</span>
           <ArrowRepeat className="animate-spin text-slate-500" />
         </div>
+      ) : response?.error === "Network Error" ? (
+        <div className="flex flex-1 items-center justify-center bg-white">
+          <span className="mr-2 text-xs text-slate-500">
+            Could not send request
+          </span>
+        </div>
       ) : (
         <>
-          <Tabs tabs={tabs} selected={tab} onChange={handleChangeTab} />
+          <Tabs
+            tabs={tabs}
+            selected={tab}
+            onChange={handleChangeTab}
+            rightComponent={
+              response ? (
+                <ResponseSummary
+                  status={response.status}
+                  time={response.responseTime}
+                  size={response.contentLength}
+                />
+              ) : undefined
+            }
+          />
           {tab.key === "BODY" && response?.body && <Body response={response} />}
           {tab.key === "HEADERS" && (
             <>

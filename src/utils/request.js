@@ -2,6 +2,8 @@ import { Body, ResponseType } from "@tauri-apps/api/http";
 import { Buffer } from "buffer";
 import mime from "mime";
 
+export const getBasename = (filepath) => filepath.split(/[\\/]/).pop();
+
 export const pipe =
   (...fns) =>
   (requestConfig, fetchConfig) =>
@@ -126,15 +128,13 @@ export const buildFetchConfig = (requestConfig) => {
 
   const requestHeaders = {};
   requestConfig.header?.forEach((item) => {
-    if (!item.enabled || !(item.key?.length > 0 && item.value?.length > 0))
-      return;
+    if (!item.enabled || !(item.key?.length > 0)) return;
     requestHeaders[item.key] = item.value;
   });
 
   const requestQueries = {};
   requestConfig.url?.query?.forEach((item) => {
-    if (!item.enabled || !(item.key?.length > 0 && item.value?.length > 0))
-      return;
+    if (!item.enabled || !(item.key?.length > 0)) return;
     requestQueries[item.key] = item.value;
   });
 
@@ -226,8 +226,17 @@ export const handleBody = (requestConfig, fetchConfig) => {
       var formData = {};
       requestConfig?.body?.formdata
         ?.filter((item) => item.enabled)
+        .filter((item) => item.key)
         .forEach((item) => {
-          formData[item.key] = item.value;
+          if (item.type === "file") {
+            formData[item.key] = {
+              file: item.value,
+              mime: mime.getType(item.value),
+              fileName: getBasename(item.value),
+            };
+          } else {
+            formData[item.key] = item.value;
+          }
         });
       headers["Content-Type"] = "multipart/form-data";
       body = Body.form(formData);
