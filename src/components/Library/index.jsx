@@ -14,7 +14,7 @@ const Library = () => {
   );
 
   return (
-    <div className="relative flex bg-white">
+    <div className="flex overflow-hidden bg-white">
       <div>
         <LibSideBar id={currentLibId} />
       </div>

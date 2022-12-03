@@ -27,7 +27,7 @@ const Editor = () => {
           {currentTabId && <RequestInput tabId={currentTabId} />}
 
           <Split
-            className="h-full overflow-hidden bg-purple-500"
+            className="h-full overflow-hidden bg-gray-200"
             direction="vertical"
             gutterSize={5}
           >

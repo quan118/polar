@@ -8,7 +8,6 @@ import { classNames } from "@/utils/common";
 
 const Tab = ({ id, selected, onSelect, onDelete }) => {
   const name = useSelector((store) => _.get(store, `tab.byId[${id}].name`));
-  // TODO: Research why button width doesn't work when there are many tabs
   return (
     <button
       type="button"
@@ -61,7 +60,7 @@ const Tabbar = () => {
   return (
     // TODO: research resize tabbar and button for add new tab bar
 
-    <div className="flex items-center gap-x-1 overflow-x-auto border-x-2 border-blue-500 bg-white py-1 text-xs text-gray-800 scrollbar-hide">
+    <div className="flex items-center gap-x-1 overflow-x-auto bg-white py-1 text-xs text-gray-800 scrollbar-hide">
       {tabIds.map((id) => (
         <Tab
           id={id}
