@@ -226,7 +226,7 @@ export const handleBody = (requestConfig, fetchConfig) => {
       var formData = {};
       requestConfig?.body?.formdata
         ?.filter((item) => item.enabled)
-        .filter((item) => item.key)
+        .filter((item) => item.type === "file" || item.key)
         .forEach((item) => {
           if (item.type === "file") {
             formData[item.key] = {
@@ -239,7 +239,9 @@ export const handleBody = (requestConfig, fetchConfig) => {
           }
         });
       headers["Content-Type"] = "multipart/form-data";
-      body = Body.form(formData);
+      if (Object.keys(formData)?.length > 0) {
+        body = Body.form(formData);
+      }
       break;
     }
     case "urlencoded": {
