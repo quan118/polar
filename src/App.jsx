@@ -5,7 +5,7 @@ import "./split.css";
 import { Library, Editor } from "./components";
 function App() {
   return (
-    <div className="h-screen w-screen select-none overflow-hidden bg-white">
+    <div className="h-screen w-screen overflow-hidden bg-white">
       <Split
         className="flex h-screen w-full flex-1"
         gutterSize={5}
