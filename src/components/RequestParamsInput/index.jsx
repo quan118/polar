@@ -12,6 +12,22 @@ const Badge = ({ number }) => (
   <span className="ml-1 rounded border px-1 text-xxxs">{number}</span>
 );
 
+const hasBodyData = (body) => {
+  switch (body.mode) {
+    case "raw":
+      return !!body.raw;
+    case "formdata":
+      return body.formdata?.filter((item) => item.enabled)?.length > 0;
+    case "urlencoded":
+      return body.urlencoded?.filter((item) => item.enabled)?.length > 0;
+    case "file":
+      return body.file?.src?.length > 0;
+    case "none":
+    default:
+      return false;
+  }
+};
+
 const RequestParamsInput = ({ tabId }) => {
   const headers = useSelector((store) =>
     _.get(store, `tab.byId[${tabId}].header`)
@@ -19,6 +35,7 @@ const RequestParamsInput = ({ tabId }) => {
   const params = useSelector((store) =>
     _.get(store, `tab.byId[${tabId}].url.query`)
   );
+  const body = useSelector((store) => _.get(store, `tab.byId[${tabId}].body`));
   const headersCount = headers?.filter((item) => item.key?.length > 0).length;
   const paramsCount = params?.filter((item) => item.key?.length > 0).length;
 
@@ -32,7 +49,15 @@ const RequestParamsInput = ({ tabId }) => {
         rightComponent:
           paramsCount > 0 ? <Badge number={paramsCount} /> : undefined,
       },
-      { key: "BODY", name: "Body", href: "#", current: false },
+      {
+        key: "BODY",
+        name: "Body",
+        href: "#",
+        current: false,
+        rightComponent: hasBodyData(body) ? (
+          <div className="ml-1 h-1 w-1 rounded-full bg-green-500" />
+        ) : undefined,
+      },
       {
         key: "HEADERS",
         name: "Headers",
@@ -43,7 +68,7 @@ const RequestParamsInput = ({ tabId }) => {
       },
       { key: "AUTH", name: "Authorization", href: "#", current: false },
     ],
-    [headersCount, paramsCount]
+    [headersCount, paramsCount, body]
   );
   const [tab, setTab] = useState();
 
