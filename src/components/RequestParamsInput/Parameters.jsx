@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
-import KeyValueInput from "./KeyValueInput";
+import KVForm from "../KVForm";
 import Header from "../Header";
 import { updateTabItemByKeyPathLevel2Action } from "@/store/modules/tab";
 
@@ -78,7 +78,7 @@ const Parameters = ({ tabId }) => {
           id: uuid(),
           key: "",
           value: "",
-          enabled: false,
+          enabled: true,
         });
       }
       dispatch(
@@ -97,7 +97,7 @@ const Parameters = ({ tabId }) => {
           id: uuid(),
           key: "",
           value: "",
-          enabled: false,
+          enabled: true,
         });
       }
       dispatch(
@@ -118,7 +118,7 @@ const Parameters = ({ tabId }) => {
         />
         <Plus size={18} color="rgb(115, 115, 115)" onClick={handleAddNew} />
       </Header>
-      <KeyValueInput
+      <KVForm
         data={request.url?.query || []}
         keyPlaceholder={"Parameter"}
         valuePlaceholder={"Value"}

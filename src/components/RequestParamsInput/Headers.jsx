@@ -4,7 +4,7 @@ import _ from "lodash";
 import { Trash, Plus } from "react-bootstrap-icons";
 import uuid from "react-uuid";
 import Header from "../Header";
-import KeyValueInput from "./KeyValueInput";
+import KVForm from "../KVForm";
 import { updateTabItemByKeyPathLevel1Action } from "@/store/modules/tab";
 
 const Headers = ({ tabId }) => {
@@ -107,7 +107,7 @@ const Headers = ({ tabId }) => {
         />
         <Plus size={18} color="rgb(115, 115, 115)" onClick={handleAddNew} />
       </Header>
-      <KeyValueInput
+      <KVForm
         data={request.header || []}
         keyPlaceholder={"Header"}
         valuePlaceholder={"Value"}
