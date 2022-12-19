@@ -5,7 +5,7 @@ import * as ToastPrimitive from "@radix-ui/react-toast";
 
 const Toast = ({ label, open, setOpen }) => {
   return (
-    <ToastPrimitive.Provider>
+    <ToastPrimitive.Provider duration={2000}>
       <ToastPrimitive.Root
         open={open}
         onOpenChange={setOpen}
