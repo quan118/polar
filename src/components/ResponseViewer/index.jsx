@@ -2,10 +2,10 @@ import { memo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import _ from "lodash";
 import { ArrowRepeat } from "react-bootstrap-icons";
+
 import Tabs from "../Tabs";
 import Body from "./Body";
-import Header from "../Header";
-import KVForm from "../KVForm";
+import Headers from "./Headers";
 
 const tabs = [
   { key: "BODY", name: "Body", current: true },
@@ -69,12 +69,7 @@ const ResponseViewer = () => {
             }
           />
           {tab.key === "BODY" && response?.body && <Body response={response} />}
-          {tab.key === "HEADERS" && (
-            <>
-              <Header title="Header List" />
-              <KVForm data={headers} readOnly />
-            </>
-          )}
+          {tab.key === "HEADERS" && <Headers headers={headers} />}
         </>
       )}
     </div>
