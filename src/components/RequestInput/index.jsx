@@ -31,7 +31,9 @@ const RequestInput = ({ tabId }) => {
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const tab = useSelector((store) => _.get(store, `tab.byId.${tabId}`));
-  const sendingRequest = useSelector((store) => store.common.sendingRequest);
+  const sendingRequest = useSelector((store) =>
+    _.get(store, `tab.byId[${tabId}].sendingRequest`)
+  );
 
   const handleSelectMethod = useCallback(
     (method) => {

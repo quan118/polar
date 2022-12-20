@@ -1,11 +1,15 @@
-import { takeLatest, put, select, call } from "redux-saga/effects";
+import { takeEvery, put, select, call } from "redux-saga/effects";
 import _ from "lodash";
 import uuid from "react-uuid";
 import { getReasonPhrase } from "http-status-codes";
 import { fetch } from "@tauri-apps/api/http";
 import { Body } from "@tauri-apps/api/http";
 import { readBinaryFile } from "@tauri-apps/api/fs";
-import { SEND_REQUEST, updateCommonAction } from "../modules/common";
+import {
+  updateTabByIdAction,
+  updateTabItemByKeyPathLevel1Action,
+} from "@/store/modules/tab";
+import { SEND_REQUEST } from "../modules/common";
 import { createResponseAction } from "../modules/response";
 import { buildFetchConfig, processVariables } from "@/utils/request";
 
@@ -29,7 +33,14 @@ const buildNameToVariablesMapping = (
 
 function* handleSendRequest({ requestId }) {
   try {
-    yield put(updateCommonAction({ sendingRequest: true }));
+    yield put(
+      updateTabItemByKeyPathLevel1Action(
+        requestId,
+        "sendingRequest",
+        true,
+        false
+      )
+    );
 
     // build variables mapping
     const currentEnvId = yield select((store) => store.common.currentEnvId);
@@ -119,10 +130,14 @@ function* handleSendRequest({ requestId }) {
     );
 
     yield put(
-      updateCommonAction({
-        responseId,
-        responseStatus: "success",
-      })
+      updateTabByIdAction(
+        requestId,
+        {
+          responseId,
+          responseStatus: "success",
+        },
+        false
+      )
     );
   } catch (error) {
     console.log("handleSendRequest exception");
@@ -140,18 +155,29 @@ function* handleSendRequest({ requestId }) {
     }
 
     yield put(
-      updateCommonAction({
-        responseId,
-        responseStatus: "failed",
-      })
+      updateTabByIdAction(
+        requestId,
+        {
+          responseId,
+          responseStatus: "failed",
+        },
+        false
+      )
     );
   } finally {
-    yield put(updateCommonAction({ sendingRequest: false }));
+    yield put(
+      updateTabItemByKeyPathLevel1Action(
+        requestId,
+        "sendingRequest",
+        false,
+        false
+      )
+    );
   }
 }
 
 function* CommonSaga() {
-  yield takeLatest(SEND_REQUEST, handleSendRequest);
+  yield takeEvery(SEND_REQUEST, handleSendRequest);
   // yield takeLatest(GET_APP_VERSION, handleGetAppVersion);
   // yield takeLatest(UPLOAD_LOG_TO_APPCENTER, handleUploadLogAppCenter);
 }

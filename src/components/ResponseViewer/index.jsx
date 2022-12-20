@@ -26,13 +26,18 @@ const ResponseSummary = ({ status, time, size }) => (
 );
 
 const ResponseViewer = () => {
-  const responseId = useSelector((store) => _.get(store, "common.responseId"));
+  const currentTabId = useSelector((store) => store.tab.currentTabId);
+  const responseId = useSelector((store) =>
+    _.get(store, `tab.byId[${currentTabId}].responseId`)
+  );
   const response = useSelector((store) =>
     _.get(store, `response.byId[${responseId}]`)
   );
   const [tab, setTab] = useState(tabs[0]);
   const handleChangeTab = useCallback((tab) => () => setTab(tab), [setTab]);
-  const sendingRequest = useSelector((store) => store.common.sendingRequest);
+  const sendingRequest = useSelector((store) =>
+    _.get(store, `tab.byId[${currentTabId}].sendingRequest`)
+  );
 
   const headers = response?.header?.map((item) => ({
     id: Object.keys(item)[0],

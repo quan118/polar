@@ -9,8 +9,6 @@ export const CURRENT_ENV_ID = "CURRENT_ENV_ID";
 export const EDIT_ENV_ID = "EDIT_ENV_ID";
 
 const defaultState = {
-  sendingRequest: false,
-  responseId: undefined,
   responseStatus: undefined, // success | failed | undefined
   currentRequestId: "draft0", // current requestId
   editItemId: "",
