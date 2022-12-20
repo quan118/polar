@@ -145,4 +145,5 @@ module.exports = {
     }),
     require("tailwindcss-radix")(),
   ],
+  darkMode: "class",
 };

@@ -1,5 +1,5 @@
+import { themes } from "@storybook/theming";
 import "../src/style.css";
-// import 'tailwindcss/tailwind.css'
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -8,6 +8,13 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+  },
+  darkMode: {
+    dark: { ...themes.dark, appBg: "black" },
+    light: { ...themes.normal, appBg: "white" },
+    darkClass: "dark",
+    lightClass: "light",
+    stylePreview: true,
   },
   // backgrounds: {
   //   default: 'twitter',

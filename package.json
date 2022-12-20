@@ -25,6 +25,7 @@
     "@radix-ui/react-tooltip": "^1.0.2",
     "@sentry/react": "^7.18.0",
     "@sentry/tracing": "^7.18.0",
+    "@storybook/theming": "^6.5.14",
     "@tauri-apps/api": "^1.2.0",
     "@uiw/codemirror-extensions-langs": "^4.12.4",
     "@uiw/codemirror-themes": "^4.12.4",
@@ -46,6 +47,7 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.1",
+    "storybook-dark-mode": "^2.0.4",
     "tailwindcss-radix": "^2.6.1"
   },
   "devDependencies": {
